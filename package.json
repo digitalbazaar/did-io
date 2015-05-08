@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "chai": "~1.9.1",
+    "commander": "~2.8.1",
     "grunt": "~0.4.2",
     "grunt-cli": "~0.1.9",
     "grunt-contrib-jshint": "~0.10.0",
