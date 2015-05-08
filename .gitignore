@@ -1,0 +1,14 @@
+*.sw[op]
+*~
+.cproject
+.project
+.c9
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+.settings
+coverage
+node_modules
+v8.log
+.c9revisions
+npm-debug.log
