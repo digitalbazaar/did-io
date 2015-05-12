@@ -38,7 +38,7 @@ if(_nodejs) {
   var didio = window.didio;
   window.Promise = require('es6-promise').Promise;
   var should = require('should');
-  window.should = require('should'); 
+  window.should = require('should');
   require('mocha/mocha');
   require('mocha-phantomjs/lib/mocha-phantomjs/core_extensions');
 
@@ -75,19 +75,50 @@ if(_nodejs) {
 
 // run tests
 describe('did-io', function() {
+  var did = didio.generateDid();
 
   describe('DID generation', function() {
 
     it('should create a well-formed DID', function(done) {
       var didRegex = new RegExp('^did\:[0-9a-f]{8}-[0-9a-f]{4}-' +
         '4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', 'i');
-      var did = didio.generateDid();
       should.exist(did);
       should(didRegex.test(did)).be.true;
       done();
     });
 
   });
+
+  describe('hash generation', function() {
+
+    it('should create a well-formed hash', function(done) {
+      var hash = didio.generateHash('test@example.com', 'Big52TestPassphrase');
+      should.exist(hash);
+      hash.should.be.exactly(
+        'ebd63d3bcba72e30277bff6792955e4a450f09e9cc29ddc317205a3cc70f2b42');
+      done();
+    });
+
+  });
+
+  describe('cryptography', function() {
+    var encryptedMessage = {};
+
+    it('should encrypt a DID', function(done) {
+      encryptedMessage = didio.encrypt(did, 'Big52TestPassphrase');
+      encryptedMessage.should.have.property('cipherData');
+      done();
+    });
+
+    it('should decrypt a DID', function(done) {
+      var decryptedDid = didio.decrypt(encryptedMessage, 'Big52TestPassphrase');
+      should.exist(decryptedDid);
+      should(decryptedDid).be.exactly(did);
+      done();
+    });
+
+  });
+
 });
 
 if(!_nodejs) {
@@ -110,11 +141,12 @@ var securityContext = {
     "GraphSignature2012": "sec:GraphSignature2012",
     "CryptographicKey": "sec:Key",
 
-    "credential": {"@id": "sec:credential", "@type": "@id"},
     "cipherAlgorithm": "sec:cipherAlgorithm",
+    "cipherAuthTag": "sec:cipherAuthTag",
     "cipherData": "sec:cipherData",
     "cipherKey": "sec:cipherKey",
     "claim": {"@id": "sec:claim", "@type": "@id"},
+    "credential": {"@id": "sec:credential", "@type": "@id"},
     "created": {"@id": "dc:created", "@type": "xsd:dateTime"},
     "creator": {"@id": "dc:creator", "@type": "@id"},
     "digestAlgorithm": "sec:digestAlgorithm",
@@ -124,6 +156,7 @@ var securityContext = {
     "expiration": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
     "expires": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
     "initializationVector": "sec:initializationVector",
+    "iterations": "sec:iterations",
     "nonce": "sec:nonce",
     "normalizationAlgorithm": "sec:normalizationAlgorithm",
     "owner": {"@id": "sec:owner", "@type": "@id"},
@@ -134,6 +167,7 @@ var securityContext = {
     "publicKeyPem": "sec:publicKeyPem",
     "publicKeyService": {"@id": "sec:publicKeyService", "@type": "@id"},
     "revoked": {"@id": "sec:revoked", "@type": "xsd:dateTime"},
+    "salt": "sec:salt",
     "signature": "sec:signature",
     "signatureAlgorithm": "sec:signingAlgorithm",
     "signatureValue": "sec:signatureValue"
