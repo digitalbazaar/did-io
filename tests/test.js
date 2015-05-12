@@ -119,6 +119,17 @@ describe('did-io', function() {
 
   });
 
+  describe('promise API', function() {
+
+    it('should support all static API methods', function(done) {
+      // FIXME: promise API generation is currently broken and should be fixed
+      var didiop = didio.promises();
+      done();
+    });
+
+  });
+
+
 });
 
 if(!_nodejs) {
