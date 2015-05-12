@@ -32,6 +32,8 @@ if(_nodejs) {
   window.forge = forge;
   require('../node_modules/jsonld');
   var jsonld = jsonldjs;
+  require('../' + _jsdir + '/did-io');
+  var didio = window.didio;
   window.Promise = require('es6-promise').Promise;
   var assert = require('chai').assert;
   require('mocha/mocha');
@@ -74,7 +76,9 @@ describe('did-io', function() {
   describe('DID generation', function() {
 
     it('should create a unique ID', function(done) {
-      done();
+      didio.test(function() {
+        done();
+      });
     });
 
   });
