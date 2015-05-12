@@ -17,8 +17,8 @@ var _nodejs = (typeof process !== 'undefined' &&
 if(_nodejs) {
   var _jsdir = process.env.JSDIR || 'lib';
   var didio = require('../' + _jsdir + '/did-io')();
-  var assert = require('assert');
   var program = require('commander');
+  var should = require('should');
   program
     .option('--bail', 'Bail when a test fails')
     .parse(process.argv);
@@ -32,10 +32,13 @@ if(_nodejs) {
   window.forge = forge;
   require('../node_modules/jsonld');
   var jsonld = jsonldjs;
+  var uuid = require('node-uuid');
+  window.uuid = uuid;
   require('../' + _jsdir + '/did-io');
   var didio = window.didio;
   window.Promise = require('es6-promise').Promise;
-  var assert = require('chai').assert;
+  var should = require('should');
+  window.should = require('should'); 
   require('mocha/mocha');
   require('mocha-phantomjs/lib/mocha-phantomjs/core_extensions');
 
@@ -75,10 +78,13 @@ describe('did-io', function() {
 
   describe('DID generation', function() {
 
-    it('should create a unique ID', function(done) {
-      didio.test(function() {
-        done();
-      });
+    it('should create a well-formed DID', function(done) {
+      var didRegex = new RegExp('^did\:[0-9a-f]{8}-[0-9a-f]{4}-' +
+        '4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', 'i');
+      var did = didio.generateDid();
+      should.exist(did);
+      should(didRegex.test(did)).be.true;
+      done();
     });
 
   });
