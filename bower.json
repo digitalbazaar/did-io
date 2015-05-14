@@ -10,7 +10,6 @@
   "dependencies": {
     "async": "~0.9.2",
     "es6-promise": "^2.0.0",
-    "forge": "~0.6.26",
     "jsonld": "~0.3.22",
     "node-uuid": "~1.4.3"
   },
