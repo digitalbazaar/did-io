@@ -1,6 +1,6 @@
 {
   "name": "did-io",
-  "version": "0.3.0-dev",
+  "version": "0.3.0",
   "description": "A WebDHT-based library for managing decentralized identifiers and associated data.",
   "homepage": "http://github.com/digitalbazaar/did-io",
   "author": {
@@ -75,6 +75,7 @@
     "ci-lint": "grunt jshint --mode=ci || exit 0",
     "lint": "grunt jshint",
     "jscs": "grunt jscs",
+    "release": "grunt release",
     "test-node": "grunt mochaTest",
     "test-browser": "grunt shell:testBrowser",
     "test": "grunt mochaTest shell:testBrowser",
