@@ -105,16 +105,22 @@ describe('did-io', function() {
     var encryptedMessage = {};
 
     it('should encrypt a DID', function(done) {
-      encryptedMessage = didio.encrypt(did, 'Big52TestPassphrase');
-      encryptedMessage.should.have.property('cipherData');
-      done();
+      didio.encrypt(did, 'Big52TestPassphrase', function(err, em) {
+        encryptedMessage = em;
+        should.not.exist(err);
+        encryptedMessage.should.have.property('cipherData');
+        done();
+      });
     });
 
     it('should decrypt a DID', function(done) {
-      var decryptedDid = didio.decrypt(encryptedMessage, 'Big52TestPassphrase');
-      should.exist(decryptedDid);
-      should(decryptedDid).be.exactly(did);
-      done();
+      didio.decrypt(
+        encryptedMessage, 'Big52TestPassphrase', function(err, message) {
+        should.not.exist(err);
+        should.exist(message);
+        should(message).be.exactly(did);
+        done();
+      });
     });
 
   });
