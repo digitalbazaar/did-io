@@ -95,7 +95,8 @@ describe('did-io', function() {
       var hash = didio.generateHash('test@example.com', 'Big52TestPassphrase');
       should.exist(hash);
       hash.should.be.exactly(
-        'ebd63d3bcba72e30277bff6792955e4a450f09e9cc29ddc317205a3cc70f2b42');
+        'urn:sha256:ebd63d3bcba72e30277bff6792955e4a450f09e9cc29ddc317205a' +
+        '3cc70f2b42');
       done();
     });
 
