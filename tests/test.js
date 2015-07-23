@@ -18,7 +18,10 @@ if(_nodejs) {
   var _jsdir = process.env.JSDIR || 'lib';
   var didio = require('../' + _jsdir + '/did-io')();
   var program = require('commander');
-  var should = require('should');
+  var should = require('chai').should();
+  var superagent = require('superagent');
+  var mockConfig = require('./mock.config.js');
+  require('superagent-mock')(superagent, mockConfig);
   program
     .option('--bail', 'Bail when a test fails')
     .parse(process.argv);
@@ -38,8 +41,8 @@ if(_nodejs) {
   require('../' + _jsdir + '/did-io');
   var didio = window.didio;
   window.Promise = require('es6-promise').Promise;
-  var should = require('should');
-  window.should = require('should');
+  var should = require('chai').should();
+  window.should = require('should').should();
   require('mocha/mocha');
   require('mocha-phantomjs/lib/mocha-phantomjs/core_extensions');
 
@@ -84,7 +87,7 @@ describe('did-io', function() {
       var didRegex = new RegExp('^did\:[0-9a-f]{8}-[0-9a-f]{4}-' +
         '4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', 'i');
       should.exist(did);
-      should(didRegex.test(did)).be.true;
+      didRegex.test(did).should.equal(true);
       done();
     });
 
@@ -95,7 +98,7 @@ describe('did-io', function() {
     it('should create a well-formed hash', function(done) {
       var hash = didio.generateHash('test@example.com', 'Big52TestPassphrase');
       should.exist(hash);
-      hash.should.be.exactly(
+      hash.should.equal(
         'urn:sha256:ebd63d3bcba72e30277bff6792955e4a450f09e9cc29ddc317205a' +
         '3cc70f2b42');
       done();
@@ -103,28 +106,25 @@ describe('did-io', function() {
 
   });
 
-  describe('cryptography', function() {
-    var encryptedMessage = {};
-
-    it('should encrypt a DID', function(done) {
-      didio.encrypt(did, 'Big52TestPassphrase', function(err, em) {
-        encryptedMessage = em;
-        should.not.exist(err);
-        encryptedMessage.should.have.property('cipherData');
-        done();
+  describe('getDidDocument Function', function() {
+      it('should retrieve a DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
+        didio.getDidDocument(did, function(err, doc) {
+          should.not.exist(err);
+          should.exist(doc);
+          doc.idp.should.equal('did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
+          done();
+        });
       });
-    });
 
-    it('should decrypt a DID', function(done) {
-      didio.decrypt(
-        encryptedMessage, 'Big52TestPassphrase', function(err, message) {
-        should.not.exist(err);
-        should.exist(message);
-        should(message).be.exactly(did);
-        done();
+      it('should err on unknown DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
+        didio.getDidDocument(did, function(err, doc) {
+          should.exist(err);
+          err.status.should.equal(404);
+          done();
+        });
       });
-    });
-
   });
 
   describe('promise API', function() {
@@ -136,6 +136,7 @@ describe('did-io', function() {
     });
 
   });
+
 });
 
 if(!_nodejs) {
