@@ -30,12 +30,7 @@
     "url": "https://github.com/digitalbazaar/did-io/issues",
     "email": "support@digitalbazaar.com"
   },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "https://github.com/digitalbazaar/did-io/raw/master/LICENSE"
-    }
-  ],
+  "license": "BSD-3-Clause",
   "main": "lib/did-io.js",
   "dependencies": {
     "async": "~0.9.0",
