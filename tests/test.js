@@ -136,8 +136,6 @@ describe('did-io', function() {
     });
 
   });
-
-
 });
 
 if(!_nodejs) {
