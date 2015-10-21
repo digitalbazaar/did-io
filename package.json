@@ -1,6 +1,6 @@
 {
   "name": "did-io",
-  "version": "0.4.4",
+  "version": "0.6.0",
   "description": "A WebDHT-based library for managing decentralized identifiers and associated data.",
   "homepage": "http://github.com/digitalbazaar/did-io",
   "author": {
@@ -38,12 +38,10 @@
   ],
   "main": "lib/did-io.js",
   "dependencies": {
-    "async": "^1.4.2",
     "es6-promise": "~1.0.0",
     "jsonld": "~0.4.1",
     "node-forge": "~0.6.28",
     "node-uuid": "~1.4.3",
-    "superagent": "^1.2.0",
     "underscore": "~1.7.0"
   },
   "devDependencies": {
@@ -59,8 +57,7 @@
     "istanbul": "~0.3.2",
     "mocha": "~1.21.4",
     "mocha-phantomjs": "~3.5.0",
-    "phantomjs": "~1.9.0",
-    "superagent-mock": "^1.3.0"
+    "phantomjs": "~1.9.0"
   },
   "engines": {
     "node": ">=0.10.0"

@@ -1,7 +1,5 @@
 'use strict';
 
-var http = require('http');
-
 var didDocument = {
   "@context":"https://w3id.org/identity/v1",
   "id":"did:32e89321-a5f1-48ff-8ec8-a4112be1215c",
@@ -34,24 +32,6 @@ var didDocument = {
   }
 };
 
-module.exports = [
-  {
-    pattern: 'https://authorization.io/dids/did:(.*?)$',
-    fixtures: function(match, params) {
-      switch(match[1]) {
-        case '32e89321-a5f1-48ff-8ec8-a4112be1215c':
-          return didDocument;
-          break;
-        default:
-          var code = 404;
-          var newErr = new Error(http.STATUS_CODES[code]);
-          newErr.response = http.STATUS_CODES[code];
-          newErr.status = code;
-          throw newErr;
-      }
-    },
-    callback: function(match, data) {
-      return {body: data};
-    }
-  }
-];
+module.exports = {
+  didDocument: didDocument
+};

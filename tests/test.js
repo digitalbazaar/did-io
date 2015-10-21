@@ -19,9 +19,22 @@ if(_nodejs) {
   var didio = require('../' + _jsdir + '/did-io')();
   var program = require('commander');
   var should = require('chai').should();
-  var superagent = require('superagent');
-  var mockConfig = require('./mock.config.js');
-  require('superagent-mock')(superagent, mockConfig);
+  var jsonld = require('jsonld');
+  // mock document loader
+  var mockConfig = require('./mock.config');
+  var documentLoader = jsonld.documentLoader;
+  jsonld.documentLoader = function(url, callback) {
+    if(url === 'https://authorization.io/dids/' + mockConfig.didDocument.id) {
+      return callback(
+        null, {
+          contextUrl: null,
+          document: mockConfig.didDocument,
+          documentUrl: url
+        });
+    }
+    documentLoader(url, callback);
+  };
+  didio.use('jsonld', jsonld);
   program
     .option('--bail', 'Bail when a test fails')
     .parse(process.argv);
@@ -30,8 +43,6 @@ if(_nodejs) {
   require('./bind');
   require('./setImmediate');
   var _jsdir = system.env.JSDIR || 'lib';
-  var async = require('async');
-  window.async = async;
   var forge = require('../node_modules/node-forge');
   window.forge = forge;
   require('../node_modules/jsonld');
@@ -42,13 +53,13 @@ if(_nodejs) {
   var didio = window.didio;
   window.Promise = require('es6-promise').Promise;
   var should = require('chai').should();
-  window.should = require('should').should();
   require('mocha/mocha');
   require('mocha-phantomjs/lib/mocha-phantomjs/core_extensions');
 
   // PhantomJS is really bad at doing XHRs, so we have to fake the network
   // fetch of the JSON-LD Contexts
-  var contextLoader = function(url, callback) {
+  var mockConfig = require('./mock.config');
+  jsonld.documentLoader = function(url, callback) {
     if(url === 'https://w3id.org/security/v1') {
       callback(null, {
         contextUrl: null,
@@ -56,8 +67,20 @@ if(_nodejs) {
         documentUrl: 'https://web-payments.org/contexts/security-v1.jsonld'
       });
     }
+    // mock document loader
+    if(url === 'https://authorization.io/dids/' + mockConfig.didDocument.id) {
+      return callback(
+        null, {
+          contextUrl: null,
+          document: mockConfig.didDocument,
+          documentUrl: url
+        });
+    }
+    var err = new Error('Not found.');
+    err.status = 404;
+    callback(err);
   };
-  jsonld.documentLoader = contextLoader;
+  didio.use('jsonld', jsonld);
 
   var program = {};
   for(var i = 0; i < system.args.length; ++i) {
@@ -107,24 +130,24 @@ describe('did-io', function() {
   });
 
   describe('getDidDocument Function', function() {
-      it('should retrieve a DID document', function(done) {
-        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
-        didio.getDidDocument(did, function(err, doc) {
-          should.not.exist(err);
-          should.exist(doc);
-          doc.idp.should.equal('did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
-          done();
-        });
+    it('should retrieve a DID document', function(done) {
+      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
+      didio.getDidDocument(did, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.idp.should.equal('did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
+        done();
       });
+    });
 
-      it('should err on unknown DID document', function(done) {
-        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
-        didio.getDidDocument(did, function(err, doc) {
-          should.exist(err);
-          err.status.should.equal(404);
-          done();
-        });
+    it('should err on unknown DID document', function(done) {
+      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
+      didio.getDidDocument(did, function(err, doc) {
+        should.exist(err);
+        err.status.should.equal(404);
+        done();
       });
+    });
   });
 
   describe('promise API', function() {
