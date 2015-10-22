@@ -14,6 +14,8 @@
 var _nodejs = (typeof process !== 'undefined' &&
   process.versions && process.versions.node);
 
+var MOCK_DOCS = _mockDocs();
+
 if(_nodejs) {
   var _jsdir = process.env.JSDIR || 'lib';
   var didio = require('../' + _jsdir + '/did-io');
@@ -21,14 +23,13 @@ if(_nodejs) {
   var should = require('chai').should();
   var jsonld = require('jsonld');
   // mock document loader
-  var mockConfig = require('./mock.config');
   var documentLoader = jsonld.documentLoader;
   jsonld.documentLoader = function(url, callback) {
-    if(url === 'https://authorization.io/dids/' + mockConfig.didDocument.id) {
+    if(url in MOCK_DOCS) {
       return callback(
         null, {
           contextUrl: null,
-          document: mockConfig.didDocument,
+          document: MOCK_DOCS[url],
           documentUrl: url
         });
     }
@@ -58,23 +59,13 @@ if(_nodejs) {
 
   // PhantomJS is really bad at doing XHRs, so we have to fake the network
   // fetch of the JSON-LD Contexts
-  var mockConfig = require('./mock.config');
   jsonld.documentLoader = function(url, callback) {
-    if(url === 'https://w3id.org/security/v1') {
-      callback(null, {
+    if(url in MOCK_DOCS) {
+      return callback(null, {
         contextUrl: null,
-        document: securityContext,
-        documentUrl: 'https://web-payments.org/contexts/security-v1.jsonld'
+        document: MOCK_DOCS[url],
+        documentUrl: url
       });
-    }
-    // mock document loader
-    if(url === 'https://authorization.io/dids/' + mockConfig.didDocument.id) {
-      return callback(
-        null, {
-          contextUrl: null,
-          document: mockConfig.didDocument,
-          documentUrl: url
-        });
     }
     var err = new Error('Not found.');
     err.status = 404;
@@ -105,7 +96,6 @@ describe('did-io', function() {
   var did = didio.generateDid();
 
   describe('DID generation', function() {
-
     it('should create a well-formed DID', function(done) {
       var didRegex = new RegExp('^did\:[0-9a-f]{8}-[0-9a-f]{4}-' +
         '4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$', 'i');
@@ -113,11 +103,9 @@ describe('did-io', function() {
       didRegex.test(did).should.equal(true);
       done();
     });
-
   });
 
   describe('hash generation', function() {
-
     it('should create a well-formed hash', function(done) {
       var hash = didio.generateHash('test@example.com', 'Big52TestPassphrase');
       should.exist(hash);
@@ -126,7 +114,6 @@ describe('did-io', function() {
         '3cc70f2b42');
       done();
     });
-
   });
 
   describe('getDidDocument Function', function() {
@@ -150,16 +137,45 @@ describe('did-io', function() {
     });
   });
 
-  describe('promise API', function() {
+  describe('get Function', function() {
+    it('should retrieve a DID document', function(done) {
+      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
+      didio.get(did, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.idp.should.equal('did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
+        done();
+      });
+    });
 
+    it('should err on unknown DID document', function(done) {
+      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
+      didio.get(did, function(err, doc) {
+        should.exist(err);
+        err.status.should.equal(404);
+        done();
+      });
+    });
+
+    it('should retrieve a DID document public key', function(done) {
+      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
+      didio.get(did, function(err, doc) {
+        should.not.exist(err);
+        should.exist(doc);
+        doc.id.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1');
+        doc.owner.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c');
+        done();
+      });
+    });
+  });
+
+  describe('promise API', function() {
     it('should support all static API methods', function(done) {
       // FIXME: promise API generation is currently broken and should be fixed
       var didiop = didio.promises();
       done();
     });
-
   });
-
 });
 
 if(!_nodejs) {
@@ -168,51 +184,131 @@ if(!_nodejs) {
   });
 }
 
-// the security context that is used when loading https://w3id.org/security/v1
-var securityContext = {
-  "@context": {
-    "id": "@id",
-    "type": "@type",
+function _mockDocs() {
+  // documents to mock load
+  var MOCK_DOCS = {
+    'https://w3id.org/security/v1': {
+      "@context": {
+        "id": "@id",
+        "type": "@type",
 
-    "dc": "http://purl.org/dc/terms/",
-    "sec": "https://w3id.org/security#",
-    "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "dc": "http://purl.org/dc/terms/",
+        "sec": "https://w3id.org/security#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
 
-    "EncryptedMessage": "sec:EncryptedMessage",
-    "GraphSignature2012": "sec:GraphSignature2012",
-    "CryptographicKey": "sec:Key",
+        "EncryptedMessage": "sec:EncryptedMessage",
+        "GraphSignature2012": "sec:GraphSignature2012",
+        "CryptographicKey": "sec:Key",
 
-    "authenticationTag": "sec:authenticationTag",
-    "cipherAlgorithm": "sec:cipherAlgorithm",
-    "cipherData": "sec:cipherData",
-    "cipherKey": "sec:cipherKey",
-    "claim": {"@id": "sec:claim", "@type": "@id"},
-    "created": {"@id": "dc:created", "@type": "xsd:dateTime"},
-    "creator": {"@id": "dc:creator", "@type": "@id"},
-    "credential": {"@id": "sec:credential", "@type": "@id"},
-    "digestAlgorithm": "sec:digestAlgorithm",
-    "digestValue": "sec:digestValue",
-    "domain": "sec:domain",
-    "encryptionKey": "sec:encryptionKey",
-    "expiration": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
-    "expires": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
-    "initializationVector": "sec:initializationVector",
-    "iterationCount": "sec:iterationCount",
-    "nonce": "sec:nonce",
-    "normalizationAlgorithm": "sec:normalizationAlgorithm",
-    "owner": {"@id": "sec:owner", "@type": "@id"},
-    "password": "sec:password",
-    "privateKey": {"@id": "sec:privateKey", "@type": "@id"},
-    "privateKeyPem": "sec:privateKeyPem",
-    "publicKey": {"@id": "sec:publicKey", "@type": "@id"},
-    "publicKeyPem": "sec:publicKeyPem",
-    "publicKeyService": {"@id": "sec:publicKeyService", "@type": "@id"},
-    "revoked": {"@id": "sec:revoked", "@type": "xsd:dateTime"},
-    "salt": "sec:salt",
-    "signature": "sec:signature",
-    "signatureAlgorithm": "sec:signingAlgorithm",
-    "signatureValue": "sec:signatureValue"
-  }
-};
+        "authenticationTag": "sec:authenticationTag",
+        "cipherAlgorithm": "sec:cipherAlgorithm",
+        "cipherData": "sec:cipherData",
+        "cipherKey": "sec:cipherKey",
+        "claim": {"@id": "sec:claim", "@type": "@id"},
+        "created": {"@id": "dc:created", "@type": "xsd:dateTime"},
+        "creator": {"@id": "dc:creator", "@type": "@id"},
+        "credential": {"@id": "sec:credential", "@type": "@id"},
+        "digestAlgorithm": "sec:digestAlgorithm",
+        "digestValue": "sec:digestValue",
+        "domain": "sec:domain",
+        "encryptionKey": "sec:encryptionKey",
+        "expiration": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
+        "expires": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
+        "initializationVector": "sec:initializationVector",
+        "iterationCount": "sec:iterationCount",
+        "nonce": "sec:nonce",
+        "normalizationAlgorithm": "sec:normalizationAlgorithm",
+        "owner": {"@id": "sec:owner", "@type": "@id"},
+        "password": "sec:password",
+        "privateKey": {"@id": "sec:privateKey", "@type": "@id"},
+        "privateKeyPem": "sec:privateKeyPem",
+        "publicKey": {"@id": "sec:publicKey", "@type": "@id"},
+        "publicKeyPem": "sec:publicKeyPem",
+        "publicKeyService": {"@id": "sec:publicKeyService", "@type": "@id"},
+        "revoked": {"@id": "sec:revoked", "@type": "xsd:dateTime"},
+        "salt": "sec:salt",
+        "signature": "sec:signature",
+        "signatureAlgorithm": "sec:signingAlgorithm",
+        "signatureValue": "sec:signatureValue"
+      }
+    },
+    'https://w3id.org/identity/v1': {
+      "@context": {
+        "id": "@id",
+        "type": "@type",
+
+        "dc": "http://purl.org/dc/terms/",
+        "identity": "https://w3id.org/identity#",
+        "ps": "https://w3id.org/payswarm#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "sec": "https://w3id.org/security#",
+        "schema": "http://schema.org/",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+        "about": {"@id": "schema:about", "@type": "@id"},
+        "address": {"@id": "schema:address", "@type": "@id"},
+        "addressCountry": "schema:addressCountry",
+        "addressLocality": "schema:addressLocality",
+        "addressRegion": "schema:addressRegion",
+        "comment": "rdfs:comment",
+        "created": {"@id": "dc:created", "@type": "xsd:dateTime"},
+        "creator": {"@id": "dc:creator", "@type": "@id"},
+        "description": "schema:description",
+        "email": "schema:email",
+        "familyName": "schema:familyName",
+        "givenName": "schema:givenName",
+        "image": {"@id": "schema:image", "@type": "@id"},
+        "label": "rdfs:label",
+        "name": "schema:name",
+        "postalCode": "schema:postalCode",
+        "streetAddress": "schema:streetAddress",
+        "title": "dc:title",
+        "url": {"@id": "schema:url", "@type": "@id"},
+        "PostalAddress": "schema:PostalAddress",
+
+        "Identity": "identity:Identity",
+        "Person": "schema:Person",
+        "Organization": "schema:Organization",
+
+        "paymentProcessor": "ps:processor",
+
+        "preferences": {"@id": "ps:preferences", "@type": "@vocab"},
+
+        "credential": {"@id": "sec:credential", "@type": "@id"},
+        "cipherAlgorithm": "sec:cipherAlgorithm",
+        "cipherData": "sec:cipherData",
+        "cipherKey": "sec:cipherKey",
+        "claim": {"@id": "sec:claim", "@type": "@id"},
+        "digestAlgorithm": "sec:digestAlgorithm",
+        "digestValue": "sec:digestValue",
+        "domain": "sec:domain",
+        "expires": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
+        "identityService": {"@id": "identity:identityService", "@type": "@id"},
+        "initializationVector": "sec:initializationVector",
+        "nonce": "sec:nonce",
+        "normalizationAlgorithm": "sec:normalizationAlgorithm",
+        "owner": {"@id": "sec:owner", "@type": "@id"},
+        "password": "sec:password",
+        "privateKey": {"@id": "sec:privateKey", "@type": "@id"},
+        "privateKeyPem": "sec:privateKeyPem",
+        "publicKey": {"@id": "sec:publicKey", "@type": "@id"},
+        "publicKeyPem": "sec:publicKeyPem",
+        "publicKeyService": {"@id": "sec:publicKeyService", "@type": "@id"},
+        "revoked": {"@id": "sec:revoked", "@type": "xsd:dateTime"},
+        "signature": "sec:signature",
+        "signatureAlgorithm": "sec:signatureAlgorithm",
+        "signatureValue": "sec:signatureValue",
+        "EncryptedMessage": "sec:EncryptedMessage",
+        "CryptographicKey": "sec:Key",
+        "GraphSignature2012": "sec:GraphSignature2012"
+      }
+    }
+  };
+  var mockConfig = require('./mock.config');
+  MOCK_DOCS['https://authorization.io/dids/' + mockConfig.didDocument.id] =
+    mockConfig.didDocument;
+  return MOCK_DOCS;
+}
 
 })();
