@@ -170,10 +170,58 @@ describe('did-io', function() {
   });
 
   describe('promise API', function() {
-    it('should support all static API methods', function(done) {
-      // FIXME: promise API generation is currently broken and should be fixed
-      var didiop = didio.promises();
-      done();
+    describe('getDidDocument Function', function() {
+      it('should retrieve a DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
+        didio.promises.getDidDocument(did).then(function(doc) {
+          should.exist(doc);
+          doc.idp.should.equal('did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
+          done();
+        });
+      });
+
+      it('should err on unknown DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
+        didio.promises.getDidDocument(did).catch(function(err) {
+          return err;
+        }).then(function(err) {
+          should.exist(err);
+          err.status.should.equal(404);
+          done();
+        });
+      });
+    });
+
+    describe('get Function', function() {
+      it('should retrieve a DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
+        didio.promises.get(did).then(function(doc) {
+          should.exist(doc);
+          doc.idp.should.equal('did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
+          done();
+        });
+      });
+
+      it('should err on unknown DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
+        didio.promises.get(did).catch(function(err) {
+          return err;
+        }).then(function(err) {
+          should.exist(err);
+          err.status.should.equal(404);
+          done();
+        });
+      });
+
+      it('should retrieve a DID document public key', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
+        didio.promises.get(did).then(function(doc) {
+          should.exist(doc);
+          doc.id.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1');
+          doc.owner.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c');
+          done();
+        });
+      });
     });
   });
 });
