@@ -16,7 +16,7 @@ var _nodejs = (typeof process !== 'undefined' &&
 
 if(_nodejs) {
   var _jsdir = process.env.JSDIR || 'lib';
-  var didio = require('../' + _jsdir + '/did-io')();
+  var didio = require('../' + _jsdir + '/did-io');
   var program = require('commander');
   var should = require('chai').should();
   var jsonld = require('jsonld');
