@@ -158,12 +158,52 @@ describe('did-io', function() {
     });
 
     it('should retrieve a DID document public key', function(done) {
-      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
-      didio.get(did, function(err, doc) {
+      var key = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
+      didio.get(key, function(err, doc) {
         should.not.exist(err);
         should.exist(doc);
         doc.id.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1');
         doc.owner.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c');
+        done();
+      });
+    });
+  });
+
+  describe('JSON-LD document loader', function() {
+    it('should retrieve a DID document', function(done) {
+      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
+      var loader = didio.createDocumentLoader();
+      loader(did, function(err, remoteDoc) {
+        should.not.exist(err);
+        should.exist(remoteDoc);
+        should.exist(remoteDoc.document);
+        remoteDoc.document.idp.should.equal(
+          'did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
+        done();
+      });
+    });
+
+    it('should err on unknown DID document', function(done) {
+      var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
+      var loader = didio.createDocumentLoader();
+      loader(did, function(err, remoteDoc) {
+        should.exist(err);
+        err.status.should.equal(404);
+        done();
+      });
+    });
+
+    it('should retrieve a DID document public key', function(done) {
+      var key = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
+      var loader = didio.createDocumentLoader();
+      loader(key, function(err, remoteDoc) {
+        should.not.exist(err);
+        should.exist(remoteDoc);
+        should.exist(remoteDoc.document);
+        remoteDoc.document.id.should.equal(
+          'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1');
+        remoteDoc.document.owner.should.equal(
+          'did:32e89321-a5f1-48ff-8ec8-a4112be1215c');
         done();
       });
     });
@@ -214,11 +254,50 @@ describe('did-io', function() {
       });
 
       it('should retrieve a DID document public key', function(done) {
-        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
-        didio.promises.get(did).then(function(doc) {
+        var key = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
+        didio.promises.get(key).then(function(doc) {
           should.exist(doc);
           doc.id.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1');
           doc.owner.should.equal('did:32e89321-a5f1-48ff-8ec8-a4112be1215c');
+          done();
+        });
+      });
+    });
+
+    describe('JSON-LD document loader', function() {
+      it('should retrieve a DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c';
+        var loader = didio.promises.createDocumentLoader();
+        loader(did).then(function(remoteDoc) {
+          should.exist(remoteDoc);
+          remoteDoc.document.idp.should.equal(
+            'did:bef5ac6a-ca9c-4548-8179-76b44692bb86');
+          done();
+        });
+      });
+
+      it('should err on unknown DID document', function(done) {
+        var did = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215d';
+        var loader = didio.promises.createDocumentLoader();
+        loader(did).catch(function(err) {
+          return err;
+        }).then(function(err) {
+          should.exist(err);
+          err.status.should.equal(404);
+          done();
+        });
+      });
+
+      it('should retrieve a DID document public key', function(done) {
+        var key = 'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1';
+        var loader = didio.promises.createDocumentLoader();
+        loader(key).then(function(remoteDoc) {
+          should.exist(remoteDoc);
+          should.exist(remoteDoc.document);
+          remoteDoc.document.id.should.equal(
+            'did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1');
+          remoteDoc.document.owner.should.equal(
+            'did:32e89321-a5f1-48ff-8ec8-a4112be1215c');
           done();
         });
       });
