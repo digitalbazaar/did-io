@@ -1,6 +1,6 @@
 {
   "name": "did-io",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A WebDHT-based library for managing decentralized identifiers and associated data.",
   "homepage": "http://github.com/digitalbazaar/did-io",
   "author": {
