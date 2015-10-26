@@ -325,16 +325,15 @@ function _mockDocs() {
 
         "EncryptedMessage": "sec:EncryptedMessage",
         "GraphSignature2012": "sec:GraphSignature2012",
+        "LinkedDataSignature2015": "sec:LinkedDataSignature2015",
         "CryptographicKey": "sec:Key",
 
         "authenticationTag": "sec:authenticationTag",
         "cipherAlgorithm": "sec:cipherAlgorithm",
         "cipherData": "sec:cipherData",
         "cipherKey": "sec:cipherKey",
-        "claim": {"@id": "sec:claim", "@type": "@id"},
         "created": {"@id": "dc:created", "@type": "xsd:dateTime"},
         "creator": {"@id": "dc:creator", "@type": "@id"},
-        "credential": {"@id": "sec:credential", "@type": "@id"},
         "digestAlgorithm": "sec:digestAlgorithm",
         "digestValue": "sec:digestValue",
         "domain": "sec:domain",
@@ -364,14 +363,23 @@ function _mockDocs() {
         "id": "@id",
         "type": "@type",
 
+        "cred": "https://w3id.org/credentials#",
         "dc": "http://purl.org/dc/terms/",
         "identity": "https://w3id.org/identity#",
+        "perm": "https://w3id.org/permissions#",
         "ps": "https://w3id.org/payswarm#",
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
         "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
         "sec": "https://w3id.org/security#",
         "schema": "http://schema.org/",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+        "claim": {"@id": "cred:claim", "@type": "@id"},
+        "issued": {"@id": "cred:issued", "@type": "xsd:dateTime"},
+        "issuer": {"@id": "cred:issuer", "@type": "@id"},
+        "recipient": {"@id": "cred:recipient", "@type": "@id"},
+        "Credential": "cred:Credential",
+        "CryptographicKeyCredential": "cred:CryptographicKeyCredential",
 
         "about": {"@id": "schema:about", "@type": "@id"},
         "address": {"@id": "schema:address", "@type": "@id"},
@@ -392,26 +400,24 @@ function _mockDocs() {
         "streetAddress": "schema:streetAddress",
         "title": "dc:title",
         "url": {"@id": "schema:url", "@type": "@id"},
-        "PostalAddress": "schema:PostalAddress",
-
-        "Identity": "identity:Identity",
         "Person": "schema:Person",
+        "PostalAddress": "schema:PostalAddress",
         "Organization": "schema:Organization",
 
-        "paymentProcessor": "ps:processor",
+        "identityService": {"@id": "identity:identityService", "@type": "@id"},
+        "idp": {"@id": "identity:idp", "@type": "@id"},
+        "Identity": "identity:Identity",
 
+        "paymentProcessor": "ps:processor",
         "preferences": {"@id": "ps:preferences", "@type": "@vocab"},
 
-        "credential": {"@id": "sec:credential", "@type": "@id"},
         "cipherAlgorithm": "sec:cipherAlgorithm",
         "cipherData": "sec:cipherData",
         "cipherKey": "sec:cipherKey",
-        "claim": {"@id": "sec:claim", "@type": "@id"},
         "digestAlgorithm": "sec:digestAlgorithm",
         "digestValue": "sec:digestValue",
         "domain": "sec:domain",
         "expires": {"@id": "sec:expiration", "@type": "xsd:dateTime"},
-        "identityService": {"@id": "identity:identityService", "@type": "@id"},
         "initializationVector": "sec:initializationVector",
         "nonce": "sec:nonce",
         "normalizationAlgorithm": "sec:normalizationAlgorithm",
@@ -426,9 +432,13 @@ function _mockDocs() {
         "signature": "sec:signature",
         "signatureAlgorithm": "sec:signatureAlgorithm",
         "signatureValue": "sec:signatureValue",
-        "EncryptedMessage": "sec:EncryptedMessage",
         "CryptographicKey": "sec:Key",
-        "GraphSignature2012": "sec:GraphSignature2012"
+        "EncryptedMessage": "sec:EncryptedMessage",
+        "GraphSignature2012": "sec:GraphSignature2012",
+        "LinkedDataSignature2015": "sec:LinkedDataSignature2015",
+
+        "accessControl": {"@id": "perm:accessControl", "@type": "@id"},
+        "writePermission": {"@id": "perm:writePermission", "@type": "@id"}
       }
     }
   };
