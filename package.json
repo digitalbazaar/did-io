@@ -39,7 +39,7 @@
   "main": "lib/did-io.js",
   "dependencies": {
     "es6-promise": "~1.0.0",
-    "jsonld": "~0.4.1",
+    "jsonld": "^0.4.2",
     "node-forge": "~0.6.28",
     "node-uuid": "~1.4.3",
     "underscore": "~1.7.0"

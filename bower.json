@@ -15,7 +15,7 @@
   "dependencies": {
     "es6-promise": "^2.0.0",
     "forge": "~0.6.23",
-    "jsonld": "~0.4.1",
+    "jsonld": "^0.4.2",
     "node-uuid": "~1.4.3"
   },
   "ignore": [
