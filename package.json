@@ -41,6 +41,7 @@
     "async": "^1.5.2",
     "es6-promise": "^2.0.0",
     "jsonld": "~0.4.6",
+    "jsonld-signatures": "^1.1.5",
     "lodash": "^4.6.1",
     "node-forge": "~0.6.28",
     "node-uuid": "^1.4.7",
