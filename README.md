@@ -1,9 +1,7 @@
 did-io
 =================
 
-[![Build Status][travis-ci-png]][travis-ci-site]
-[travis-ci-png]: https://travis-ci.org/digitalbazaar/did-io.png?branch=master
-[travis-ci-site]: https://travis-ci.org/digitalbazaar/did-io
+[![Build Status](https://travis-ci.org/digitalbazaar/did-io.png?branch=master)](https://travis-ci.org/digitalbazaar/did-io)
 
 A WebDHT-based library for managing decentralized identifiers and 
 associated data.
