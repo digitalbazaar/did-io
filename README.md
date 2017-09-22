@@ -3,8 +3,65 @@ did-io
 
 [![Build Status](https://travis-ci.org/digitalbazaar/did-io.png?branch=master)](https://travis-ci.org/digitalbazaar/did-io)
 
-A WebDHT-based library for managing decentralized identifiers and
-associated data.
+A Decentralized Identifier resolution library for the browser and
+node.js.
+
+Install
+-------
+
+## Requiring jsonld.js:
+
+### node.js + npm
+
+```
+npm install did-io
+```
+
+```js
+var didio = require('did-io');
+```
+
+### JSPM
+
+```
+jspm install npm:did-io
+```
+
+``` js
+import * as didio from 'did-io';
+```
+
+
+Quick Examples
+--------------
+
+Retrieve a DID document:
+
+```javascript
+const did = 'did:example:521a0c21-7816-47f8-bc07-1de5b89385fb';
+
+didio.get(did, (err, doc) => {
+  if(err) {
+    console.log('Failed to get DID Document:', err);
+  }
+  
+  console.log('Successfully retrieved DID Document:', JSON.stringify(doc, null, 2));
+});
+```
+
+Retrieve a public key from a DID document:
+
+```javascript
+const keyId = 'did:example:521a0c21-7816-47f8-bc07-1de5b89385fb/keys/123';
+
+didio.get(keyId, (err, doc) => {
+  if(err) {
+    console.log('Failed to get key description:', err);
+  }
+  
+  console.log('Successfully retrieved key:', JSON.stringify(doc, null, 2));
+});
+```
 
 Commercial Support
 ------------------
