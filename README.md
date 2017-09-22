@@ -9,7 +9,10 @@ node.js.
 Install
 -------
 
-## Requiring jsonld.js:
+The did-io library is available through npm for both node.js and 
+the browser.
+
+## Requiring did-io
 
 ### node.js + npm
 
