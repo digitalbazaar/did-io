@@ -48,7 +48,7 @@ if(_nodejs) {
   window.forge = forge;
   require('../node_modules/jsonld');
   var jsonld = jsonldjs;
-  var uuid = require('node-uuid');
+  var uuid = require('uuid');
   window.uuid = uuid;
   require('../' + _jsdir + '/did-io');
   var didio = window.didio;

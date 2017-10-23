@@ -44,8 +44,8 @@
     "jsonld-signatures": "^1.1.5",
     "lodash": "^4.6.1",
     "node-forge": "~0.6.28",
-    "node-uuid": "^1.4.7",
-    "request": "^2.69.0"
+    "request": "^2.69.0",
+    "uuid": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.2.0",
