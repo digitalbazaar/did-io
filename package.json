@@ -36,31 +36,15 @@
       "url": "https://github.com/digitalbazaar/did-io/raw/master/LICENSE"
     }
   ],
-  "main": "lib/did-io.js",
+  "main": "lib/index.js",
   "dependencies": {
-    "async": "^1.5.2",
-    "es6-promise": "^2.0.0",
-    "jsonld": "~0.4.6",
-    "jsonld-signatures": "^1.1.5",
-    "lodash": "^4.6.1",
-    "node-forge": "~0.6.28",
-    "node-uuid": "^1.4.7",
-    "request": "^2.69.0"
+    "jsonld": "^1.0.1",
+    "jsonld-signatures": "^2.3.0"
   },
   "devDependencies": {
-    "chai": "^3.2.0",
-    "commander": "~2.8.1",
-    "grunt": "~0.4.2",
-    "grunt-cli": "~0.1.9",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-jscs": "^2.1.0",
-    "grunt-mocha-test": "~0.12.4",
-    "grunt-release": "^0.13.0",
-    "grunt-shell": "~1.1.1",
-    "istanbul": "~0.3.2",
-    "mocha": "~1.21.4",
-    "mocha-phantomjs": "~3.5.0",
-    "phantomjs": "~1.9.0"
+    "chai": "^4.1.2",
+    "dirty-chai": "^2.0.1",
+    "mocha": "^5.0.5"
   },
   "engines": {
     "node": ">=8.6.0"
@@ -71,13 +55,15 @@
     "Credential"
   ],
   "scripts": {
-    "ci-lint": "grunt jshint --mode=ci || exit 0",
-    "lint": "grunt jshint",
-    "jscs": "grunt jscs",
-    "release": "grunt release",
-    "test-node": "grunt mochaTest",
-    "test-browser": "grunt shell:testBrowser",
-    "test": "grunt mochaTest shell:testBrowser",
-    "coverage": "grunt shell:coverage"
+    "mocha": "mocha ./tests/index.spec.js",
+    "test": "npm run mocha",
+    "preversion": "npm test",
+    "postversion": "git push --follow-tags"
+  },
+  "eslintConfig": {
+    "env": {
+      "mocha": true,
+      "node": true
+    }
   }
 }
