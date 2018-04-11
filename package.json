@@ -1,7 +1,7 @@
 {
   "name": "did-io",
   "version": "0.6.8-0",
-  "description": "A WebDHT-based library for managing decentralized identifiers and associated data.",
+  "description": "A library for managing DIDs (Decentralized Identifiers) and associated data.",
   "homepage": "http://github.com/digitalbazaar/did-io",
   "author": {
     "name": "Digital Bazaar, Inc.",
@@ -63,10 +63,10 @@
     "phantomjs": "~1.9.0"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=8.6.0"
   },
   "keywords": [
-    "WebDHT",
+    "Decentralized",
     "DID",
     "Credential"
   ],
