@@ -1,6 +1,4 @@
-'use strict';
-
-var didDocument = {
+{
   "@context":"https://w3id.org/identity/v1",
   "id":"did:32e89321-a5f1-48ff-8ec8-a4112be1215c",
   "idp":"did:bef5ac6a-ca9c-4548-8179-76b44692bb86",
@@ -30,8 +28,4 @@ var didDocument = {
     "creator":"did:32e89321-a5f1-48ff-8ec8-a4112be1215c/keys/1",
     "signatureValue":"ba9dvZrSEn97zqnjEN0Mjp4nEMyJrEpfVwyThfXfCjTfmgZ7C325p7u5pTE2Zclw8X74UNOy8HqemQXSuIpdNZiU82o/ABZ6n1IKKxnAEVuMXzH1ukMH0ao32tldcwGtM9yonXJGPqtkzYtsCXdQxkM6C5Qf/MEaU83ZF0sUw6m+cQatWKsGDldu771A7+KxGApjbyMAza4c/oeDsNCuo7cbWZisglzQ0Dp0kGOXSCY3nxs28b1UkeLFf740Bs9j7AtayzYaVjwAdHLZeXK669tcuRDzc+BYLscu/6ry0H5EVOHjItMhjjQ4nho4ONr3dPA60c+3yfXZyIfs8UUI1Q=="
   }
-};
-
-module.exports = {
-  didDocument: didDocument
-};
+}
