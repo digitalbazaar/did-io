@@ -39,12 +39,14 @@
   "main": "lib/index.js",
   "dependencies": {
     "jsonld": "^1.0.1",
-    "jsonld-signatures": "^2.3.0"
+    "jsonld-signatures": "^2.3.0",
+    "r2": "^2.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
-    "mocha": "^5.0.5"
+    "mocha": "^5.0.5",
+    "nock": "^9.2.5"
   },
   "engines": {
     "node": ">=8.6.0"
@@ -55,7 +57,7 @@
     "Credential"
   ],
   "scripts": {
-    "mocha": "mocha ./tests/index.spec.js",
+    "mocha": "mocha ./tests/**/*.spec.js",
     "test": "npm run mocha",
     "preversion": "npm test",
     "postversion": "git push --follow-tags"
