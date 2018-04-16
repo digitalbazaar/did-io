@@ -1,117 +1,114 @@
+const nock = require('nock');
 const chai = require('chai');
 chai.use(require('dirty-chai'));
 chai.should();
 
 const {expect} = chai;
 
-const dids = require('../lib/index');
-const jsonld = require('jsonld')();
-const jsigs = require('jsonld-signatures');
-jsigs.use('jsonld', jsonld);
-// const eproofs = require('equihash-signature');
-// eproofs.install(jsigs);
+const tls = require('tls');
+tls.DEFAULT_ECDH_CURVE = 'auto';
 
-describe('dids api', () => {
-  it('accept JSON-LD libs via injector', () => {
-    dids.use('jsonld', jsonld);
-    dids.use('jsonld-signatures', jsigs);
+const VeresOneClient = require('../../lib/methods/veres-one/client');
 
-    const v1 = dids.methods.veres();
-
-    expect(v1.injector._libs).to.have.property('jsonld');
-  });
-});
+const TEST_DID = 'did:v1:test:nym:QdF43dq9Qu5HrDcMq91hebewWK5bvVWQ4CeyRrQ5Ydq';
+const TEST_DID_DOC = require('../dids/genesis.testnet.did.json');
 
 describe('did methods', () => {
-  let v1;
+  let client;
 
   before(() => {
-    dids.use('jsonld', jsonld);
-    dids.use('jsonld-signatures', jsigs);
-    v1 = dids.methods.veres();
+    client = new VeresOneClient();
   });
 
-  describe('veres one', () => {
-    it('should exist', () => {
-      expect(v1.ledger).to.equal('veres');
+  describe('veres one client', () => {
+    describe('get', () => {
+      it('should fetch a did doc from ledger via https', async () => {
+        nock('https://example.com')
+          .intercept(`/dids/${TEST_DID}`, 'GET')
+          .reply(200, TEST_DID_DOC);
+
+        const result = await client.get(TEST_DID, 'example.com');
+        // console.log(JSON.stringify(result, 0, 2));
+        expect(result.doc.id).to.equal(TEST_DID);
+      });
     });
 
     describe('hostnames', () => {
       it('should de-duplicate hostname lists', () => {
-        expect(v1.hostnames({hostname: ['example.com', 'example.com']}))
+        expect(client.hostnames({hostname: ['example.com', 'example.com']}))
           .to.eql(['example.com']);
       });
 
       it('should return all the mode hostnames if no overrides', () => {
-        expect(v1.hostnames({mode: 'test', location: 'all'}))
-          .to.eql(v1.config.hostnames.testnet);
+        expect(client.hostnames({mode: 'test', location: 'all'}))
+          .to.eql(client.config.hostnames.testnet);
       });
 
       it('should return default hostname by default', () => {
-        expect(v1.hostnames({mode: 'live'}))
+        expect(client.hostnames({mode: 'live'}))
           .to.eql(['veres.one']);
       });
     });
 
     describe('optionHostnames', () => {
       it('should return empty list if no hostname options provided', () => {
-        expect(v1.optionHostnames({})).to.eql([]);
+        expect(client.optionHostnames({})).to.eql([]);
       });
 
       it('should handle a single hostname string', () => {
-        expect(v1.optionHostnames({hostname: 'example.com'}))
+        expect(client.optionHostnames({hostname: 'example.com'}))
           .to.eql(['example.com']);
       });
 
       it('should handle a list of hostnames', () => {
-        expect(v1.optionHostnames({hostname: ['example.com', 'example.net']}))
+        expect(client.optionHostnames({hostname: ['example.com', 'example.net']}))
           .to.eql(['example.com', 'example.net']);
       });
     });
 
     describe('modeHostnames', () => {
       it('should return all mode hostnames, if applicable', () => {
-        expect(v1.modeHostnames({mode: 'test'}))
-          .to.eql(v1.config.hostnames.testnet);
+        expect(client.modeHostnames({mode: 'test'}))
+          .to.eql(client.config.hostnames.testnet);
       });
 
       it('should return a default hostname if no more are provided', () => {
-        expect(v1.modeHostnames({mode: 'live'}))
+        expect(client.modeHostnames({mode: 'live'}))
           .to.eql(['veres.one']);
       });
     });
 
     describe('singleHostname', () => {
       it('should throw an error if more than one hostname is passed in', () => {
-        expect(() => v1.singleHostname({hostname: ['e1.com', 'e2.com']}))
+        expect(() => client.singleHostname({hostname: ['e1.com', 'e2.com']}))
           .to.throw(/Too many hostnames provided/);
       });
 
       it('should return a default hostname if no override is passed in', () => {
-        expect(v1.singleHostname({}))
+        expect(client.singleHostname({}))
           .to.equal('genesis.testnet.veres.one');
       });
 
       it('should return a single override hostname', () => {
-        expect(v1.singleHostname({hostname: 'example.com'}))
+        expect(client.singleHostname({hostname: 'example.com'}))
           .to.equal('example.com');
       });
     });
 
     describe('defaultHostname', () => {
       it('should return default hostname based on mode', () => {
-        expect(v1.defaultHostname({mode: 'dev'}))
+        expect(client.defaultHostname({mode: 'dev'}))
           .to.equal('genesis.veres.one.localhost:42443');
 
-        expect(v1.defaultHostname({mode: 'test'}))
+        expect(client.defaultHostname({mode: 'test'}))
           .to.equal('genesis.testnet.veres.one');
 
-        expect(v1.defaultHostname({mode: 'live'}))
+        expect(client.defaultHostname({mode: 'live'}))
           .to.equal('veres.one');
       });
 
       it('should throw error for unknown or missing mode', () => {
-        expect(() => v1.defaultHostname({mode: '...'})).to.throw(Error);
+        expect(() => client.defaultHostname({mode: '...'})).to.throw(Error);
       });
     });
   });
