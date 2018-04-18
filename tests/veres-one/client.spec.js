@@ -12,6 +12,7 @@ const VeresOneClient = require('../../lib/methods/veres-one/client');
 
 const TEST_DID = 'did:v1:test:nym:QdF43dq9Qu5HrDcMq91hebewWK5bvVWQ4CeyRrQ5Ydq';
 const TEST_DID_DOC = require('../dids/genesis.testnet.did.json');
+const LEDGER_AGENTS_DOC = require('../dids/ledger-agents.json');
 
 describe('did methods', () => {
   let client;
@@ -24,12 +25,25 @@ describe('did methods', () => {
     describe('get', () => {
       it('should fetch a did doc from ledger via https', async () => {
         nock('https://example.com')
-          .intercept(`/dids/${TEST_DID}`, 'GET')
+          .get(`/dids/${TEST_DID}`)
           .reply(200, TEST_DID_DOC);
 
         const result = await client.get(TEST_DID, 'example.com');
         // console.log(JSON.stringify(result, 0, 2));
         expect(result.doc.id).to.equal(TEST_DID);
+      });
+    });
+
+    describe('getAgent', () => {
+      it('should resolve with an agent url for a ledger', async () => {
+        nock('https://genesis.testnet.veres.one')
+          .get(`/ledger-agents`)
+          .reply(200, LEDGER_AGENTS_DOC);
+
+        const agent = await client.getAgent({mode: 'test'});
+        expect(agent.id.startsWith('urn:uuid:')).to.be.true();
+        const {ledgerConfigService} = agent.service;
+        expect(ledgerConfigService.endsWith('/config')).to.be.true();
       });
     });
 
