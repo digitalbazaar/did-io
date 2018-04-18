@@ -40,6 +40,7 @@
   "dependencies": {
     "bs58": "^4.0.1",
     "chloride": "^2.2.9",
+    "equihash-signature": "digitalbazaar/equihash-signature#master",
     "jsonld": "^1.0.1",
     "jsonld-signatures": "^2.3.0",
     "node-forge": "^0.7.5",
