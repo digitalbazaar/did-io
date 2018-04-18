@@ -7,30 +7,31 @@ const {expect} = chai;
 const dids = require('../../lib/index');
 const VeresOne = require('../../lib/methods/veres-one/veres-one');
 
-// FIXME: determine how to simplify/move this code out of test
-const jsonld = dids.use('jsonld');
-const documentLoader = jsonld.documentLoader;
-jsonld.documentLoader = async url => {
-  if(url in VeresOne.contexts) {
-    return {
-      contextUrl: null,
-      documentUrl: url,
-      document: VeresOne.contexts[url]
-    };
-  }
-  return documentLoader(url);
-};
-const jsigs = require('jsonld-signatures');
-jsigs.use('jsonld', jsonld);
-const eproofs = require('equihash-signature');
-eproofs.install(jsigs);
-dids.use('jsonld-signatures', jsigs);
-
 describe('methods/veres-one', () => {
   let v1;
 
   before(() => {
     v1 = dids.methods.veres();
+    // FIXME: determine how to simplify/move this code out of test
+    const jsonld = v1.injector.use('jsonld');
+    const documentLoader = jsonld.documentLoader;
+
+    jsonld.documentLoader = async url => {
+      if(url in VeresOne.contexts) {
+        return {
+          contextUrl: null,
+          documentUrl: url,
+          document: VeresOne.contexts[url]
+        };
+      }
+      return documentLoader(url);
+    };
+    v1.injector.use('jsonld', jsonld);
+    const jsigs = require('jsonld-signatures');
+    jsigs.use('jsonld', jsonld);
+    const eproofs = require('equihash-signature');
+    eproofs.install(jsigs);
+    v1.injector.use('jsonld-signatures', jsigs);
   });
 
   describe('generate', () => {
