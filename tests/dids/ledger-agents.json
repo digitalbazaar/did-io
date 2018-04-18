@@ -1,0 +1,15 @@
+{
+  "ledgerAgent": [
+    {
+      "id": "urn:uuid:72fdcd6a-5861-4307-ba3d-cbb72509533c",
+      "service": {
+        "ledgerAgentStatusService": "https://genesis.testnet.veres.one/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c",
+        "ledgerConfigService": "https://genesis.testnet.veres.one/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c/config",
+        "ledgerOperationService": "https://genesis.testnet.veres.one/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c/operations",
+        "ledgerEventService": "https://genesis.testnet.veres.one/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c/events",
+        "ledgerBlockService": "https://genesis.testnet.veres.one/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c/blocks",
+        "ledgerQueryService": "https://genesis.testnet.veres.one/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c/query"
+      }
+    }
+  ]
+}
