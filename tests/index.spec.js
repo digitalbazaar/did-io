@@ -4,7 +4,7 @@ chai.should();
 
 const {expect} = chai;
 
-const dids = require('../../lib/index');
+const dids = require('../lib/index');
 const jsonld = require('jsonld')();
 const jsigs = require('jsonld-signatures');
 jsigs.use('jsonld', jsonld);
