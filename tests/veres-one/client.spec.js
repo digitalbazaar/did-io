@@ -5,7 +5,6 @@ chai.should();
 
 const {expect} = chai;
 
-const url = require('url');
 const tls = require('tls');
 tls.DEFAULT_ECDH_CURVE = 'auto';
 
