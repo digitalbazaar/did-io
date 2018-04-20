@@ -48,7 +48,6 @@ describe('did methods', () => {
           .reply(200, TEST_DID_RESULT);
 
         const result = await client.get(TEST_DID);
-        // console.log(JSON.stringify(result, 0, 2));
         expect(result.doc.object.id).to.equal(TEST_DID);
       });
     });
