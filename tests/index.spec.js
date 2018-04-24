@@ -8,8 +8,6 @@ const dids = require('../lib/index');
 const jsonld = require('jsonld')();
 const jsigs = require('jsonld-signatures');
 jsigs.use('jsonld', jsonld);
-// const eproofs = require('equihash-signature');
-// eproofs.install(jsigs);
 
 describe('dids api', () => {
   it('accept JSON-LD libs via injector', () => {
