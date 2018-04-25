@@ -8,7 +8,7 @@ const {expect} = chai;
 
 const KeyStore = require('../lib/key-store');
 
-describe('ld-signatures keys', () => {
+describe.skip('ld-signatures keys', () => {
   const keys = new KeyStore();
 
   describe('generateEd25519KeyPair', () => {
