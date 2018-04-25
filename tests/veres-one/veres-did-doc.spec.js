@@ -5,9 +5,13 @@ chai.use(require('sinon-chai'));
 chai.should();
 const {expect} = chai;
 
+const Injector = require('../../lib/Injector');
+const injector = new Injector();
+injector.env = {nodejs: true};
+
 const VeresOneDidDoc = require('../../lib/methods/veres-one/veres-did-doc');
 
-describe.only('VeresOneDidDoc', () => {
+describe('VeresOneDidDoc', () => {
   describe('constructor', () => {
     it('should init the doc with context', () => {
       const didDoc = new VeresOneDidDoc();
@@ -26,33 +30,41 @@ describe.only('VeresOneDidDoc', () => {
 
   describe('init', () => {
     let didDoc;
+    const keyType = 'Ed25519VerificationKey2018';
 
     beforeEach(() => {
-      didDoc = new VeresOneDidDoc();
+      didDoc = new VeresOneDidDoc({keyType, injector});
     });
 
-    it('should init the did id', () => {
+    it('should init the did id', async () => {
       const env = 'dev';
+      sinon.stub(didDoc, 'generateKeys').resolves();
       sinon.stub(didDoc, 'initId');
+      sinon.stub(didDoc, 'initSuites');
 
-      didDoc.init(env);
+      await didDoc.init({env});
 
       expect(didDoc.initId).to.have.been.calledWith(env);
     });
 
-    it('should init the authn/authz suites', () => {
+    it('should init the authn/authz suites', async () => {
       const env = 'dev';
+      sinon.stub(didDoc, 'generateKeys').resolves();
+      sinon.stub(didDoc, 'initId');
       sinon.stub(didDoc, 'initSuites');
 
-      didDoc.init(env);
+      await didDoc.init(env);
 
       expect(didDoc.initSuites).to.have.been.called();
     });
   });
 
   describe('initId', () => {
-    it('should init a uuid type did', () => {
-      const didDoc = new VeresOneDidDoc({didType: 'uuid'});
+    const keyType = 'Ed25519VerificationKey2018';
+
+    it('should init a uuid type did', async () => {
+      const didDoc = new VeresOneDidDoc({keyType, didType: 'uuid', injector});
+      await didDoc.generateKeys();
       didDoc.initId('dev');
 
       expect(didDoc.id).to.match(/^did:v1:test:uuid:.*/);
@@ -60,8 +72,9 @@ describe.only('VeresOneDidDoc', () => {
   });
 
   describe('toJSON', () => {
+    const keyType = 'Ed25519VerificationKey2018';
     it('should only serialize the document, no other properties', () => {
-      const didDoc = new VeresOneDidDoc();
+      const didDoc = new VeresOneDidDoc({keyType, injector});
 
       expect(JSON.stringify(didDoc))
         .to.equal('{"@context":"https://w3id.org/veres-one/v1"}');
