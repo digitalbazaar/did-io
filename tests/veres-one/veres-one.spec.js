@@ -48,10 +48,10 @@ describe('methods/veres-one', () => {
       expect(publicKeyPem)
         .to.have.string('-----BEGIN PUBLIC KEY-----');
 
-      // expect(
-      //   didDocument.privateDidDocument.authentication[0].publicKey[0]
-      //     .privateKey.privateKeyPem)
-      //   .to.have.string('-----BEGIN ENCRYPTED PRIVATE KEY-----');
+      const keyPair = didDocument.keys.authentication[0].export();
+      // check the corresponding private key
+      expect(keyPair.secretKeyPem)
+        .to.have.string('-----BEGIN ENCRYPTED PRIVATE KEY-----');
     }).timeout(30000);
 
     it('should generate unprotected nym-based DID Document', async () => {
@@ -70,6 +70,11 @@ describe('methods/veres-one', () => {
       //   didDocument.privateDidDocument.authentication[0].publicKey[0]
       //     .privateKey.privateKeyPem)
       //   .to.have.string('-----BEGIN RSA PRIVATE KEY-----');
+      const keyPair = didDocument.keys.authentication[0].export();
+      // check the corresponding private key
+      expect(keyPair.secretKeyPem)
+        .to.have.string('-----BEGIN RSA PRIVATE KEY-----');
+
     }).timeout(30000);
 
     it('should generate uuid-based DID Document', async () => {
@@ -84,9 +89,11 @@ describe('methods/veres-one', () => {
     });
   });
 
-  describe.skip('wrap', () => {
+  describe('wrap', () => {
     it('should wrap a nym-based DID Document in an operation', async () => {
-      const didDocument = await v1.generate({passphrase: null});
+      const didDocument = await v1.generate({
+        passphrase: null, keyType: 'RsaVerificationKey2018'
+      });
 
       const operation = v1.wrap({didDocument});
       expect(operation.type).to.equal('CreateWebLedgerRecord');
