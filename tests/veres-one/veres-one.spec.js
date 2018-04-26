@@ -35,7 +35,7 @@ describe('methods/veres-one', () => {
   });
 
   describe('generate', () => {
-    it('should generate protected nym-based DID Document', async () => {
+    it('should generate protected RSA nym-based DID Document', async () => {
       const nymOptions = {
         passphrase: 'foobar',
         keyType: 'RsaVerificationKey2018'
@@ -48,33 +48,59 @@ describe('methods/veres-one', () => {
       expect(publicKeyPem)
         .to.have.string('-----BEGIN PUBLIC KEY-----');
 
-      const keyPair = didDocument.keys.authentication[0].export();
+      const keyPair = await didDocument.keys.authentication[0].export();
       // check the corresponding private key
       expect(keyPair.secretKeyPem)
         .to.have.string('-----BEGIN ENCRYPTED PRIVATE KEY-----');
     }).timeout(30000);
 
-    it('should generate unprotected nym-based DID Document', async () => {
+    it('should generate protected EDD nym-based DID Document', async () => {
+      const nymOptions = {passphrase: 'foobar' };
+      const didDocument = await v1.generate(nymOptions);
+      expect(didDocument.id)
+        .to.match(/^did\:v1\:test\:nym\:.*/);
+      const publicKeyBase58 = didDocument.doc.authentication[0]
+        .publicKey[0].publicKeyBase58;
+      expect(publicKeyBase58).to.exist();
+
+      const exportedKey = await didDocument.keys.authentication[0].export();
+
+      // check the corresponding private key
+      expect(exportedKey.secretKeyJwe.unprotected.alg)
+        .to.equal('PBES2-A128GCMKW');
+    }).timeout(30000);
+
+    it('should generate unprotected RSA nym-based DID Document', async () => {
       const nymOptions = {
         passphrase: null,
         keyType: 'RsaVerificationKey2018'
       };
       const didDocument = await v1.generate(nymOptions);
 
-      expect(didDocument.id).to.match(
-        /^did\:v1\:test\:nym\:.*/);
-      expect(
-        didDocument.doc.authentication[0].publicKey[0].publicKeyPem)
+      expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:.*/);
+      expect(didDocument.doc.authentication[0].publicKey[0].publicKeyPem)
         .to.have.string('-----BEGIN PUBLIC KEY-----');
       // expect(
       //   didDocument.privateDidDocument.authentication[0].publicKey[0]
       //     .privateKey.privateKeyPem)
       //   .to.have.string('-----BEGIN RSA PRIVATE KEY-----');
-      const keyPair = didDocument.keys.authentication[0].export();
+      const keyPair = await didDocument.keys.authentication[0].export();
       // check the corresponding private key
       expect(keyPair.secretKeyPem)
         .to.have.string('-----BEGIN RSA PRIVATE KEY-----');
 
+    }).timeout(30000);
+
+    it('should generate unprotected EDD nym-based DID Document', async () => {
+      const nymOptions = {passphrase: null};
+      const didDocument = await v1.generate(nymOptions);
+
+      expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:.*/);
+      expect(didDocument.doc.authentication[0].publicKey[0].publicKeyBase58)
+        .to.exist();
+
+      const exportedKey = await didDocument.keys.authentication[0].export();
+      expect(exportedKey.secretKeyBase58).to.exist();
     }).timeout(30000);
 
     it('should generate uuid-based DID Document', async () => {
@@ -117,7 +143,7 @@ describe('methods/veres-one', () => {
       });
 
       const creator = didDocument.doc.grantCapability[0].publicKey[0].id;
-      const {secretKeyPem} = didDocument.keys.grantCapability[0].export();
+      const {secretKeyPem} = await didDocument.keys.grantCapability[0].export();
 
       didDocument = await v1.attachGrantProof({
         didDocument,
@@ -142,7 +168,7 @@ describe('methods/veres-one', () => {
       let operation = v1.wrap({didDocument});
       const creator = didDocument.doc.invokeCapability[0].publicKey[0].id;
 
-      const {secretKeyPem} = didDocument.keys.invokeCapability[0].export();
+      const {secretKeyPem} = await didDocument.keys.invokeCapability[0].export();
 
       operation = await v1.attachInvocationProof({
         operation,
@@ -175,7 +201,7 @@ describe('methods/veres-one', () => {
       // attach an capability invocation proof
       let operation = v1.wrap({didDocument});
       const creator = didDocument.doc.invokeCapability[0].publicKey[0].id;
-      const {secretKeyPem} = didDocument.keys.invokeCapability[0].export();
+      const {secretKeyPem} = await didDocument.keys.invokeCapability[0].export();
 
       operation = await v1.attachInvocationProof({
         operation,
