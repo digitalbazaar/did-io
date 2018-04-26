@@ -110,18 +110,19 @@ describe('methods/veres-one', () => {
     });
   });
 
-  describe.skip('attachGrantProof', () => {
+  describe('attachGrantProof', () => {
     it('should attach an ld-ocap grant proof to an operation', async () => {
-      let didDocument = await v1.generate({passphrase: null});
+      let didDocument = await v1.generate({
+        passphrase: null, keyType: 'RsaVerificationKey2018'
+      });
 
-      const creator = didDocument.grantCapability[0].publicKey[0].id;
-      const privateKeyPem = privateDidDocument.grantCapability[0].publicKey[0]
-        .privateKey.privateKeyPem;
+      const creator = didDocument.doc.grantCapability[0].publicKey[0].id;
+      const {secretKeyPem} = didDocument.keys.grantCapability[0].export();
 
       didDocument = await v1.attachGrantProof({
         didDocument,
         creator,
-        privateKeyPem
+        privateKeyPem: secretKeyPem
       });
 
       expect(didDocument.proof).to.exist();
@@ -132,22 +133,23 @@ describe('methods/veres-one', () => {
     }).timeout(30000);
   });
 
-  describe.skip('attachInvocationProof', () => {
+  describe('attachInvocationProof', () => {
     it('should attach an ld-ocap invocation proof to an operation', async () => {
-      const {publicDidDocument: didDocument, privateDidDocument} =
-        await v1.generate({passphrase: null});
+      const didDocument = await v1.generate({
+        passphrase: null, keyType: 'RsaVerificationKey2018'
+      });
 
       let operation = v1.wrap({didDocument});
-      const creator = didDocument.invokeCapability[0].publicKey[0].id;
-      const privateKeyPem = privateDidDocument.invokeCapability[0].publicKey[0]
-        .privateKey.privateKeyPem;
+      const creator = didDocument.doc.invokeCapability[0].publicKey[0].id;
+
+      const {secretKeyPem} = didDocument.keys.invokeCapability[0].export();
 
       operation = await v1.attachInvocationProof({
         operation,
         capability: didDocument.id,
         capabilityAction: operation.type,
         creator,
-        privateKeyPem
+        privateKeyPem: secretKeyPem
       });
 
       expect(operation.type).to.equal('CreateWebLedgerRecord');
@@ -163,24 +165,24 @@ describe('methods/veres-one', () => {
     }).timeout(30000);
   });
 
-  describe.skip('attachEquihashProof', () => {
+  describe('attachEquihashProof', () => {
     it('should attach an equihash proof to an operation', async () => {
       // generate a DID Document
-      const {publicDidDocument: didDocument, privateDidDocument} =
-        await v1.generate({passphrase: null});
+      const didDocument = await v1.generate({
+        passphrase: null, keyType: 'RsaVerificationKey2018'
+      });
 
       // attach an capability invocation proof
       let operation = v1.wrap({didDocument});
-      const creator = didDocument.invokeCapability[0].publicKey[0].id;
-      const privateKeyPem = privateDidDocument.invokeCapability[0].publicKey[0]
-        .privateKey.privateKeyPem;
+      const creator = didDocument.doc.invokeCapability[0].publicKey[0].id;
+      const {secretKeyPem} = didDocument.keys.invokeCapability[0].export();
 
       operation = await v1.attachInvocationProof({
         operation,
         capability: didDocument.id,
         capabilityAction: operation.type,
         creator,
-        privateKeyPem
+        privateKeyPem: secretKeyPem
       });
 
       // attach an equihash proof
