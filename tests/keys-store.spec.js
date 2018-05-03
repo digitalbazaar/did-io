@@ -15,7 +15,7 @@ describe.skip('ld-signatures keys', () => {
     it('should generate a key pair', () => {
       const keyPair = keys.generateEd25519KeyPair({});
       expect(keyPair).to.have.property('publicKey');
-      expect(keyPair).to.have.property('privateKey');
+      expect(keyPair).to.have.property('secretKey');
     });
   });
 
@@ -23,7 +23,7 @@ describe.skip('ld-signatures keys', () => {
     it('should generate a key pair', async() => {
       const keyPair = await keys.generateRsaKeyPair();
       expect(keyPair).to.have.property('publicKey');
-      expect(keyPair).to.have.property('privateKey');
+      expect(keyPair).to.have.property('secretKey');
     });
   });
 

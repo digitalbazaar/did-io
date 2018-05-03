@@ -115,6 +115,21 @@ describe('methods/veres-one', () => {
     });
   });
 
+  describe.skip('register', () => {
+    it('should send a doc to ledger for registration', async () => {
+      const didDocument = await v1.generate({
+        passphrase: null //, keyType: 'RsaVerificationKey2018'
+      });
+      const result = await v1.register({didDocument, authDoc: didDocument, accelerator: 'genesis.testnet.veres.one'});
+
+      // const result = await v1.get('did:v1:test:nym:F8fKsFHrPyAZKeC3bkPdg8HsPtqA5uepQdXrH62Ccf7E');
+
+      console.log(result);
+
+      console.log(JSON.stringify(await result.text(), 0, 2));
+    });
+  });
+
   describe('wrap', () => {
     it('should wrap a nym-based DID Document in an operation', async () => {
       const didDocument = await v1.generate({
