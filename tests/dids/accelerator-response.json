@@ -1,0 +1,17 @@
+{
+  "@context": "https://w3id.org/veres-one/v1",
+  "type": "CreateWebLedgerRecord",
+  "record": {
+    "@context": "https://w3id.org/veres-one/v1",
+    "id": "did:v1:test:uuid:ad33d59b630f44d49bdfb8266d4a243e"
+  },
+  "proof": {
+    "type": "RsaSignature2018",
+    "created": "2018-05-03T17:17:16Z",
+    "creator": "did:v1:test:nym:DNhLcmADLuSurHzvmX0ZMJTydKoEgj05hk4Gtq3b6jQ#authn-key-1",
+    "capability": "did:v1:test:uuid:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "capabilityAction": "AuthorizeRequest",
+    "jws": "eyJhbGciOiJQUzI1NiIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..YdWle2t3J0f_cWhzWDyqSvBzuJJqIdn3pNwnHAoRLxEIwiSoAa373jQo1crNVCbsqa3QjqxPL9OXcirvROpk5vTXBda1UxtK1LKVm-2qrA5V68Lk_rOXVTgCp4QxVHJnhy-hjD4MOzZYTtAJAO19DKFUM-jX2GRtXBOhERBjuJyIv4g1lCILhP2PAogYcz51zloXb4mnUklHQ5-IdVvo9xgt2llmk5eCP6-honsCtpB8TURT2dvmyYhjTf7ayRIq8Wl6HeSalP1pNBKTHpnn4mqAdKyTKkMu_s_tfoQQvC9It09v22rtAQNAFoCqAClUriCR2soODEZSfQ-CRnZ2Tw",
+    "proofPurpose": "invokeCapability"
+  }
+}

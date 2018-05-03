@@ -14,6 +14,8 @@ const TEST_DID = 'did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX';
 const TEST_DID_RESULT = require('../dids/genesis.testnet.did.json');
 const LEDGER_AGENTS_DOC = require('../dids/ledger-agents.json');
 
+const ACCELERATOR_RESPONSE = require('../dids/accelerator-response.json');
+
 describe('did methods', () => {
   let client;
 
@@ -48,6 +50,32 @@ describe('did methods', () => {
 
         const result = await client.get(TEST_DID);
         expect(result.doc.object.id).to.equal(TEST_DID);
+      });
+    });
+
+    describe('sendToAccelerator', () => {
+      it('should send an operation to an accelerator service', async () => {
+        nock('https://genesis.testnet.veres.one')
+          .post(`/accelerator/proofs`)
+          .reply(200, ACCELERATOR_RESPONSE);
+
+        const operation = {
+          "@context": "https://w3id.org/veres-one/v1",
+          "type": "CreateWebLedgerRecord",
+          "record": {
+            "@context": "https://w3id.org/veres-one/v1",
+            "id": "did:v1:test:uuid:ad33d59b630f44d49bdfb8266d4a243e"
+          }
+        };
+
+        const result = await client.sendToAccelerator({
+          operation,
+          hostname: client.defaultHostname()
+        });
+
+        const body = await result.json();
+
+        expect(body).to.have.property('proof');
       });
     });
 
