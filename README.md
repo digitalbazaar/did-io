@@ -1,4 +1,4 @@
-# DID Whisper Client _(did-whisper)_
+# DID Client _(did-io)_
 
 [![Build Status](https://travis-ci.org/digitalbazaar/did-io.png?branch=master)](https://travis-ci.org/digitalbazaar/did-io)
 
