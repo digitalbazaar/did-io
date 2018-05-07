@@ -80,6 +80,27 @@ describe('VeresOneDidDoc', () => {
     });
   });
 
+  describe('exportKeys', () => {
+    it('should return an empty object when no keys are present', async () => {
+      const didDoc = new VeresOneDidDoc();
+      expect(await didDoc.exportKeys()).to.eql({});
+    });
+
+    it('should return a hashmap of keys by key id', async () => {
+      const didDoc = new VeresOneDidDoc({injector});
+      await didDoc.init({env: 'test', passphrase: null});
+
+      const keys = await didDoc.exportKeys();
+
+      expect(keys[didDoc.id + '#authn-key-1'])
+        .to.have.property('secretKeyBase58');
+      expect(keys[didDoc.id + '#ocap-invoke-key-1'])
+        .to.have.property('secretKeyBase58');
+      expect(keys[didDoc.id + '#ocap-grant-key-1'])
+        .to.have.property('secretKeyBase58');
+    });
+  });
+
   describe('toJSON', () => {
     const keyType = 'Ed25519VerificationKey2018';
     it('should only serialize the document, no other properties', () => {
