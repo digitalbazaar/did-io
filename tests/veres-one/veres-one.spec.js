@@ -68,6 +68,10 @@ describe('methods/veres-one', () => {
       // check the corresponding private key
       expect(exportedKey.secretKeyJwe.unprotected.alg)
         .to.equal('PBES2-A128GCMKW');
+
+      // check that keys have been saved in key store
+      const savedKeys = await v1.keys.get(didDocument.id);
+      expect(Object.keys(savedKeys).length).to.equal(3);
     }).timeout(30000);
 
     it('should generate unprotected RSA nym-based DID Document', async () => {
