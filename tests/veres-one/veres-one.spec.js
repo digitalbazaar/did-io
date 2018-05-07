@@ -55,8 +55,9 @@ describe('methods/veres-one', () => {
     }).timeout(30000);
 
     it('should generate protected EDD nym-based DID Document', async () => {
-      const nymOptions = {passphrase: 'foobar' };
+      const nymOptions = {passphrase: 'foobar'};
       const didDocument = await v1.generate(nymOptions);
+
       expect(didDocument.id)
         .to.match(/^did\:v1\:test\:nym\:.*/);
       const publicKeyBase58 = didDocument.doc.authentication[0]
