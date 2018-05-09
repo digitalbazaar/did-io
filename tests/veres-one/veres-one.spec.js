@@ -43,12 +43,12 @@ describe('methods/veres-one', () => {
       const didDocument = await v1.generate(nymOptions);
       expect(didDocument.id)
         .to.match(/^did\:v1\:test\:nym\:.*/);
-      const publicKeyPem = didDocument.doc.authentication[0]
-        .publicKey[0].publicKeyPem;
+      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+      const publicKeyPem = authPublicKey.publicKeyPem;
       expect(publicKeyPem)
         .to.have.string('-----BEGIN PUBLIC KEY-----');
 
-      const keyPair = await didDocument.keys.authentication[0].export();
+      const keyPair = await didDocument.keys[authPublicKey.id].export();
       // check the corresponding private key
       expect(keyPair.secretKeyPem)
         .to.have.string('-----BEGIN ENCRYPTED PRIVATE KEY-----');
@@ -60,11 +60,11 @@ describe('methods/veres-one', () => {
 
       expect(didDocument.id)
         .to.match(/^did\:v1\:test\:nym\:.*/);
-      const publicKeyBase58 = didDocument.doc.authentication[0]
-        .publicKey[0].publicKeyBase58;
+      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+      const publicKeyBase58 = authPublicKey.publicKeyBase58;
       expect(publicKeyBase58).to.exist();
 
-      const exportedKey = await didDocument.keys.authentication[0].export();
+      const exportedKey = await didDocument.keys[authPublicKey.id].export();
 
       // check the corresponding private key
       expect(exportedKey.secretKeyJwe.unprotected.alg)
@@ -83,13 +83,10 @@ describe('methods/veres-one', () => {
       const didDocument = await v1.generate(nymOptions);
 
       expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:.*/);
-      expect(didDocument.doc.authentication[0].publicKey[0].publicKeyPem)
+      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+      expect(authPublicKey.publicKeyPem)
         .to.have.string('-----BEGIN PUBLIC KEY-----');
-      // expect(
-      //   didDocument.privateDidDocument.authentication[0].publicKey[0]
-      //     .privateKey.privateKeyPem)
-      //   .to.have.string('-----BEGIN RSA PRIVATE KEY-----');
-      const keyPair = await didDocument.keys.authentication[0].export();
+      const keyPair = await didDocument.keys[authPublicKey.id].export();
       // check the corresponding private key
       expect(keyPair.secretKeyPem)
         .to.have.string('-----BEGIN RSA PRIVATE KEY-----');
@@ -101,10 +98,10 @@ describe('methods/veres-one', () => {
       const didDocument = await v1.generate(nymOptions);
 
       expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:.*/);
-      expect(didDocument.doc.authentication[0].publicKey[0].publicKeyBase58)
-        .to.exist();
+      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+      expect(authPublicKey.publicKeyBase58).to.exist();
 
-      const exportedKey = await didDocument.keys.authentication[0].export();
+      const exportedKey = await didDocument.keys[authPublicKey.id].export();
       expect(exportedKey.secretKeyBase58).to.exist();
     }).timeout(30000);
 
@@ -162,8 +159,9 @@ describe('methods/veres-one', () => {
         passphrase: null, keyType: 'RsaVerificationKey2018'
       });
 
-      const creator = didDocument.doc.grantCapability[0].publicKey[0].id;
-      const {secretKeyPem} = await didDocument.keys.grantCapability[0].export();
+      const grantPublicKey = didDocument.doc.grantCapability[0].publicKey[0];
+      const creator = grantPublicKey.id;
+      const {secretKeyPem} = await didDocument.keys[grantPublicKey.id].export();
 
       didDocument = await v1.attachGrantProof({
         didDocument,
@@ -186,9 +184,10 @@ describe('methods/veres-one', () => {
       });
 
       let operation = v1.wrap({didDocument});
-      const creator = didDocument.doc.invokeCapability[0].publicKey[0].id;
+      const invokePublicKey = didDocument.doc.invokeCapability[0].publicKey[0];
+      const creator = invokePublicKey.id;
 
-      const {secretKeyPem} = await didDocument.keys.invokeCapability[0].export();
+      const {secretKeyPem} = await didDocument.keys[invokePublicKey.id].export();
 
       operation = await v1.attachInvocationProof({
         operation,
@@ -220,8 +219,9 @@ describe('methods/veres-one', () => {
 
       // attach an capability invocation proof
       let operation = v1.wrap({didDocument});
-      const creator = didDocument.doc.invokeCapability[0].publicKey[0].id;
-      const {secretKeyPem} = await didDocument.keys.invokeCapability[0].export();
+      const invokePublicKey = didDocument.doc.invokeCapability[0].publicKey[0];
+      const creator = invokePublicKey.id;
+      const {secretKeyPem} = await didDocument.keys[invokePublicKey.id].export();
 
       operation = await v1.attachInvocationProof({
         operation,

@@ -1,0 +1,43 @@
+{
+  "@context": "https://w3id.org/veres-one/v1",
+  "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r",
+  "authentication": [
+    {
+      "type": "Ed25519SignatureCapabilityAuthorization2018",
+      "publicKey": [
+        {
+          "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#authn-key-1",
+          "type": "Ed25519VerificationKey2018",
+          "owner": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r",
+          "publicKeyBase58": "DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r"
+        }
+      ]
+    }
+  ],
+  "grantCapability": [
+    {
+      "type": "Ed25519SignatureCapabilityAuthorization2018",
+      "publicKey": [
+        {
+          "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#ocap-grant-key-1",
+          "type": "Ed25519VerificationKey2018",
+          "owner": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r",
+          "publicKeyBase58": "HKxDmh1xFHz8m3yhJL2WXruBNFXUFEpBKG4rSCVDwfEk"
+        }
+      ]
+    }
+  ],
+  "invokeCapability": [
+    {
+      "type": "Ed25519SignatureCapabilityAuthorization2018",
+      "publicKey": [
+        {
+          "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#ocap-invoke-key-1",
+          "type": "Ed25519VerificationKey2018",
+          "owner": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r",
+          "publicKeyBase58": "4dYHzyaMGVFdzVsUF9KoyP8PgvoVQd6E6cbpxM2LL7cT"
+        }
+      ]
+    }
+  ]
+}

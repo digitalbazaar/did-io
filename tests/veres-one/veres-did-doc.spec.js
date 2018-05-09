@@ -101,6 +101,26 @@ describe('VeresOneDidDoc', () => {
     });
   });
 
+  describe('importKeys', () => {
+    const exampleDoc = require('../dids/did-v1-test-nym-eddsa-example.json');
+    const exampleKeys = require('../dids/did-v1-test-nym-eddsa-example-keys.json');
+
+    it('should import keys', async () => {
+      const didDoc = new VeresOneDidDoc({doc: exampleDoc, injector});
+
+      expect(didDoc.keys).to.eql({}); // no keys
+
+      await didDoc.importKeys(exampleKeys);
+
+      const keyId = 'did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#authn-key-1';
+
+      const authKey = didDoc.keys[keyId];
+      expect(authKey).to.exist();
+
+      expect(authKey.id).to.equal(keyId);
+    });
+  });
+
   describe('toJSON', () => {
     const keyType = 'Ed25519VerificationKey2018';
     it('should only serialize the document, no other properties', () => {
