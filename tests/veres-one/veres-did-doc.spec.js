@@ -61,8 +61,9 @@ describe('VeresOneDidDoc', () => {
     const keyType = 'Ed25519VerificationKey2018';
 
     it('should generate a uuid type did', async () => {
-      const didDoc = new VeresOneDidDoc({keyType, didType: 'uuid', injector});
-      const did = didDoc.generateId({env: 'dev'});
+      const didType = 'uuid';
+      const didDoc = new VeresOneDidDoc({keyType, didType, injector});
+      const did = didDoc.generateId({didType, env: 'dev'});
 
       expect(did).to.match(/^did:v1:test:uuid:.*/);
     });
