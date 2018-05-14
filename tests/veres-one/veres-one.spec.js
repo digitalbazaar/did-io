@@ -6,6 +6,7 @@ const {expect} = chai;
 
 const dids = require('../../lib/index');
 const VeresOne = require('../../lib/methods/veres-one/veres-one');
+const MockStore = require('../../lib/storage/mock-store');
 
 describe('methods/veres-one', () => {
   let v1;
@@ -32,6 +33,8 @@ describe('methods/veres-one', () => {
     const eproofs = require('equihash-signature');
     eproofs.install(jsigs);
     v1.injector.use('jsonld-signatures', jsigs);
+
+    v1.keys = new MockStore({});
   });
 
   describe('generate', () => {
