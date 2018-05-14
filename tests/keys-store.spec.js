@@ -6,7 +6,7 @@ chai.should();
 
 const {expect} = chai;
 
-const KeyStore = require('../lib/key-store');
+const KeyStore = require('../lib/storage/key-store');
 
 describe.skip('KeyStore', () => {
 });
