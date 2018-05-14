@@ -30,12 +30,7 @@
     "url": "https://github.com/digitalbazaar/did-io/issues",
     "email": "support@digitalbazaar.com"
   },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "https://github.com/digitalbazaar/did-io/raw/master/LICENSE"
-    }
-  ],
+  "license": "BSD-3-Clause",
   "main": "lib/index.js",
   "dependencies": {
     "bs58": "^4.0.1",
