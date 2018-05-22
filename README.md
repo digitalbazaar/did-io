@@ -36,9 +36,7 @@ See also (related specs):
 Requires Node.js 8.6+.
 
 ```
-git clone https://github.com/digitalbazaar/did-io.git
-cd did-io
-npm install
+npm install did-io
 ```
 
 ## Usage
@@ -60,13 +58,8 @@ To aid with experimentation and development of DID-related prototypes, `did-io`
 uses a simple filesystem based JSON blob storage system, to store private keys
 and DID metadata on one's local machine.
 
-```js
-dids.store  // default store
-// ->
-FSKeyStore {
-  path: '~/.dids/'
-}
-```
+Keys from DID Documents (as well as related metadata) you control will be stored
+in the `~/.dids` folder by default.
 
 ### Veres One Ledger Usage
 

@@ -3,6 +3,7 @@
   "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r",
   "authentication": [
     {
+      "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#auth-suite-1",
       "type": "Ed25519SignatureCapabilityAuthorization2018",
       "publicKey": [
         {
@@ -16,6 +17,7 @@
   ],
   "grantCapability": [
     {
+      "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#grant-suite-1",
       "type": "Ed25519SignatureCapabilityAuthorization2018",
       "publicKey": [
         {
@@ -29,6 +31,7 @@
   ],
   "invokeCapability": [
     {
+      "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#invoke-suite-1",
       "type": "Ed25519SignatureCapabilityAuthorization2018",
       "publicKey": [
         {
