@@ -30,7 +30,7 @@ describe('did methods', () => {
           .get(`/ledger-agents`)
           .reply(200, LEDGER_AGENTS_DOC);
 
-        const agent = await client.getAgent({ mode: 'test' });
+        const agent = await client.getAgent({mode: 'test'});
         expect(agent.id.startsWith('urn:uuid:')).to.be.true();
         const {ledgerConfigService} = agent.service;
         expect(ledgerConfigService.endsWith('/config')).to.be.true();
@@ -48,8 +48,9 @@ describe('did methods', () => {
                '/query?id=' + TEST_DID)
           .reply(200, TEST_DID_RESULT);
 
-        const result = await client.get(TEST_DID);
-        expect(result.doc.object.id).to.equal(TEST_DID);
+        const result = await client.get({did: TEST_DID});
+        expect(result.doc.id).to.equal(TEST_DID);
+        expect(result.meta.sequence).to.equal(0);
       });
     });
 
