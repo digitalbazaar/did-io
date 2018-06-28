@@ -37,6 +37,7 @@
     "chloride": "^2.2.9",
     "equihash-signature": "digitalbazaar/equihash-signature#master",
     "fast-json-patch": "^2.0.6",
+    "flex-docstore": "0.0.1",
     "fs-json-store": "^1.0.0",
     "glob": "^7.1.2",
     "jsonld": "^1.0.1",
