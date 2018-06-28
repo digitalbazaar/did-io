@@ -33,7 +33,7 @@ See also (related specs):
 
 ## Install
 
-Requires Node.js 8.6+.
+Requires Node.js 8.10+.
 
 ```
 npm install did-io
@@ -101,7 +101,7 @@ const didDocResult = await v1.get(did);
 
 #### Generating a Veres One DID Document
 
-Note: This also saves the generated keys in `dids.store`.
+Note: This also saves the generated keys in `dids.keyStore`.
 
 ```js
 const didDocument = await v1.generate({ passphrase: null });

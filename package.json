@@ -38,7 +38,6 @@
     "equihash-signature": "digitalbazaar/equihash-signature#master",
     "fast-json-patch": "^2.0.6",
     "flex-docstore": "0.0.1",
-    "fs-json-store": "^1.0.0",
     "glob": "^7.1.2",
     "jsonld": "^1.0.1",
     "jsonld-signatures": "^2.3.0",
@@ -51,8 +50,8 @@
     "dirty-chai": "^2.0.1",
     "mocha": "^5.0.5",
     "nock": "^9.2.5",
-    "nyc": "^11.7.1",
-    "sinon": "^4.5.0",
+    "nyc": "^12.0.2",
+    "sinon": "^6.0.1",
     "sinon-chai": "^3.0.0"
   },
   "nyc": {
@@ -62,7 +61,7 @@
     ]
   },
   "engines": {
-    "node": ">=8.6.0"
+    "node": ">=8.10.0"
   },
   "keywords": [
     "Decentralized",
