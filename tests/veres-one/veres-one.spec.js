@@ -4,9 +4,10 @@ chai.should();
 
 const {expect} = chai;
 
+const Store = require('flex-docstore');
+
 const dids = require('../../lib/index');
 const VeresOne = require('../../lib/methods/veres-one/veres-one');
-const MockStore = require('../../lib/storage/mock-store');
 
 describe('methods/veres-one', () => {
   let v1;
@@ -34,7 +35,7 @@ describe('methods/veres-one', () => {
     eproofs.install(jsigs);
     v1.injector.use('jsonld-signatures', jsigs);
 
-    v1.keys = new MockStore({});
+    v1.keyStore = Store.using('mock');
   });
 
   describe('generate', () => {
@@ -74,7 +75,7 @@ describe('methods/veres-one', () => {
         .to.equal('PBES2-A128GCMKW');
 
       // check that keys have been saved in key store
-      const savedKeys = await v1.keys.get(didDocument.id);
+      const savedKeys = await v1.keyStore.get(didDocument.id);
       expect(Object.keys(savedKeys).length).to.equal(3);
     }).timeout(30000);
 
