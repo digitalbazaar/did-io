@@ -36,6 +36,8 @@ describe('methods/veres-one', () => {
     v1.injector.use('jsonld-signatures', jsigs);
 
     v1.keyStore = Store.using('mock');
+    v1.didStore = Store.using('mock');
+    v1.metaStore = Store.using('mock');
   });
 
   describe('generate', () => {
@@ -126,11 +128,17 @@ describe('methods/veres-one', () => {
       const didDocument = await v1.generate({
         passphrase: null //, keyType: 'RsaVerificationKey2018'
       });
-      const result = await v1.register({didDocument, authDoc: didDocument, accelerator: 'genesis.testnet.veres.one'});
+      const result = await v1.register({
+        didDocument,
+        authDoc: didDocument,
+        accelerator: 'genesis.testnet.veres.one'
+      });
 
-      // const result = await v1.get('did:v1:test:nym:F8fKsFHrPyAZKeC3bkPdg8HsPtqA5uepQdXrH62Ccf7E');
-
-      console.log(result);
+      // const result = await v1.get({
+      //   did: 'did:v1:test:nym:CS69oXskYadUi2MPjSvQguhUgeaxzdA4ZSQRzniNf1t5',
+      //   mode: 'test'
+      // });
+      // console.log(result);
 
       console.log(JSON.stringify(await result.text(), 0, 2));
     });
