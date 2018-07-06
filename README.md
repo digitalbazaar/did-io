@@ -47,7 +47,12 @@ npm install did-io
 const dids = require('did-io');
 ```
 
-### Setting up a Private Key Store
+### Setting Up Storage
+
+TL;DR - to work with DIDs, you'll need storage for keys, local DID docs, and
+notes.
+
+**By default, everything is stored in `~/.dids/<method>/`**
 
 DIDs are essentially repositories of public keys on various networks / ledgers.
 Any non-trivial operations that involve them, such as registering, updating,
@@ -55,11 +60,22 @@ authenticating and so on, necessarily involve working with corresponding private
 keys.
 
 To aid with experimentation and development of DID-related prototypes, `did-io`
-uses a simple filesystem based JSON blob storage system, to store private keys
-and DID metadata on one's local machine.
+uses a simple filesystem based JSON blob storage system, to store private keys,
+local copies of DID documents, and DID metadata on one's local machine.
 
 Keys from DID Documents (as well as related metadata) you control will be stored
-in the `~/.dids` folder by default.
+in the `~/.dids/<method>/` folder by default, and will be organized by DID.
+
+For example for a DID of "did:method:abcd", the following files would be
+potentially created:
+
+- `~/.dids/method/did:method:abcd.json`
+- `~/.dids/method/did:method:abcd.keys.json`
+- `~/.dids/method/did:method:abcd.meta.json`
+
+You can override the storage mechanism for each ledger method (to store JSON
+files in a different directory, or to use an in-memory `MockStore` for unit
+testing).
 
 ### Veres One Ledger Usage
 
@@ -74,38 +90,21 @@ const v1 = dids.methods.veres();
 
 ```js
 const did = 'did:v1:test:nym:QdF43dq9Qu5HrDcMq91hebewWK5bvVWQ4CeyRrQ5Ydq';
-const didDocResult = await v1.get(did);
-// didDocResult:
-{
-  found: true,
-  retry: false,
-  type: 'LedgerDidDocument',
-  did: 'did:v1:test:nym:QdF43dq9Qu5HrDcMq91hebewWK5bvVWQ4CeyRrQ5Ydq',
-  doc: {
-    object: {
-      '@context': 'https://w3id.org/veres-one/v1',
-      id: 'did:v1:test:nym:QdF43dq9Qu5HrDcMq91hebewWK5bvVWQ4CeyRrQ5Ydq',
-      authentication: [...],
-      grantCapability: [...],
-      invokeCapability: [...]
-    },
-    meta: {
-      blockHeight: 109,
-      created: 1522177961881,
-      updated: 1522177961881,
-      sequence: 0
-    }
-  }
-}
+const didDoc = await v1.get(did);
 ```
 
-#### Generating a Veres One DID Document
+This also loads corresponding keys from the local `v1.keyStore`.
 
-Note: This also saves the generated keys in `dids.keyStore`.
+#### Generating a Veres One DID Document
 
 ```js
 const didDocument = await v1.generate({ passphrase: null });
 ```
+
+Note: This also saves the generated private/public key pairs, a local copy of
+the document, as well as any metadata, in the local (typically on-disk) store.
+See [Setting Up Storage](#setting-up-storage) for more detail.
+
 
 #### Registering a (newly generated) DID Document
 
@@ -122,6 +121,8 @@ const accelerator = 'genesis.testnet.veres.one';
 const authDoc = didDocumentFromAccelerator; // obtained previously
 
 const result = await v1.register({ didDocument, accelerator, authDoc });
+
+console.log(JSON.stringify(await result.text(), 0, 2));
 ```
 
 ## Contribute
