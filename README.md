@@ -35,10 +35,18 @@ See also (related specs):
 
 Requires Node.js 8.10+.
 
+To install locally (for development):
+
 ```
 git clone https://github.com/digitalbazaar/did-io.git
 cd did-io
 npm install
+```
+
+To install as a dependency in another project, add this to your `package.json`:
+
+```
+"did-io": "digitalbazaar/did-io#v0.7.0"
 ```
 
 ## Usage
