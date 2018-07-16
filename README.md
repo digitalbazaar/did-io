@@ -36,7 +36,9 @@ See also (related specs):
 Requires Node.js 8.10+.
 
 ```
-npm install did-io
+git clone https://github.com/digitalbazaar/did-io.git
+cd did-io
+npm install
 ```
 
 ## Usage
@@ -89,29 +91,50 @@ const v1 = dids.methods.veres();
 #### Retrieving a Veres One DID Document
 
 ```js
-const did = 'did:v1:test:nym:QdF43dq9Qu5HrDcMq91hebewWK5bvVWQ4CeyRrQ5Ydq';
-const didDoc = await v1.get(did);
+const did = 'did:v1:test:nym:ApvL3PKAzQvFnRVqyZKhSYD2i8XcsLG1Dy4FrSdEKAdR';
+
+v1.get({ did, mode: 'test' })
+  .then(didDoc => { console.log(JSON.stringify(didDoc, 0, 2)); })
+  .catch(console.error);
 ```
 
-This also loads corresponding keys from the local `v1.keyStore`.
+If available (meaning, if you were the one that registered this DID Doc on your
+machine), this operation also loads corresponding private keys from the local
+`v1.keyStore`.
 
-#### Generating a Veres One DID Document
+#### Generating and Registering a Veres One DID Document
 
 ```js
-const didDocument = await v1.generate({ passphrase: null });
+// Generate a new DID Document, store the private keys locally
+v1.generate({})
+  .then(didDocument => {
+    // A new didDocument is generated. Log it to console
+    console.log('Generated:', JSON.stringify(didDocument, 0, 2));
+    return didDocument;
+  })
+
+  // Now register the newly generated DID Document
+  // Use Equihash Proof of Work by default (see below)
+  .then(didDocument => v1.register({ didDocument }))
+
+  // Log the results
+  .then(registrationResult => {
+    // Log the result of registering the didDoc to the VeresOne Test ledger
+    console.log('Registered!', JSON.stringify(registrationResult, 0, 2));
+  })
+  .catch(console.error);
 ```
 
 Note: This also saves the generated private/public key pairs, a local copy of
 the document, as well as any metadata, in the local (typically on-disk) store.
 See [Setting Up Storage](#setting-up-storage) for more detail.
 
-
 #### Registering a (newly generated) DID Document
 
 To register a DID Document using an Equihash proof of work:
 
 ```js
-const result = await v1.register({ didDocument });
+v1.register({ didDocument }); // async/Promise based operation
 ```
 
 To register using an Accelerator:
@@ -120,9 +143,9 @@ To register using an Accelerator:
 const accelerator = 'genesis.testnet.veres.one';
 const authDoc = didDocumentFromAccelerator; // obtained previously
 
-const result = await v1.register({ didDocument, accelerator, authDoc });
-
-console.log(JSON.stringify(await result.text(), 0, 2));
+v1.register({ didDocument, accelerator, authDoc })
+  .then(result => console.log(JSON.stringify(await result.text(), 0, 2)))
+  .catch(console.error);
 ```
 
 ## Contribute
