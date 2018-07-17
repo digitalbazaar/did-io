@@ -33,7 +33,7 @@ See also (related specs):
 
 ## Install
 
-Requires Node.js 8.10+.
+Requires Node.js 8.
 
 To install locally (for development):
 
@@ -59,7 +59,7 @@ const dids = require('did-io');
 
 ### Setting Up Storage
 
-TL;DR - to work with DIDs, you'll need storage for keys, local DID docs, and
+To work with DIDs, you'll need storage for keys, local DID docs, and
 notes.
 
 **By default, everything is stored in `~/.dids/<method>/<mode>/`, where `mode`
