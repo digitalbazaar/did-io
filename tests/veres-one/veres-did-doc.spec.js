@@ -5,7 +5,6 @@ chai.use(require('sinon-chai'));
 chai.should();
 const {expect} = chai;
 
-const Injector = require('../../lib/Injector');
 const {LDKeyPair} = require('../../lib/ld-key-pair');
 const Constants = require('../../lib/methods/veres-one/constants');
 

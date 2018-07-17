@@ -118,8 +118,7 @@ describe('methods/veres-one', () => {
       };
       const didDocument = await v1.generate(uuidOptions);
 
-      expect(didDocument.id).to.match(
-        /^did\:v1\:test\:uuid\:.*/);
+      expect(didDocument.id).to.match(/^did\:v1\:test\:uuid\:.*/);
     });
   });
 
