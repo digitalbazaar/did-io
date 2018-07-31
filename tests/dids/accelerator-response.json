@@ -12,6 +12,6 @@
     "capability": "did:v1:test:uuid:aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
     "capabilityAction": "AuthorizeRequest",
     "jws": "eyJhbGciOiJQUzI1NiIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19..YdWle2t3J0f_cWhzWDyqSvBzuJJqIdn3pNwnHAoRLxEIwiSoAa373jQo1crNVCbsqa3QjqxPL9OXcirvROpk5vTXBda1UxtK1LKVm-2qrA5V68Lk_rOXVTgCp4QxVHJnhy-hjD4MOzZYTtAJAO19DKFUM-jX2GRtXBOhERBjuJyIv4g1lCILhP2PAogYcz51zloXb4mnUklHQ5-IdVvo9xgt2llmk5eCP6-honsCtpB8TURT2dvmyYhjTf7ayRIq8Wl6HeSalP1pNBKTHpnn4mqAdKyTKkMu_s_tfoQQvC9It09v22rtAQNAFoCqAClUriCR2soODEZSfQ-CRnZ2Tw",
-    "proofPurpose": "invokeCapability"
+    "proofPurpose": "capabilityInvocation"
   }
 }
