@@ -28,7 +28,7 @@
         ]
       }
     ],
-    "invokeCapability": [
+    "capabilityInvocation": [
       {
         "type": "Ed25519SignatureCapabilityAuthorization2018",
         "publicKey": [

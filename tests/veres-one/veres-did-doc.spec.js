@@ -53,7 +53,7 @@ describe('VeresOneDidDoc', () => {
 
       expect(didDoc.doc.authentication.length).to.equal(1);
       expect(didDoc.doc.grantCapability.length).to.equal(1);
-      expect(didDoc.doc.invokeCapability.length).to.equal(1);
+      expect(didDoc.doc.capabilityInvocation.length).to.equal(1);
     });
   });
 
