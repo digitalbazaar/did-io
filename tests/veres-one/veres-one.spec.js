@@ -195,7 +195,7 @@ describe('methods/veres-one', () => {
       });
 
       let operation = v1.wrap({didDocument});
-      const invokePublicKey = didDocument.doc.invokeCapability[0].publicKey[0];
+      const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
 
       const {secretKeyPem} = await didDocument.keys[invokePublicKey.id].export();
@@ -215,7 +215,7 @@ describe('methods/veres-one', () => {
       expect(operation.proof).to.exist();
       expect(operation.proof.type).to.equal('RsaSignature2018');
       expect(operation.proof.capabilityAction).to.equal(operation.type);
-      expect(operation.proof.proofPurpose).to.equal('invokeCapability');
+      expect(operation.proof.proofPurpose).to.equal('capabilityInvocation');
       expect(operation.proof.creator).to.equal(creator);
       expect(operation.proof.jws).to.exist();
     }).timeout(30000);
@@ -230,7 +230,7 @@ describe('methods/veres-one', () => {
 
       // attach an capability invocation proof
       let operation = v1.wrap({didDocument});
-      const invokePublicKey = didDocument.doc.invokeCapability[0].publicKey[0];
+      const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
       const {secretKeyPem} = await didDocument.keys[invokePublicKey.id].export();
 
@@ -255,7 +255,7 @@ describe('methods/veres-one', () => {
       expect(operation.proof[0]).to.exist();
       expect(operation.proof[0].type).to.equal('RsaSignature2018');
       expect(operation.proof[0].capabilityAction).to.equal(operation.type);
-      expect(operation.proof[0].proofPurpose).to.equal('invokeCapability');
+      expect(operation.proof[0].proofPurpose).to.equal('capabilityInvocation');
       expect(operation.proof[0].creator).to.equal(creator);
       expect(operation.proof[0].jws).to.exist();
       // equihash proof
