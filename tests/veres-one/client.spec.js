@@ -66,21 +66,11 @@ describe('did methods', () => {
         const testKeyId = TEST_DID + '#authn-key-1';
 
         const expectedDoc = {
-          "@id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX#authn-key-1",
-          "@type": [
-            "https://w3id.org/security#Ed25519VerificationKey2018"
-          ],
-          "https://w3id.org/security#owner": [
-            {
-              "@id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX"
-            }
-          ],
-          "https://w3id.org/security#publicKeyBase58": [
-            {
-              "@value": "2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX"
-            }
-          ],
-          "@context": "https://w3id.org/veres-one/v1"
+          "@context": "https://w3id.org/veres-one/v1",
+          "id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX#authn-key-1",
+          "type": "Ed25519VerificationKey2018",
+          "owner": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX",
+          "publicKeyBase58": "2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX"
         };
 
         const result = await client.get({did: testKeyId});
