@@ -52,6 +52,41 @@ describe('did methods', () => {
         expect(result.doc.id).to.equal(TEST_DID);
         expect(result.meta.sequence).to.equal(0);
       });
+
+      it('should fetch just a key object from a did: with hash', async () => {
+        nock('https://genesis.testnet.veres.one')
+          .get(`/ledger-agents`)
+          .reply(200, LEDGER_AGENTS_DOC);
+
+        nock('https://genesis.testnet.veres.one')
+          .post('/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c' +
+            '/query?id=' + TEST_DID)
+          .reply(200, TEST_DID_RESULT);
+
+        const testKeyId = TEST_DID + '#authn-key-1';
+
+        const expectedDoc = {
+          "@id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX#authn-key-1",
+          "@type": [
+            "https://w3id.org/security#Ed25519VerificationKey2018"
+          ],
+          "https://w3id.org/security#owner": [
+            {
+              "@id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX"
+            }
+          ],
+          "https://w3id.org/security#publicKeyBase58": [
+            {
+              "@value": "2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX"
+            }
+          ],
+          "@context": "https://w3id.org/veres-one/v1"
+        };
+
+        const result = await client.get({did: testKeyId});
+
+        expect(result.doc).to.eql(expectedDoc);
+      });
     });
 
     describe('sendToAccelerator', () => {
