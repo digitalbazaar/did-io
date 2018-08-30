@@ -139,7 +139,7 @@ describe('methods/veres-one', () => {
       // });
       // console.log(result);
 
-      console.log(JSON.stringify(await result.text(), 0, 2));
+      console.log(JSON.stringify(await result.text(), null, 2));
     });
   });
 
