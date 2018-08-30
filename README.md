@@ -104,7 +104,7 @@ const v1 = dids.methods.veres();
 const did = 'did:v1:test:nym:ApvL3PKAzQvFnRVqyZKhSYD2i8XcsLG1Dy4FrSdEKAdR';
 
 v1.get({ did, mode: 'test' })
-  .then(didDoc => { console.log(JSON.stringify(didDoc, 0, 2)); })
+  .then(didDoc => { console.log(JSON.stringify(didDoc, null, 2)); })
   .catch(console.error);
 ```
 
@@ -119,7 +119,7 @@ machine), this operation also loads corresponding private keys from the local
 v1.generate({})
   .then(didDocument => {
     // A new didDocument is generated. Log it to console
-    console.log('Generated:', JSON.stringify(didDocument, 0, 2));
+    console.log('Generated:', JSON.stringify(didDocument, null, 2));
     return didDocument;
   })
 
@@ -130,7 +130,7 @@ v1.generate({})
   // Log the results
   .then(registrationResult => {
     // Log the result of registering the didDoc to the VeresOne Test ledger
-    console.log('Registered!', JSON.stringify(registrationResult, 0, 2));
+    console.log('Registered!', JSON.stringify(registrationResult, null, 2));
   })
   .catch(console.error);
 ```
@@ -154,7 +154,7 @@ const accelerator = 'genesis.testnet.veres.one';
 const authDoc = didDocumentFromAccelerator; // obtained previously
 
 v1.register({ didDocument, accelerator, authDoc })
-  .then(result => console.log(JSON.stringify(await result.text(), 0, 2)))
+  .then(result => console.log(JSON.stringify(await result.text(), null, 2)))
   .catch(console.error);
 ```
 
