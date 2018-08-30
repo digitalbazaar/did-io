@@ -33,7 +33,7 @@ See also (related specs):
 
 ## Install
 
-Requires Node.js 8.
+Requires Node.js 8.3+
 
 To install locally (for development):
 
