@@ -6,7 +6,7 @@ chai.should();
 const {expect} = chai;
 
 const {LDKeyPair} = require('../../lib/ld-key-pair');
-const Constants = require('../../lib/methods/veres-one/constants');
+const constants = require('../../lib/methods/veres-one/constants');
 
 const injector = require('../test-injector');
 
@@ -131,7 +131,7 @@ describe('VeresOneDidDoc', () => {
     it('should add/remove a public key node from the DID Doc', async () => {
       await didDoc.importKeys(exampleKeys);
 
-      const authSuite = didDoc.doc[Constants.SUITES.authentication][0];
+      const authSuite = didDoc.doc[constants.SUITES.authentication][0];
       const authKey = authSuite.publicKey[0];
 
       didDoc.removeKey(authKey);
