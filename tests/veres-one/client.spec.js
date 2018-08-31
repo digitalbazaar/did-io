@@ -9,6 +9,7 @@ const tls = require('tls');
 tls.DEFAULT_ECDH_CURVE = 'auto';
 
 const VeresOneClient = require('../../lib/methods/veres-one/client');
+const injector = require('../test-injector');
 
 const TEST_DID = 'did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX';
 const TEST_DID_RESULT = require('../dids/genesis.testnet.did.json');
@@ -20,7 +21,7 @@ describe('did methods', () => {
   let client;
 
   before(() => {
-    client = new VeresOneClient();
+    client = new VeresOneClient({injector});
   });
 
   describe('veres one client', () => {
