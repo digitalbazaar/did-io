@@ -52,7 +52,7 @@ describe('VeresOneDidDoc', () => {
       await didDoc.init(env);
 
       expect(didDoc.doc.authentication.length).to.equal(1);
-      expect(didDoc.doc.grantCapability.length).to.equal(1);
+      expect(didDoc.doc.capabilityDelegation.length).to.equal(1);
       expect(didDoc.doc.capabilityInvocation.length).to.equal(1);
     });
   });
@@ -97,7 +97,7 @@ describe('VeresOneDidDoc', () => {
         .to.have.property('secretKeyBase58');
       expect(keys[didDoc.id + '#ocap-invoke-key-1'])
         .to.have.property('secretKeyBase58');
-      expect(keys[didDoc.id + '#ocap-grant-key-1'])
+      expect(keys[didDoc.id + '#ocap-delegate-key-1'])
         .to.have.property('secretKeyBase58');
     });
   });
