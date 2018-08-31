@@ -142,7 +142,6 @@ describe('did methods', () => {
 
     describe('modeHostnames', () => {
       it('should return all mode hostnames, if applicable', () => {
-
         expect(client.modeHostnames('test'))
           .to.eql(client.config.hostnames.testnet);
       });

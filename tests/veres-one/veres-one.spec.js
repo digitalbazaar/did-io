@@ -170,11 +170,11 @@ describe('methods/veres-one', () => {
         passphrase: null, keyType: 'RsaVerificationKey2018'
       });
 
-      const grantPublicKey = didDocument.doc.grantCapability[0].publicKey[0];
+      const grantPublicKey = didDocument.doc.capabilityDelegation[0].publicKey[0];
       const creator = grantPublicKey.id;
       const {secretKeyPem} = await didDocument.keys[grantPublicKey.id].export();
 
-      didDocument = await v1.attachGrantProof({
+      didDocument = await v1.attachDelegationProof({
         didDocument,
         creator,
         privateKeyPem: secretKeyPem
@@ -182,7 +182,7 @@ describe('methods/veres-one', () => {
 
       expect(didDocument.proof).to.exist();
       expect(didDocument.proof.type).to.equal('RsaSignature2018');
-      expect(didDocument.proof.proofPurpose).to.equal('grantCapability');
+      expect(didDocument.proof.proofPurpose).to.equal('capabilityDelegation');
       expect(didDocument.proof.creator).to.equal(creator);
       expect(didDocument.proof.jws).to.exist();
     }).timeout(30000);
