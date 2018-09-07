@@ -46,7 +46,7 @@ npm install
 To install as a dependency in another project, add this to your `package.json`:
 
 ```
-"did-io": "digitalbazaar/did-io#v0.7.0"
+"did-io": "^0.7.0"
 ```
 
 ## Usage
