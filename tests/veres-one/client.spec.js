@@ -20,8 +20,8 @@ const ACCELERATOR_RESPONSE = require('../dids/accelerator-response.json');
 describe('did methods', () => {
   let client;
 
-  before(() => {
-    client = new VeresOneClient({injector});
+  beforeEach(() => {
+    client = new VeresOneClient({injector, mode: 'test'});
   });
 
   describe('veres one client', () => {
@@ -113,12 +113,13 @@ describe('did methods', () => {
       });
 
       it('should return all the mode hostnames if no overrides', () => {
-        expect(client.hostnames({mode: 'test', location: 'all'}))
+        expect(client.hostnames({location: 'all'}))
           .to.eql(client.config.hostnames.testnet);
       });
 
       it('should return default hostname by default', () => {
-        expect(client.hostnames({mode: 'live'}))
+        client.mode = 'live';
+        expect(client.hostnames({}))
           .to.eql(['veres.one']);
       });
     });
@@ -141,12 +142,14 @@ describe('did methods', () => {
 
     describe('modeHostnames', () => {
       it('should return all mode hostnames, if applicable', () => {
-        expect(client.modeHostnames({mode: 'test'}))
+
+        expect(client.modeHostnames('test'))
           .to.eql(client.config.hostnames.testnet);
       });
 
       it('should return a default hostname if no more are provided', () => {
-        expect(client.modeHostnames({mode: 'live'}))
+        client.mode = 'live';
+        expect(client.modeHostnames('live'))
           .to.eql(['veres.one']);
       });
     });
@@ -170,18 +173,22 @@ describe('did methods', () => {
 
     describe('defaultHostname', () => {
       it('should return default hostname based on mode', () => {
-        expect(client.defaultHostname({mode: 'dev'}))
+        client.mode = 'dev';
+        expect(client.defaultHostname())
           .to.equal('genesis.veres.one.localhost:42443');
 
-        expect(client.defaultHostname({mode: 'test'}))
+        client.mode = 'test';
+        expect(client.defaultHostname({}))
           .to.equal('genesis.testnet.veres.one');
 
-        expect(client.defaultHostname({mode: 'live'}))
+        client.mode = 'live';
+        expect(client.defaultHostname({}))
           .to.equal('veres.one');
       });
 
       it('should throw error for unknown or missing mode', () => {
-        expect(() => client.defaultHostname({mode: '...'})).to.throw(Error);
+        client.mode = null;
+        expect(() => client.defaultHostname()).to.throw(Error);
       });
     });
   });
