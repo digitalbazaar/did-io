@@ -51,12 +51,6 @@ To install as a dependency in another project, add this to your `package.json`:
 
 ## Usage
 
-### Requiring did-io (Node.js / npm)
-
-```js
-const dids = require('did-io');
-```
-
 ### Setting Up Storage
 
 To work with DIDs, you'll need storage for keys, local DID docs, and
@@ -95,7 +89,10 @@ See the [Veres One Method spec](https://w3c-ccg.github.io/didm-veres-one/) for
 context.
 
 ```js
-const v1 = dids.methods.veres();
+const dids = require('did-io');
+
+const v1 = dids.methods.veres({ mode: 'test' });
+// or use mode: 'dev' when testing against a local Veres One node
 ```
 
 #### Retrieving a Veres One DID Document
@@ -103,7 +100,7 @@ const v1 = dids.methods.veres();
 ```js
 const did = 'did:v1:test:nym:ApvL3PKAzQvFnRVqyZKhSYD2i8XcsLG1Dy4FrSdEKAdR';
 
-v1.get({ did, mode: 'test' })
+v1.get({ did })
   .then(didDoc => { console.log(JSON.stringify(didDoc, null, 2)); })
   .catch(console.error);
 ```
