@@ -94,11 +94,11 @@ describe('VeresOneDidDoc', () => {
       const keys = await didDoc.exportKeys();
 
       expect(keys[didDoc.id + '#authn-key-1'])
-        .to.have.property('secretKeyBase58');
+        .to.have.property('privateKeyBase58');
       expect(keys[didDoc.id + '#ocap-invoke-key-1'])
-        .to.have.property('secretKeyBase58');
+        .to.have.property('privateKeyBase58');
       expect(keys[didDoc.id + '#ocap-delegate-key-1'])
-        .to.have.property('secretKeyBase58');
+        .to.have.property('privateKeyBase58');
     });
   });
 
