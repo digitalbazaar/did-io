@@ -1,5 +1,17 @@
 # did-io ChangeLog
 
+## 0.8.0
+(Migrating from v0.7.0 will require renaming the relevant properties in existing
+DID Docs.)
+
+## Changed
+
+- **BREAKING**: Updated terminology to match latest VeresOne DID method specs:
+  `grantCapability -> capabilityDelegation`,
+  `invokeCapability -> capabilityInvocation`
+- **BREAKING**: Renamed `secretKey` to `privateKey`, to match Digital
+  Bazaar conventions.
+
 ## 0.7.0 - 2018-09-10
 
 ## Changed (BREAKING changes)
