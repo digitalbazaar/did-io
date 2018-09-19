@@ -143,27 +143,6 @@ describe('methods/veres-one', () => {
     });
   });
 
-  describe('wrap', () => {
-    it('should wrap a nym-based DID Document in an operation', async () => {
-      const didDocument = await v1.generate({
-        passphrase: null, keyType: 'RsaVerificationKey2018'
-      });
-
-      const operation = v1.wrap({didDocument});
-      expect(operation.type).to.equal('CreateWebLedgerRecord');
-      expect(operation.record.id).to.match(/^did\:v1\:test\:nym\:.*/);
-      expect(operation.record.authentication[0].publicKey[0].publicKeyPem)
-        .to.have.string('-----BEGIN PUBLIC KEY-----');
-    }).timeout(30000);
-
-    it('should wrap a uuid-based DID Document in an operation', async () => {
-      const didDocument = await v1.generate({didType: 'uuid'});
-      const operation = v1.wrap({didDocument});
-      expect(operation.type).to.equal('CreateWebLedgerRecord');
-      expect(operation.record.id).to.match(/^did\:v1\:test\:uuid\:.*/);
-    });
-  });
-
   describe('attachGrantProof', () => {
     it('should attach an ld-ocap grant proof to an operation', async () => {
       let didDocument = await v1.generate({
@@ -194,7 +173,7 @@ describe('methods/veres-one', () => {
         passphrase: null, keyType: 'RsaVerificationKey2018'
       });
 
-      let operation = v1.wrap({didDocument});
+      let operation = v1.client.wrap({didDocument});
       const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
 
@@ -229,7 +208,7 @@ describe('methods/veres-one', () => {
       });
 
       // attach an capability invocation proof
-      let operation = v1.wrap({didDocument});
+      let operation = v1.client.wrap({didDocument});
       const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
       const {secretKeyPem} = await didDocument.keys[invokePublicKey.id].export();
