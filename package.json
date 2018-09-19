@@ -42,15 +42,15 @@
     "jsonld": "^1.0.1",
     "jsonld-signatures": "^2.3.0",
     "node-forge": "^0.7.5",
-    "r2": "^2.0.1",
-    "ursa": "github:JoshKaufman/ursa#7083023efe0dd3802573c4cdbe8b4916708a5a51"
+    "ursa": "github:JoshKaufman/ursa#7083023efe0dd3802573c4cdbe8b4916708a5a51",
+    "web-ledger-client": "digitalbazaar/web-ledger-client#development"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
     "mocha": "^5.0.5",
-    "nock": "^9.4.1",
-    "nyc": "^12.0.2",
+    "nock": "^10.0.0",
+    "nyc": "^13.0.1",
     "sinon": "^6.0.1",
     "sinon-chai": "^3.0.0"
   },
