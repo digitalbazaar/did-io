@@ -56,7 +56,7 @@ describe('methods/veres-one', () => {
 
       const keyPair = await didDocument.keys[authPublicKey.id].export();
       // check the corresponding private key
-      expect(keyPair.secretKeyPem)
+      expect(keyPair.privateKeyPem)
         .to.have.string('-----BEGIN ENCRYPTED PRIVATE KEY-----');
     }).timeout(30000);
 
@@ -73,7 +73,7 @@ describe('methods/veres-one', () => {
       const exportedKey = await didDocument.keys[authPublicKey.id].export();
 
       // check the corresponding private key
-      expect(exportedKey.secretKeyJwe.unprotected.alg)
+      expect(exportedKey.privateKeyJwe.unprotected.alg)
         .to.equal('PBES2-A128GCMKW');
 
       // check that keys have been saved in key store
@@ -94,7 +94,7 @@ describe('methods/veres-one', () => {
         .to.have.string('-----BEGIN PUBLIC KEY-----');
       const keyPair = await didDocument.keys[authPublicKey.id].export();
       // check the corresponding private key
-      expect(keyPair.secretKeyPem)
+      expect(keyPair.privateKeyPem)
         .to.have.string('-----BEGIN RSA PRIVATE KEY-----');
 
     }).timeout(30000);
@@ -108,7 +108,7 @@ describe('methods/veres-one', () => {
       expect(authPublicKey.publicKeyBase58).to.exist();
 
       const exportedKey = await didDocument.keys[authPublicKey.id].export();
-      expect(exportedKey.secretKeyBase58).to.exist();
+      expect(exportedKey.privateKeyBase58).to.exist();
     }).timeout(30000);
 
     it('should generate uuid-based DID Document', async () => {
@@ -151,12 +151,12 @@ describe('methods/veres-one', () => {
 
       const grantPublicKey = didDocument.doc.capabilityDelegation[0].publicKey[0];
       const creator = grantPublicKey.id;
-      const {secretKeyPem} = await didDocument.keys[grantPublicKey.id].export();
+      const {privateKeyPem} = await didDocument.keys[grantPublicKey.id].export();
 
       didDocument = await v1.attachDelegationProof({
         didDocument,
         creator,
-        privateKeyPem: secretKeyPem
+        privateKeyPem
       });
 
       expect(didDocument.proof).to.exist();
@@ -177,14 +177,14 @@ describe('methods/veres-one', () => {
       const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
 
-      const {secretKeyPem} = await didDocument.keys[invokePublicKey.id].export();
+      const {privateKeyPem} = await didDocument.keys[invokePublicKey.id].export();
 
       operation = await v1.attachInvocationProof({
         operation,
         capability: didDocument.id,
         capabilityAction: operation.type,
         creator,
-        privateKeyPem: secretKeyPem
+        privateKeyPem
       });
 
       expect(operation.type).to.equal('CreateWebLedgerRecord');
@@ -211,14 +211,14 @@ describe('methods/veres-one', () => {
       let operation = v1.client.wrap({didDocument});
       const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
-      const {secretKeyPem} = await didDocument.keys[invokePublicKey.id].export();
+      const {privateKeyPem} = await didDocument.keys[invokePublicKey.id].export();
 
       operation = await v1.attachInvocationProof({
         operation,
         capability: didDocument.id,
         capabilityAction: operation.type,
         creator,
-        privateKeyPem: secretKeyPem
+        privateKeyPem
       });
 
       // attach an equihash proof

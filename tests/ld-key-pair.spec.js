@@ -23,7 +23,7 @@ describe('LDKeyPair', () => {
         expect(exported.id).to.equal('#test-id');
         expect(exported.keyType).to.equal(keyType);
         expect(exported).to.have.property('publicKeyBase58');
-        expect(exported).to.have.property('secretKeyBase58');
+        expect(exported).to.have.property('privateKeyBase58');
       });
     });
 
@@ -51,7 +51,7 @@ describe('LDKeyPair', () => {
         expect(exported.id).to.equal('#test-id');
         expect(exported.keyType).to.equal(keyType);
         expect(exported).to.have.property('publicKeyPem');
-        expect(exported).to.have.property('secretKeyPem');
+        expect(exported).to.have.property('privateKeyPem');
       });
     });
 
