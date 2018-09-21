@@ -85,6 +85,8 @@ testing).
 
 ### Veres One Ledger Usage
 
+#### Creating a `did-io` Client Instance
+
 See the [Veres One Method spec](https://w3c-ccg.github.io/didm-veres-one/) for
 context.
 
@@ -93,6 +95,16 @@ const dids = require('did-io');
 
 const v1 = dids.methods.veres({ mode: 'test' });
 // or use mode: 'dev' when testing against a local Veres One node
+```
+
+If you do not specify a particular ledger hostname, one will be determined
+based on the `mode` parameter (either 'test', 'dev' or 'live').
+
+If you want to connect to a specific hostname (for testing a particular node,
+for example), you can specify the override directly:
+
+```js
+const v1 = dids.methods.veres({ mode: 'dev', hostname: 'localhost:12345' });
 ```
 
 #### Retrieving a Veres One DID Document
