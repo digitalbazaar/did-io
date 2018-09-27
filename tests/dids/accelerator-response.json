@@ -1,5 +1,5 @@
 {
-  "@context": "https://w3id.org/veres-one/v1",
+  "@context": "https://w3id.org/webledger/v1",
   "type": "CreateWebLedgerRecord",
   "record": {
     "@context": "https://w3id.org/veres-one/v1",

@@ -48,7 +48,7 @@ describe('methods/veres-one', () => {
       };
       const didDocument = await v1.generate(nymOptions);
       expect(didDocument.id)
-        .to.match(/^did\:v1\:test\:nym\:.*/);
+        .to.match(/^did\:v1\:test\:nym\:z.*/);
       const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
       const publicKeyPem = authPublicKey.publicKeyPem;
       expect(publicKeyPem)
@@ -65,7 +65,7 @@ describe('methods/veres-one', () => {
       const didDocument = await v1.generate(nymOptions);
 
       expect(didDocument.id)
-        .to.match(/^did\:v1\:test\:nym\:.*/);
+        .to.match(/^did\:v1\:test\:nym\:z.*/);
       const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
       const publicKeyBase58 = authPublicKey.publicKeyBase58;
       expect(publicKeyBase58).to.exist();
@@ -143,15 +143,15 @@ describe('methods/veres-one', () => {
     });
   });
 
-  describe('attachGrantProof', () => {
-    it('should attach an ld-ocap grant proof to an operation', async () => {
+  describe('attachDelegationProof', () => {
+    it('should attach an ocap-ld delegation proof to an operation', async () => {
       let didDocument = await v1.generate({
         passphrase: null, keyType: 'RsaVerificationKey2018'
       });
 
-      const grantPublicKey = didDocument.doc.capabilityDelegation[0].publicKey[0];
-      const creator = grantPublicKey.id;
-      const {privateKeyPem} = await didDocument.keys[grantPublicKey.id].export();
+      const delegationPublicKey = didDocument.doc.capabilityDelegation[0].publicKey[0];
+      const creator = delegationPublicKey.id;
+      const {privateKeyPem} = await didDocument.keys[delegationPublicKey.id].export();
 
       didDocument = await v1.attachDelegationProof({
         didDocument,
@@ -193,7 +193,7 @@ describe('methods/veres-one', () => {
         .to.have.string('-----BEGIN PUBLIC KEY-----');
       expect(operation.proof).to.exist();
       expect(operation.proof.type).to.equal('RsaSignature2018');
-      expect(operation.proof.capabilityAction).to.equal(operation.type);
+      expect(operation.proof.capabilityAction.id).to.equal('wl:CreateWebLedgerRecord');
       expect(operation.proof.proofPurpose).to.equal('capabilityInvocation');
       expect(operation.proof.creator).to.equal(creator);
       expect(operation.proof.jws).to.exist();
@@ -233,7 +233,7 @@ describe('methods/veres-one', () => {
       expect(operation.proof).to.exist();
       expect(operation.proof[0]).to.exist();
       expect(operation.proof[0].type).to.equal('RsaSignature2018');
-      expect(operation.proof[0].capabilityAction).to.equal(operation.type);
+      expect(operation.proof[0].capabilityAction.id).to.equal('wl:CreateWebLedgerRecord');
       expect(operation.proof[0].proofPurpose).to.equal('capabilityInvocation');
       expect(operation.proof[0].creator).to.equal(creator);
       expect(operation.proof[0].jws).to.exist();
