@@ -15,12 +15,12 @@
         ]
       }
     ],
-    "grantCapability": [
+    "capabilityDelegation": [
       {
         "type": "Ed25519SignatureCapabilityAuthorization2018",
         "publicKey": [
           {
-            "id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX#ocap-grant-key-1",
+            "id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX#ocap-delegate-key-1",
             "type": "Ed25519VerificationKey2018",
             "owner": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX",
             "publicKeyBase58": "83aqLqcwejjiQs33e5pdTty9B4beao8hzu7oNsv14Peo"
