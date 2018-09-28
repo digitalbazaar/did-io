@@ -74,8 +74,8 @@ describe('VeresOneDidDoc', () => {
         keyType, injector: didDoc.injector, passphrase: null
       };
 
-      const authKey = await LDKeyPair.generate(keyOptions);
-      const did = didDoc.generateId({authKey, env: 'dev'});
+      const keyPair = await LDKeyPair.generate(keyOptions);
+      const did = didDoc.generateId({keyPair, env: 'dev'});
 
       expect(did).to.match(/^did:v1:test:nym:.*/);
     });

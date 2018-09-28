@@ -120,6 +120,44 @@ describe('methods/veres-one', () => {
 
       expect(didDocument.id).to.match(/^did\:v1\:test\:uuid\:.*/);
     });
+
+    it('should generate protected ed25519 nym-based DID Doc', async () => {
+      const nymOptions = {
+        keyType: 'Ed25519VerificationKey2018',
+        passphrase: 'foobar'
+      };
+      const didDocument = await v1.generate(nymOptions);
+
+      expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:z.*/);
+
+      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+
+      expect(authPublicKey.id).to.have.string('nym:z');
+
+      const exportedKey = await didDocument.keys[authPublicKey.id].export();
+
+      expect(exportedKey.privateKeyJwe.ciphertext)
+        .to.have.lengthOf.above(128);
+
+      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.above(43);
+      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.below(45);
+    }).timeout(30000);
+
+    it('should generate unprotected ed25519 nym-based DID Doc', async () => {
+      const nymOptions = {
+        keyType: 'Ed25519VerificationKey2018',
+        passphrase: null
+      };
+      const didDocument = await v1.generate(nymOptions);
+
+      expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:z.*/);
+
+      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+
+      expect(authPublicKey.id).to.have.string('nym:z');
+      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.above(43);
+      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.below(45);
+    }).timeout(30000);
   });
 
   describe.skip('register', () => {
