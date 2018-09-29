@@ -151,6 +151,40 @@ describe('VeresOneDidDoc', () => {
     });
   });
 
+  describe('service endpoints', () => {
+    let didDoc;
+
+    beforeEach(() => {
+      const exampleDoc = require('../dids/did-v1-test-nym-eddsa-example.json');
+      didDoc = new VeresOneDidDoc({doc: exampleDoc, injector});
+    });
+
+    it('should add a service to the did doc', () => {
+      expect(didDoc.hasService({name: 'testAgent'})).to.be.false();
+      didDoc.addService({
+        name: 'testAgent',
+        type: 'AgentService',
+        endpoint: 'https://example.com',
+        description: 'test description' // this is a custom property
+      });
+      expect(didDoc.hasService({name: 'testAgent'})).to.be.true();
+
+      expect(didDoc.findService({name: 'testAgent'}).description)
+        .to.equal('test description');
+    });
+
+    it('should remove a service from the did doc', () => {
+      didDoc.addService({
+        name: 'testService', type: 'Test', endpoint: 'https://example.com'
+      });
+      expect(didDoc.hasService({name: 'testService'})).to.be.true();
+
+      didDoc.removeService({name: 'testService'});
+
+      expect(didDoc.hasService({name: 'testService'})).to.be.false();
+    });
+  });
+
   describe('toJSON', () => {
     const keyType = 'Ed25519VerificationKey2018';
     it('should only serialize the document, no other properties', () => {
