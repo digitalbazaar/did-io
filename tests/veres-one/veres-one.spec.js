@@ -1,18 +1,22 @@
+const nock = require('nock');
 const chai = require('chai');
 chai.use(require('dirty-chai'));
 chai.should();
 
 const {expect} = chai;
-
 const Store = require('flex-docstore');
 
 const dids = require('../../lib/index');
 const VeresOne = require('../../lib/methods/veres-one/veres-one');
 
+const TEST_DID = 'did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX';
+const TEST_DID_RESULT = require('../dids/genesis.testnet.did.json');
+const LEDGER_AGENTS_DOC = require('../dids/ledger-agents.json');
+
 describe('methods/veres-one', () => {
   let v1;
 
-  before(() => {
+  beforeEach(() => {
     v1 = dids.methods.veres();
     // FIXME: determine how to simplify/move this code out of test
     const jsonld = v1.injector.use('jsonld');
@@ -38,6 +42,55 @@ describe('methods/veres-one', () => {
     v1.keyStore = Store.using('mock');
     v1.didStore = Store.using('mock');
     v1.metaStore = Store.using('mock');
+  });
+
+  describe('get', () => {
+    it('should fetch a DID Doc from a ledger', async () => {
+      nock('https://genesis.testnet.veres.one')
+        .get(`/ledger-agents`)
+        .reply(200, LEDGER_AGENTS_DOC);
+
+      nock('https://genesis.testnet.veres.one')
+        .post('/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c' +
+          '/query?id=' + TEST_DID)
+        .reply(200, TEST_DID_RESULT);
+
+      const didDoc = await v1.get({did: TEST_DID});
+      expect(didDoc.id).to.equal(TEST_DID);
+    });
+
+    it('should fetch a pairwise DID from local DID storage', async () => {
+      await v1.didStore.put(TEST_DID, TEST_DID_RESULT.object);
+
+      nock('https://genesis.testnet.veres.one')
+        .get(`/ledger-agents`)
+        .reply(200, LEDGER_AGENTS_DOC);
+
+      nock('https://genesis.testnet.veres.one')
+        .post('/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c' +
+          '/query?id=' + TEST_DID)
+        .reply(404, {});
+
+      const didDoc = await v1.get({did: TEST_DID});
+      expect(didDoc.id).to.equal(TEST_DID);
+    });
+
+    it('should throw a 404 if DID not found on ledger or locally', done => {
+      nock('https://genesis.testnet.veres.one')
+        .get(`/ledger-agents`)
+        .reply(200, LEDGER_AGENTS_DOC);
+
+      nock('https://genesis.testnet.veres.one')
+        .post('/ledger-agents/72fdcd6a-5861-4307-ba3d-cbb72509533c' +
+          '/query?id=' + TEST_DID)
+        .reply(404, {});
+
+      v1.get({did: TEST_DID})
+        .catch(error => {
+          expect(error.response.status).to.equal(404);
+          done();
+        });
+    });
   });
 
   describe('generate', () => {
