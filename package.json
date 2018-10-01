@@ -43,7 +43,7 @@
     "jsonld-signatures": "^2.3.0",
     "node-forge": "^0.7.5",
     "ursa": "github:JoshKaufman/ursa#7083023efe0dd3802573c4cdbe8b4916708a5a51",
-    "veres-one-context": "veres-one/veres-one-context#extract-bedrock",
+    "veres-one-context": "^3.0.0",
     "web-ledger-client": "digitalbazaar/web-ledger-client#development"
   },
   "devDependencies": {
