@@ -127,20 +127,22 @@ describe('methods/veres-one', () => {
         passphrase: 'foobar'
       };
       const didDocument = await v1.generate(nymOptions);
+      const did = didDocument.id;
 
-      expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:z.*/);
+      expect(did).to.match(/^did\:v1\:test\:nym\:z.*/);
+      const fingerprint = did.replace('did:v1:test:nym:z', '');
 
-      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+      const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
 
-      expect(authPublicKey.id).to.have.string('nym:z');
+      expect(invokePublicKey.id).to.have.string('nym:z');
 
-      const exportedKey = await didDocument.keys[authPublicKey.id].export();
+      const invokeKey = didDocument.keys[invokePublicKey.id];
+      const exportedKey = await invokeKey.export();
 
       expect(exportedKey.privateKeyJwe.ciphertext)
         .to.have.lengthOf.above(128);
 
-      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.above(43);
-      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.below(45);
+      expect(invokeKey.verifyFingerprint(fingerprint)).to.be.true();
     }).timeout(30000);
 
     it('should generate unprotected ed25519 nym-based DID Doc', async () => {
@@ -149,14 +151,17 @@ describe('methods/veres-one', () => {
         passphrase: null
       };
       const didDocument = await v1.generate(nymOptions);
+      const did = didDocument.id;
 
-      expect(didDocument.id).to.match(/^did\:v1\:test\:nym\:z.*/);
+      expect(did).to.match(/^did\:v1\:test\:nym\:z.*/);
+      const fingerprint = did.replace('did:v1:test:nym:z', '');
 
-      const authPublicKey = didDocument.doc.authentication[0].publicKey[0];
+      const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
+      const invokeKey = didDocument.keys[invokePublicKey.id];
 
-      expect(authPublicKey.id).to.have.string('nym:z');
-      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.above(43);
-      expect(authPublicKey.publicKeyBase58).to.have.lengthOf.below(45);
+      expect(invokePublicKey.id).to.have.string('nym:z');
+
+      expect(invokeKey.verifyFingerprint(fingerprint)).to.be.true();
     }).timeout(30000);
   });
 
