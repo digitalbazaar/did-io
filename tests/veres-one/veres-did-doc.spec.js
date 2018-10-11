@@ -152,11 +152,12 @@ describe('VeresOneDidDoc', () => {
   });
 
   describe('service endpoints', () => {
+    const exampleDoc = require('../dids/did-v1-test-nym-eddsa-example.json');
     let didDoc;
 
     beforeEach(() => {
-      const exampleDoc = require('../dids/did-v1-test-nym-eddsa-example.json');
-      didDoc = new VeresOneDidDoc({doc: exampleDoc, injector});
+      const doc = JSON.parse(JSON.stringify(exampleDoc)); // clone
+      didDoc = new VeresOneDidDoc({doc, injector});
     });
 
     it('should add a service to the did doc', () => {
@@ -171,6 +172,20 @@ describe('VeresOneDidDoc', () => {
 
       expect(didDoc.findService({name: 'testAgent'}).description)
         .to.equal('test description');
+    });
+
+    it('should throw when adding a service that already exists', () => {
+      const serviceOptions = {
+        name: 'testAgent',
+        type: 'AgentService',
+        endpoint: 'https://example.com',
+        description: 'test description' // this is a custom property
+      };
+
+      didDoc.addService(serviceOptions);
+
+      expect(() => didDoc.addService(serviceOptions))
+        .to.throw(/Service with that name or id already exists/);
     });
 
     it('should remove a service from the did doc', () => {
