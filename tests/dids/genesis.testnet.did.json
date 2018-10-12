@@ -1,5 +1,5 @@
 {
-  "object": {
+  "record": {
     "@context": "https://w3id.org/veres-one/v1",
     "id": "did:v1:test:nym:2pfPix2tcwa7gNoMRxdcHbEyFGqaVBPNntCsDZexVeHX",
     "authentication": [

@@ -60,7 +60,7 @@ describe('methods/veres-one', () => {
     });
 
     it('should fetch a pairwise DID from local DID storage', async () => {
-      await v1.didStore.put(TEST_DID, TEST_DID_RESULT.object);
+      await v1.didStore.put(TEST_DID, TEST_DID_RESULT.record);
 
       nock('https://genesis.testnet.veres.one')
         .get(`/ledger-agents`)
@@ -269,7 +269,7 @@ describe('methods/veres-one', () => {
         passphrase: null, keyType: 'RsaVerificationKey2018'
       });
 
-      let operation = v1.client.wrap({didDocument});
+      let operation = v1.client.wrap({didDocument: didDocument.doc});
       const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
 
@@ -304,7 +304,7 @@ describe('methods/veres-one', () => {
       });
 
       // attach an capability invocation proof
-      let operation = v1.client.wrap({didDocument});
+      let operation = v1.client.wrap({didDocument: didDocument.doc});
       const invokePublicKey = didDocument.doc.capabilityInvocation[0].publicKey[0];
       const creator = invokePublicKey.id;
       const {privateKeyPem} = await didDocument.keys[invokePublicKey.id].export();
