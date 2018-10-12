@@ -125,7 +125,7 @@ machine), this operation also loads corresponding private keys from the local
 
 ```js
 // Generate a new DID Document, store the private keys locally
-v1.generate({})
+v1.generate()
   .then(didDocument => {
     // A new didDocument is generated. Log it to console
     console.log('Generated:', JSON.stringify(didDocument, null, 2));
