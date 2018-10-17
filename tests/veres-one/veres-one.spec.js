@@ -289,7 +289,7 @@ describe('methods/veres-one', () => {
         .to.have.string('-----BEGIN PUBLIC KEY-----');
       expect(operation.proof).to.exist();
       expect(operation.proof.type).to.equal('RsaSignature2018');
-      expect(operation.proof.capabilityAction.id).to.equal('wl:CreateWebLedgerRecord');
+      expect(operation.proof.capabilityAction).to.equal(operation.type);
       expect(operation.proof.proofPurpose).to.equal('capabilityInvocation');
       expect(operation.proof.creator).to.equal(creator);
       expect(operation.proof.jws).to.exist();
@@ -329,7 +329,7 @@ describe('methods/veres-one', () => {
       expect(operation.proof).to.exist();
       expect(operation.proof[0]).to.exist();
       expect(operation.proof[0].type).to.equal('RsaSignature2018');
-      expect(operation.proof[0].capabilityAction.id).to.equal('wl:CreateWebLedgerRecord');
+      expect(operation.proof[0].capabilityAction).to.equal(operation.type);
       expect(operation.proof[0].proofPurpose).to.equal('capabilityInvocation');
       expect(operation.proof[0].creator).to.equal(creator);
       expect(operation.proof[0].jws).to.exist();
