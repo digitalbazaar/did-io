@@ -8,9 +8,9 @@
 .DS_Store
 .settings
 coverage
-bower_components
 node_modules
 v8.log
 .c9revisions
 npm-debug.log
 package-lock.json
+.nyc_output
