@@ -5,7 +5,7 @@ chai.use(require('sinon-chai'));
 chai.should();
 const {expect} = chai;
 
-const {LDKeyPair} = require('../../lib/ld-key-pair');
+const {LDKeyPair} = require('crypto-ld');
 const constants = require('../../lib/methods/veres-one/constants');
 
 const injector = require('../test-injector');
