@@ -33,8 +33,7 @@
   "license": "BSD-3-Clause",
   "main": "lib/index.js",
   "dependencies": {
-    "bs58": "^4.0.1",
-    "chloride": "^2.2.9",
+    "crypto-ld": "digitalbazaar/crypto-ld",
     "did-client-veres-one": "veres-one/did-client-veres-one#did-io-refactoring",
     "equihash-signature": "digitalbazaar/equihash-signature#master",
     "fast-json-patch": "^2.0.6",
@@ -42,8 +41,6 @@
     "glob": "^7.1.2",
     "jsonld": "^1.0.1",
     "jsonld-signatures": "^2.3.0",
-    "node-forge": "^0.7.5",
-    "ursa": "github:JoshKaufman/ursa#7083023efe0dd3802573c4cdbe8b4916708a5a51",
     "veres-one-context": "^5.0.0"
   },
   "devDependencies": {
