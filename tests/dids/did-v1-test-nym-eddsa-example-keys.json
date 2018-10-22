@@ -1,19 +1,19 @@
 {
   "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#authn-key-1": {
     "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#authn-key-1",
-    "keyType": "Ed25519VerificationKey2018",
+    "type": "Ed25519VerificationKey2018",
     "publicKeyBase58": "DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r",
     "privateKeyBase58": "4jtX9P2GRGi7EKoRFvv6hyvhEAJhnbe7rNrEzhGT5uza3bPaXnERpYbypESGHtW4gh6ywY1hF8CgxDwrx2VfeXWW"
   },
   "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#ocap-delegate-key-1": {
     "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#ocap-delegate-key-1",
-    "keyType": "Ed25519VerificationKey2018",
+    "type": "Ed25519VerificationKey2018",
     "publicKeyBase58": "HKxDmh1xFHz8m3yhJL2WXruBNFXUFEpBKG4rSCVDwfEk",
     "privateKeyBase58": "3Xc2P6H3dR6r9NAqsc8XPt9eHtDPLVy26uF3DHkmbEdQ7xRjc4HpCjkR3M3WkjejBQpucdYGt26gzKUbfJcCj66p"
   },
   "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#ocap-invoke-key-1": {
     "id": "did:v1:test:nym:DfKCjXdt3cKzCsi4EGxhYcYvEa8k1Sz6wBH9MREs3y4r#ocap-invoke-key-1",
-    "keyType": "Ed25519VerificationKey2018",
+    "type": "Ed25519VerificationKey2018",
     "publicKeyBase58": "4dYHzyaMGVFdzVsUF9KoyP8PgvoVQd6E6cbpxM2LL7cT",
     "privateKeyBase58": "4cCrKuak9UWvUz9zdCkmnmasA3uqz8Ey8F6CtNKgtkjhzrq2MQdfJCzrGTX7VDfuZniq8qmPKrCZ259LoSd5pxAB"
   }

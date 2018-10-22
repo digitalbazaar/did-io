@@ -33,7 +33,7 @@
   "license": "BSD-3-Clause",
   "main": "lib/index.js",
   "dependencies": {
-    "crypto-ld": "digitalbazaar/crypto-ld",
+    "crypto-ld": "digitalbazaar/crypto-ld#rc-0.0.2",
     "did-client-veres-one": "veres-one/did-client-veres-one#did-io-refactoring",
     "equihash-signature": "digitalbazaar/equihash-signature#master",
     "fast-json-patch": "^2.0.6",
