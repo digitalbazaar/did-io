@@ -32,13 +32,13 @@ describe('VeresOneDidDoc', () => {
   describe('init', () => {
     let didDoc;
     const keyType = 'Ed25519VerificationKey2018';
+    const env = 'dev';
 
     beforeEach(() => {
       didDoc = new VeresOneDidDoc({keyType, injector});
     });
 
     it('should init the did id', async () => {
-      const env = 'dev';
       sinon.spy(didDoc, 'generateId');
 
       await didDoc.init({env});
@@ -47,13 +47,19 @@ describe('VeresOneDidDoc', () => {
     });
 
     it('should init the authn/authz suites', async () => {
-      const env = 'dev';
-
       await didDoc.init(env);
 
       expect(didDoc.doc.authentication.length).to.equal(1);
       expect(didDoc.doc.capabilityDelegation.length).to.equal(1);
       expect(didDoc.doc.capabilityInvocation.length).to.equal(1);
+    });
+
+    it('should generate an invoke key', async () => {
+      await didDoc.init(env);
+
+      const invokeKey = didDoc.doc.capabilityInvocation[0].publicKey[0];
+      expect(invokeKey.owner).to.equal(didDoc.id);
+      expect(invokeKey.type).to.equal(keyType);
     });
   });
 
@@ -71,7 +77,7 @@ describe('VeresOneDidDoc', () => {
     it('should generate a nym type did', async () => {
       const didDoc = new VeresOneDidDoc({keyType, didType: 'nym', injector});
       const keyOptions = {
-        keyType, injector: didDoc.injector, passphrase: null
+        type: keyType, injector: didDoc.injector, passphrase: null
       };
 
       const keyPair = await LDKeyPair.generate(keyOptions);
