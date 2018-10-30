@@ -33,24 +33,12 @@
   "license": "BSD-3-Clause",
   "main": "lib/index.js",
   "dependencies": {
-    "crypto-ld": "digitalbazaar/crypto-ld#rc-0.0.2",
-    "did-client-veres-one": "veres-one/did-client-veres-one#did-io-refactoring",
-    "equihash-signature": "digitalbazaar/equihash-signature#master",
-    "fast-json-patch": "^2.0.6",
-    "flex-docstore": "0.0.1",
-    "glob": "^7.1.2",
-    "jsonld": "^1.0.1",
-    "jsonld-signatures": "^2.3.0",
-    "veres-one-context": "^5.0.0"
+    "did-veres-one": "veres-one/did-veres-one#rc-3.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "dirty-chai": "^2.0.1",
-    "mocha": "^5.0.5",
-    "nock": "^10.0.0",
-    "nyc": "^13.0.1",
-    "sinon": "^6.0.1",
-    "sinon-chai": "^3.0.0"
+    "mocha": "^5.0.5"
   },
   "nyc": {
     "reporter": [
@@ -67,7 +55,7 @@
     "Credential"
   ],
   "scripts": {
-    "mocha": "nyc mocha ./tests/**/*.spec.js ./tests/*.spec.js",
+    "mocha": "mocha ./tests/**/*.spec.js ./tests/*.spec.js",
     "test": "npm run mocha",
     "preversion": "npm test",
     "postversion": "git push --follow-tags"
