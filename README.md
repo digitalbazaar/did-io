@@ -124,7 +124,7 @@ didIo.use('did:v1', veresOneDriver);
 didIo.get({ did }).then(didDoc => { console.log(didDoc); }); 
 ```
 
-##### Veres One Supported Methods
+##### Veres One Supported Operations
 
 * `generate()`
 * `register()`
@@ -142,7 +142,7 @@ const keyDriver = require('did-key-driver');
 didIo.use('did:key', keyDriver);
 ```
 
-##### Veres One Supported Methods
+##### `did-key` Supported Operations
 
 * `generate()`
 * **`get()`**
