@@ -8,6 +8,7 @@
 
 - [Security](#security)
 - [Background](#background)
+- [Supported Drivers](#supported-drivers)
 - [Install](#install)
 - [Usage](#usage)
 - [Contribute](#contribute)
@@ -83,99 +84,68 @@ You can override the storage mechanism for each ledger method (to store JSON
 files in a different directory, or to use an in-memory `MockStore` for unit
 testing).
 
-### Veres One Ledger Usage
+### Configuring method-specific drivers
+
+`did-io` is meant to be a DID resolver harness for use with one or more 
+method-specific drivers (no drivers are included by default). It uses a 
+[Chai](https://www.chaijs.com/)-like plugin architecture, where each driver
+is loaded via `didIo.use(method, driver)`. 
+
+That means that you need to create instances of specific driver libraries for
+each method that you want to use. 
 
 #### Creating a `did-io` Client Instance
 
-See the [Veres One Method spec](https://w3c-ccg.github.io/didm-veres-one/) for
-context.
+```js
+const didIo = require('did-io');
+
+// You can now specify which DID methods you want via `.use(method, driver)`  
+```
+
+#### Supported Drivers
+
+* [Veres One]()
+* [did:key]() method
+
+#### Veres One DID Method
+
+* [Veres One Method spec](https://w3c-ccg.github.io/didm-veres-one/)
+* [`did-veres-one`](https://github.com/veres-one/did-veres-one) driver docs
 
 ```js
 const v1 = require('did-veres-one');
-// instantiate a driver for each DID method you'll be using, pass in options
-// For Veres One, use mode: 'dev' when testing against a local Veres One node
-const veresOneDriver = v1.driver({ mode: 'test', httpsAgent, documentLoader });
 
-const keyDriver = require('did-key-driver').driver({});
+// See did-veres-one repo for instructions on how to set up the httpsAgent etc
+const veresOneDriver = v1.driver({ mode: 'dev', httpsAgent, documentLoader });
 
-const dids = require('did-io');
+didIo.use('did:v1', veresOneDriver);
 
-dids.use('did:v1', veresOneDriver);
-dids.use('did:key', keyDriver);
-
-// can start using the API
-await dids.get({ did }); 
+// Now you can start using the API
+didIo.get({ did }).then(didDoc => { console.log(didDoc); }); 
 ```
 
-If you do not specify a particular ledger hostname, one will be determined
-based on the `mode` parameter (either 'test', 'dev' or 'live').
+##### Veres One Supported Methods
 
-If you want to connect to a specific hostname (for testing a particular node,
-for example), you can specify the override directly:
+* `generate()`
+* `register()`
+* **`get()`**
+* `getLocal()`
+* **`update()`**
+
+#### `did:key` DID Method
+
+* [`did-key-driver`]() driver docs
 
 ```js
-const v1 = dids.methods.veres({ mode: 'dev', hostname: 'localhost:12345' });
+const keyDriver = require('did-key-driver');
+
+didIo.use('did:key', keyDriver);
 ```
 
-#### Retrieving a Veres One DID Document
+##### Veres One Supported Methods
 
-```js
-const did = 'did:v1:test:nym:ApvL3PKAzQvFnRVqyZKhSYD2i8XcsLG1Dy4FrSdEKAdR';
-
-v1.get({ did })
-  .then(didDoc => { console.log(JSON.stringify(didDoc, null, 2)); })
-  .catch(console.error);
-```
-
-If available (meaning, if you were the one that registered this DID Doc on your
-machine), this operation also loads corresponding private keys from the local
-`v1.keyStore`.
-
-#### Generating and Registering a Veres One DID Document
-
-```js
-// Generate a new DID Document, store the private keys locally
-v1.generate()
-  .then(didDocument => {
-    // A new didDocument is generated. Log it to console
-    console.log('Generated:', JSON.stringify(didDocument, null, 2));
-    return didDocument;
-  })
-
-  // Now register the newly generated DID Document
-  // Use Equihash Proof of Work by default (see below)
-  .then(didDocument => v1.register({ didDocument }))
-
-  // Log the results
-  .then(registrationResult => {
-    // Log the result of registering the didDoc to the VeresOne Test ledger
-    console.log('Registered!', JSON.stringify(registrationResult, null, 2));
-  })
-  .catch(console.error);
-```
-
-Note: This also saves the generated private/public key pairs, a local copy of
-the document, as well as any metadata, in the local (typically on-disk) store.
-See [Setting Up Storage](#setting-up-storage) for more detail.
-
-#### Registering a (newly generated) DID Document
-
-To register a DID Document using an Equihash proof of work:
-
-```js
-v1.register({ didDocument }); // async/Promise based operation
-```
-
-To register using an Accelerator:
-
-```js
-const accelerator = 'genesis.testnet.veres.one';
-const authDoc = didDocumentFromAccelerator; // obtained previously
-
-v1.register({ didDocument, accelerator, authDoc })
-  .then(result => console.log(JSON.stringify(await result.text(), null, 2)))
-  .catch(console.error);
-```
+* `generate()`
+* **`get()`**
 
 ## Contribute
 

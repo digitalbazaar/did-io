@@ -1,18 +1,13 @@
 # did-io ChangeLog
 
-## 0.9.0
-
-### Changed
-
-- **BREAKING**: Update API to Chai-like `dids.use(method, driver)` architecture
-  (no methods will be bundled with did-io by default).
-
 ## 0.8.0
 (Migrating from v0.7.0 will require renaming the relevant properties in existing
 DID Docs.)
 
 ### Changed
 
+- **BREAKING**: Update API to Chai-like `dids.use(method, driver)` architecture
+  (no methods will be bundled with did-io by default).
 - **BREAKING**: Updated terminology to match latest VeresOne DID method specs:
   `grantCapability -> capabilityDelegation`,
   `invokeCapability -> capabilityInvocation`
