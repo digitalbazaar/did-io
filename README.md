@@ -91,10 +91,20 @@ See the [Veres One Method spec](https://w3c-ccg.github.io/didm-veres-one/) for
 context.
 
 ```js
+const v1 = require('did-veres-one');
+// instantiate a driver for each DID method you'll be using, pass in options
+// For Veres One, use mode: 'dev' when testing against a local Veres One node
+const veresOneDriver = v1.driver({ mode: 'test', httpsAgent, documentLoader });
+
+const keyDriver = require('did-key-driver').driver({});
+
 const dids = require('did-io');
 
-const v1 = dids.methods.veres({ mode: 'test' });
-// or use mode: 'dev' when testing against a local Veres One node
+dids.use('did:v1', veresOneDriver);
+dids.use('did:key', keyDriver);
+
+// can start using the API
+await dids.get({ did }); 
 ```
 
 If you do not specify a particular ledger hostname, one will be determined
