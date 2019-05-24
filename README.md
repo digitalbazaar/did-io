@@ -118,11 +118,20 @@ const v1 = require('did-veres-one');
 // See did-veres-one repo for instructions on how to set up the httpsAgent etc
 const veresOneDriver = v1.driver({ mode: 'dev', httpsAgent, documentLoader });
 
-didIo.use('did:v1', veresOneDriver);
+// to use the did:v1 / Veres One method
+didIo.use('v1', veresOneDriver);
 
 // Now you can start using the API
 didIo.get({ did }).then(didDoc => { console.log(didDoc); }); 
 ```
+
+Some operations are method-specific, and can be only called on individual
+drivers:
+
+```js
+didIo.methods['v1'].generate({...});
+```
+
 
 ##### Veres One Supported Operations
 
@@ -139,7 +148,8 @@ didIo.get({ did }).then(didDoc => { console.log(didDoc); });
 ```js
 const keyDriver = require('did-key-driver');
 
-didIo.use('did:key', keyDriver);
+// to use the did:key method
+didIo.use('key', keyDriver);
 ```
 
 ##### `did-key` Supported Operations

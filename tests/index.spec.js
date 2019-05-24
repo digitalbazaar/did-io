@@ -9,6 +9,6 @@ const {DidIo} = require('../lib/index');
 describe('parseDid', () => {
   it('should return main did method identifier', () => {
     const {prefix} = DidIo.parseDid('did:v1:test:nym:abcd');
-    expect(prefix).to.equal('did:v1');
+    expect(prefix).to.equal('v1');
   });
 });
