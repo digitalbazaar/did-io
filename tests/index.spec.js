@@ -4,34 +4,11 @@ chai.should();
 
 const {expect} = chai;
 
-const dids = require('../lib/index');
-const jsonld = require('jsonld')();
-const jsigs = require('jsonld-signatures');
-jsigs.use('jsonld', jsonld);
+const {DidIo} = require('../lib/index');
 
-describe('dids api', () => {
-  it('accept JSON-LD libs via injector', () => {
-    dids.use('jsonld', jsonld);
-    dids.use('jsonld-signatures', jsigs);
-
-    const v1 = dids.methods.veres();
-
-    expect(v1.injector._libs).to.have.property('jsonld');
-  });
-});
-
-describe('did methods', () => {
-  let v1;
-
-  before(() => {
-    dids.use('jsonld', jsonld);
-    dids.use('jsonld-signatures', jsigs);
-    v1 = dids.methods.veres();
-  });
-
-  describe('veres one', () => {
-    it('should exist', () => {
-      expect(v1.ledger).to.equal('veres');
-    });
+describe('parseDid', () => {
+  it('should return main did method identifier', () => {
+    const {prefix} = DidIo.parseDid('did:v1:test:nym:abcd');
+    expect(prefix).to.equal('did:v1');
   });
 });
