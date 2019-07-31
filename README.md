@@ -121,8 +121,8 @@ const veresDriver = v1.driver({ mode: 'dev', httpsAgent, documentLoader });
 // to use the did:v1 / Veres One method
 didIo.use('v1', veresOneDriver);
 
-// Now you can start using the API
-const didDoc = didIo.get({did});
+// Now you can start using the API (inside an async function)
+const didDoc = await didIo.get({did});
 console.log(didDoc);
 ```
 
