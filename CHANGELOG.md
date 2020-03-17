@@ -1,8 +1,6 @@
 # did-io ChangeLog
 
 ## 0.8.0
-(Migrating from v0.7.0 will require renaming the relevant properties in existing
-DID Docs.)
 
 ### Changed
 
@@ -12,7 +10,7 @@ DID Docs.)
   `grantCapability -> capabilityDelegation`,
   `invokeCapability -> capabilityInvocation`
 - **BREAKING**: Renamed `secretKey` to `privateKey`, to match Digital
-  Bazaar conventions.
+  Bazaar conventions. (Migrating from v0.7.0 will require renaming the relevant properties in existing DID Docs.)
 
 ## 0.7.0 - 2018-09-10
 
