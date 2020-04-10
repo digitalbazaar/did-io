@@ -1,6 +1,6 @@
 # did-io ChangeLog
 
-## 0.8.0
+## 0.8.0 - 2020-04-10
 
 ### Changed
 
