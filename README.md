@@ -115,7 +115,7 @@ drivers:
 * [`did-key-driver`]() driver docs
 
 ```js
-const keyDriver = require('did-key-driver');
+const keyDriver = require('did-method-key');
 
 // to use the did:key method
 didIo.use('key', keyDriver);
