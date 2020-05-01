@@ -1,5 +1,10 @@
 # did-io ChangeLog
 
+## 0.8.1 - 2020-05-01
+
+### Added
+- Added a `forceConstruct` optimization flag.
+
 ## 0.8.0 - 2020-04-10
 
 ### Changed
