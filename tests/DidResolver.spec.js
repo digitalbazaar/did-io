@@ -4,7 +4,7 @@ chai.should();
 
 const {expect} = chai;
 
-const {DidResolver} = require('../lib/DidResolver');
+const {DidResolver} = require('../src/');
 
 describe('parseDid', () => {
   it('should return main did method identifier', () => {
@@ -13,8 +13,8 @@ describe('parseDid', () => {
   });
 });
 
-describe('didIo instance', () => {
-  const {didIo} = require('../lib/');
+describe('didIo resolver instance', () => {
+  const {didIo} = require('../src/');
 
   describe('get()', () => {
     it('should error if no DID is passed', async () => {
