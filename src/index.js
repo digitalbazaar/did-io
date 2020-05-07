@@ -4,7 +4,10 @@
 'use strict';
 
 const {DidResolver} = require('./DidResolver');
+const {DidDocument} = require('./DidDocument');
 
 module.exports = {
-  didIo: (new DidResolver({}))
+  didIo: (new DidResolver({})),
+  DidResolver,
+  DidDocument
 };
