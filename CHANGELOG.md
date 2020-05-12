@@ -1,5 +1,10 @@
 # did-io ChangeLog
 
+## 0.8.2 - 2020-05-12
+
+### Added
+- Remove `forceConstruct` flag (move it down to individual drivers).
+
 ## 0.8.1 - 2020-05-01
 
 ### Added
