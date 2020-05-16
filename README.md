@@ -48,7 +48,7 @@ npm install
 To install as a dependency in another project, add this to your `package.json`:
 
 ```
-"did-io": "^0.7.0"
+"did-io": "^0.9.0"
 ```
 
 ## Usage
@@ -58,7 +58,7 @@ To install as a dependency in another project, add this to your `package.json`:
 `did-io` is meant to be a DID resolver harness for use with one or more 
 method-specific drivers (no drivers are included by default). It uses a 
 [Chai](https://www.chaijs.com/)-like plugin architecture, where each driver
-is loaded via `didIo.use(method, driver)`. 
+is loaded via `.use(driver)`. 
 
 That means that you need to create instances of specific driver libraries for
 each method that you want to use. 
@@ -66,15 +66,16 @@ each method that you want to use.
 #### Creating a `did-io` Client Instance
 
 ```js
-const didIo = require('did-io');
+import {DidResolver} from 'did-io';
+const didIo = new DidResolver();
 
-// You can now specify which DID methods you want via `.use(method, driver)`  
+// You can now specify which DID methods you want via `.use(driver)`  
 ```
 
 #### Supported Drivers
 
-* [Veres One]()
-* [did:key]() method
+* [`did:v1`](https://github.com/veres-one/did-veres-one)
+* [did:key](https://github.com/veres-one/did-method-key-js)
 
 #### Veres One DID Method
 
@@ -88,7 +89,7 @@ const v1 = require('did-veres-one');
 const veresDriver = v1.driver({ mode: 'dev', httpsAgent, documentLoader });
 
 // to use the did:v1 / Veres One method
-didIo.use('v1', veresOneDriver);
+didIo.use(veresDriver);
 
 // Now you can start using the API (inside an async function)
 const didDoc = await didIo.get({did});
@@ -118,7 +119,7 @@ drivers:
 const keyDriver = require('did-method-key');
 
 // to use the did:key method
-didIo.use('key', keyDriver);
+didIo.use(keyDriver);
 ```
 
 ##### `did-key` Supported Operations
@@ -131,7 +132,7 @@ See [the contribute file](https://github.com/digitalbazaar/bedrock/blob/master/C
 
 PRs accepted.
 
-Small note: If editing the Readme, please conform to the
+If editing the Readme, please conform to the
 [standard-readme](https://github.com/RichardLitt/standard-readme) specification.
 
 ## Commercial Support

@@ -14,7 +14,8 @@ describe('parseDid', () => {
 });
 
 describe('didIo resolver instance', () => {
-  const {didIo} = require('../src/');
+  const {DidResolver} = require('../src/');
+  const didIo = new DidResolver();
 
   describe('get()', () => {
     it('should error if no DID is passed', async () => {
