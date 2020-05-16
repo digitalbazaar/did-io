@@ -7,7 +7,6 @@ const {DidResolver} = require('./DidResolver');
 const {DidDocument} = require('./DidDocument');
 
 module.exports = {
-  didIo: (new DidResolver({})),
   DidResolver,
   DidDocument
 };
