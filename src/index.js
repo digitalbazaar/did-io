@@ -5,8 +5,10 @@
 
 const {DidResolver} = require('./DidResolver');
 const {DidDocument} = require('./DidDocument');
+const {PROOF_PURPOSES} = require('./constants');
 
 module.exports = {
   DidResolver,
-  DidDocument
+  DidDocument,
+  PROOF_PURPOSES
 };

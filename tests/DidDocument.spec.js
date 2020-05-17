@@ -6,6 +6,12 @@ const {expect} = chai;
 const {DidDocument} = require('../src/DidDocument');
 const constants = require('../src/constants');
 
+const {CryptoLD} = require('crypto-ld');
+const ed25519 = require('ed25519-key-pair');
+
+const cryptoLd = new CryptoLD();
+cryptoLd.use(ed25519); // ed25519 type
+
 describe('DidDocument', () => {
   describe('constructor', () => {
     it('does not init endpoints or proof methods by default', () => {
@@ -36,13 +42,8 @@ describe('DidDocument', () => {
 
     it('does not initialize excluded keys', async () => {
       const {didKeys} = await didDocument.initKeys({
-        keys: {
-          capabilityInvocation: false,
-          authentication: false,
-          assertionMethod: false,
-          capabilityDelegation: false,
-          keyAgreement: false
-        }
+        cryptoLd: {},
+        keyMap: {}
       });
 
       expect(didKeys).to.eql({});
@@ -52,23 +53,24 @@ describe('DidDocument', () => {
     it('initializes using existing keys if given', async () => {
       const mockExistingKey = {
         id: 'did:ex:123#fingerprint',
-        publicNode: () => {}
+        exportPublic: () => {}
       };
       const {didKeys} = await didDocument.initKeys({
-        keys: {
-          capabilityInvocation: mockExistingKey,
-          authentication: false,
-          assertionMethod: false,
-          capabilityDelegation: false,
-          keyAgreement: false
+        cryptoLd,
+        keyMap: {
+          capabilityInvocation: mockExistingKey
         }
       });
 
       expect(didKeys['did:ex:123#fingerprint']).to.eql(mockExistingKey);
     });
 
-    it('generates keys of default type if not given or excluded', async () => {
-      const {didKeys} = await didDocument.initKeys();
+    it('generates keys of specified type', async () => {
+      const keyMap = {
+        capabilityInvocation: 'ed25519',
+        authentication: 'ed25519'
+      };
+      const {didKeys} = await didDocument.initKeys({keyMap, cryptoLd});
       const did = 'did:ex:1234';
 
       for(const keyId in didKeys) {
@@ -77,25 +79,23 @@ describe('DidDocument', () => {
         expect(didKeys[keyId]).to.have.property('privateKeyBase58');
       }
 
-      const defaultPurposes = [
+      const purposes = [
         'capabilityInvocation',
-        'authentication',
-        'assertionMethod',
-        'capabilityDelegation'
+        'authentication'
       ];
-      for(const purpose of defaultPurposes) {
+      for(const purpose of purposes) {
         const publicKey = didDocument[purpose][0];
         expect(publicKey.id).to.match(/^did\:ex\:1234#z/);
-        expect(publicKey.type).to.equal(constants.DEFAULT_KEY_TYPE);
+        expect(publicKey.type).to.equal('Ed25519VerificationKey2018');
         expect(publicKey.controller).to.equal(did);
         expect(publicKey).to.have.property('publicKeyBase58');
         expect(publicKey).to.not.have.property('privateKeyBase58');
       }
-      const keyAgreementKey = didDocument.keyAgreement[0];
-      expect(keyAgreementKey.id).to.match(/^did\:ex\:1234#z/);
-      expect(keyAgreementKey.type).to.equal('X25519KeyAgreementKey2019');
-      expect(keyAgreementKey).to.have.property('publicKeyBase58');
-      expect(keyAgreementKey).to.not.have.property('privateKeyBase58');
+      // const keyAgreementKey = didDocument.keyAgreement[0];
+      // expect(keyAgreementKey.id).to.match(/^did\:ex\:1234#z/);
+      // expect(keyAgreementKey.type).to.equal('X25519KeyAgreementKey2019');
+      // expect(keyAgreementKey).to.have.property('publicKeyBase58');
+      // expect(keyAgreementKey).to.not.have.property('privateKeyBase58');
     });
   });
 });
