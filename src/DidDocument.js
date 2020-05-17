@@ -3,10 +3,8 @@
  */
 'use strict';
 
-const {LDKeyPair} = require('crypto-ld');
-const {X25519KeyPair} = require('x25519-key-pair');
 const constants = require('./constants');
-const {DEFAULT_KEY_TYPE, PROOF_PURPOSES} = constants;
+const {PROOF_PURPOSES} = constants;
 
 class DidDocument {
   constructor({id, capabilityInvocation, authentication, assertionMethod,
@@ -24,70 +22,51 @@ class DidDocument {
    * Initializes the DID Document's keys/proof methods. By default, initializes
    * all key purposes; to leave one out, set it to `false`:
    * Usage:
-   *
    * ```
    * didDocument.id = 'did:ex:123';
-   * // This initializes all key purposes except keyAgreement
    * const {didKeys} = await didDocument.initKeys({
-   *   keys: {
+   *   cryptoLd,
+   *   keyMap: {
    *     capabilityInvocation: someExistingKey,
-   *     keyAgreement: false
+   *     authentication: 'ed25519',
+   *     assertionMethod: 'ed25519',
+   *     keyAgreement: 'x25519'
    *   }
    * });
    * ```
+   * @param [cryptoLd] {CryptoLD} - CryptoLD driver instance, initialized with
+   *   the key types this DID Document intends to support.
+   * @param [keyMap={}] {object}
    *
-   * @param [keys={}] {object}
-   * @param [keyType] {string}
    * @returns {Promise<{didKeys: object}>} Public/private Key hashmap by key id.
    */
-  async initKeys({keys = {}, keyType = DEFAULT_KEY_TYPE} = {}) {
+  async initKeys({cryptoLd, keyMap = {}} = {}) {
     if(!this.id) {
-      throw Error('DID Document "id" property is required to initialize keys.');
+      throw new Error(
+        'DID Document "id" property is required to initialize keys.');
     }
-
-    let {capabilityInvocation, authentication, assertionMethod,
-      capabilityDelegation, keyAgreement} = keys;
-
-    // Set the defaults for the created keys (if needed)
-    const keyOptions = {type: keyType, controller: this.id};
-
-    // Initialize capabilityInvocation key pair, used for proving control of DID
-    if(capabilityInvocation !== false) {
-      capabilityInvocation = capabilityInvocation ||
-        await LDKeyPair.generate(keyOptions);
-      this.capabilityInvocation = [capabilityInvocation.publicNode()];
-    }
-
-    // Generate authentication key pair, used for DIDAuth operations
-    if(authentication !== false) {
-      authentication = authentication || await LDKeyPair.generate(keyOptions);
-      this.authentication = [authentication.publicNode()];
-    }
-
-    // Generate assertionMethod key pair, used for digital signatures (VCs)
-    if(assertionMethod !== false) {
-      assertionMethod = assertionMethod || await LDKeyPair.generate(keyOptions);
-      this.assertionMethod = [assertionMethod.publicNode()];
-    }
-
-    // Generate capabilityDelegation key pair, used for delegating authorization
-    if(capabilityDelegation !== false) {
-      capabilityDelegation = capabilityDelegation ||
-        await LDKeyPair.generate(keyOptions);
-      this.capabilityDelegation = [capabilityDelegation.publicNode()];
-    }
-
-    // Generate keyAgreement key pair, used for key agreement for encryption
-    if(keyAgreement !== false) {
-      keyAgreement = keyAgreement || await X25519KeyPair.generate(keyOptions);
-      this.keyAgreement = [keyAgreement.publicNode()];
-    }
-
-    const keyPurpose = [capabilityInvocation, authentication, assertionMethod,
-      capabilityDelegation, keyAgreement].filter(purpose => purpose);
 
     const didKeys = {};
-    for(const key of keyPurpose) {
+
+    // Set the defaults for the created keys (if needed)
+    const options = {controller: this.id};
+
+    for(const purpose in keyMap) {
+      if(!PROOF_PURPOSES.includes(purpose)) {
+        throw new Error(`Unsupported key purpose: "${purpose}".`);
+      }
+
+      let key;
+      if(typeof keyMap[purpose] === 'string') {
+        if(!cryptoLd) {
+          throw new Error('Please provide an initialized CryptoLD instance.');
+        }
+        key = await cryptoLd.generate({type: keyMap[purpose], ...options});
+      } else {
+        key = keyMap[purpose]; // Existing key
+      }
+
+      this[purpose] = [key.exportPublic()];
       didKeys[key.id] = key;
     }
 
