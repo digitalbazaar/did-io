@@ -4,7 +4,7 @@ chai.should();
 const {expect} = chai;
 
 const {DidDocument} = require('../src/DidDocument');
-const constants = require('../src/constants');
+// const constants = require('../src/constants');
 
 const {CryptoLD} = require('crypto-ld');
 const ed25519 = require('ed25519-key-pair');
@@ -53,7 +53,7 @@ describe('DidDocument', () => {
     it('initializes using existing keys if given', async () => {
       const mockExistingKey = {
         id: 'did:ex:123#fingerprint',
-        exportPublic: () => {}
+        export: () => {}
       };
       const {didKeys} = await didDocument.initKeys({
         cryptoLd,
