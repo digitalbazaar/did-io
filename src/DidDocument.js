@@ -66,7 +66,7 @@ class DidDocument {
         key = keyMap[purpose]; // Existing key
       }
 
-      this[purpose] = [key.exportPublic()];
+      this[purpose] = [key.export({publicKey: true})];
       didKeys[key.id] = key;
     }
 
