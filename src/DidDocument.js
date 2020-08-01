@@ -1,12 +1,9 @@
 /*!
  * Copyright (c) 2020 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import {PROOF_PURPOSES} from './constants';
 
-const constants = require('./constants');
-const {PROOF_PURPOSES} = constants;
-
-class DidDocument {
+export class DidDocument {
   constructor({id, capabilityInvocation, authentication, assertionMethod,
     capabilityDelegation, keyAgreement, service} = {}) {
     this.id = id;
@@ -19,8 +16,7 @@ class DidDocument {
   }
 
   /**
-   * Initializes the DID Document's keys/proof methods. By default, initializes
-   * all key purposes; to leave one out, set it to `false`:
+   * Initializes the DID Document's keys/proof methods.
    * Usage:
    * ```
    * didDocument.id = 'did:ex:123';
@@ -84,7 +80,7 @@ class DidDocument {
   }
 
   /**
-   * Returns with the node for the verification method for the specified proof
+   * Returns the node for the verification method for the specified proof
    * purpose (from which you can create an LDKeyPair instance).
    * If no methodId or methodIndex is given, the first available non-revoked
    * key is returned.
@@ -355,7 +351,3 @@ class DidDocument {
     // return newKey;
   }
 }
-
-module.exports = {
-  DidDocument
-};

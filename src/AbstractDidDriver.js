@@ -1,6 +1,4 @@
-'use strict';
-
-class AbstractDidDriver {
+export class AbstractDidDriver {
   constructor({method = 'ex'}) {
     // did:ex:...
     this.method = method;
@@ -30,6 +28,3 @@ class AbstractDidDriver {
   async get() {}
 }
 
-module.exports = {
-  AbstractDidDriver
-};

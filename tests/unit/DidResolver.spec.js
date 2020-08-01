@@ -4,17 +4,16 @@ chai.should();
 
 const {expect} = chai;
 
-const {DidResolver} = require('../src/');
+const {DidResolver} = require('../../');
 
 describe('parseDid', () => {
-  it('should return main did method identifier', () => {
+  it('should return main did method identifier', async () => {
     const {prefix} = DidResolver.parseDid('did:v1:test:nym:abcd');
     expect(prefix).to.equal('v1');
   });
 });
 
 describe('didIo resolver instance', () => {
-  const {DidResolver} = require('../src/');
   const didIo = new DidResolver();
 
   describe('get()', () => {

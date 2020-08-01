@@ -1,9 +1,7 @@
 /*!
  * Copyright (c) 2018-2020 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
-
-class DidResolver {
+export class DidResolver {
   constructor(options = {}) {
     this.methods = options.methods || {};
   }
@@ -71,7 +69,3 @@ class DidResolver {
     return method;
   }
 }
-
-module.exports = {
-  DidResolver
-};
