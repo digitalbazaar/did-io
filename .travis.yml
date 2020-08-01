@@ -1,18 +1,8 @@
 language: node_js
 node_js:
-  - "8"
-  - "10"
+  - "12"
+  - "14"
 sudo: false
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.9
-install:
-  - CC=gcc-4.9 CXX=g++-4.9 npm install
-# download test suite and run tests... submodule? meta testing project with
-# all of the reference implementations?
 script:
   - npm run test
 notifications:
