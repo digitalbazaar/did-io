@@ -6,12 +6,16 @@ import {PROOF_PURPOSES} from './constants';
 export class DidDocument {
   constructor({id, capabilityInvocation, authentication, assertionMethod,
     capabilityDelegation, keyAgreement, service} = {}) {
-    this.id = id;
+    this.id = id; // DID
+
+    // Proof methods
     this.capabilityInvocation = capabilityInvocation;
     this.authentication = authentication;
     this.assertionMethod = assertionMethod;
     this.capabilityDelegation = capabilityDelegation;
     this.keyAgreement = keyAgreement;
+
+    // Service endpoints
     this.service = service;
   }
 
@@ -283,14 +287,15 @@ export class DidDocument {
 
   addKey({key, proofPurpose, controller = this.id}) {
     // Add public key node to the DID Doc
-    const keys = this.getAllVerificationMethods(proofPurpose);
-    if(!keys) {
-      throw new Error(`Keys not found for proofPurpose "${proofPurpose}".`);
-    }
-    keys.push(key.publicNode({controller}));
+    // const keys = this.getAllVerificationMethods(proofPurpose);
+    // if(!keys) {
+    //   throw new Error(`Keys not found for proofPurpose "${proofPurpose}".`);
+    // }
+
+    // keys.push(key.publicNode({controller})); //addPublicKey
 
     // Add keypair (public + private) to non-exported key storage
-    this.keys[key.id] = key;
+    // this.keys[key.id] = key;
   }
 
   /**
