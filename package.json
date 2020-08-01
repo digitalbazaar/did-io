@@ -35,16 +35,38 @@
     "email": "support@digitalbazaar.com"
   },
   "license": "BSD-3-Clause",
-  "main": "src/index.js",
+  "main": "src/main.js",
+  "files": [
+    "src/*.js"
+  ],
+  "module": "src/main.js",
   "dependencies": {
-    "did-context": "^2.0.0"
+    "did-context": "^2.0.0",
+    "esm": "^3.2.25"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "crypto-ld": "digitalbazaar/crypto-ld#extract-key-pairs",
+    "@babel/core": "^7.11.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/runtime": "^7.11.0",
+    "babel-loader": "^8.1.0",
+    "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
     "dirty-chai": "^2.0.1",
-    "ed25519-key-pair": "digitalbazaar/ed25519-key-pair#initial",
-    "mocha": "^5.0.5"
+    "eslint": "^7.6.0",
+    "eslint-config-digitalbazaar": "^2.5.0",
+    "eslint-plugin-jsdoc": "^30.1.0",
+    "karma": "^5.1.1",
+    "karma-babel-preprocessor": "^8.0.1",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^4.0.2",
+    "mocha": "^8.1.0",
+    "webpack": "^4.44.1"
   },
   "engines": {
     "node": ">=8.3.0"
@@ -55,8 +77,10 @@
     "Credential"
   ],
   "scripts": {
-    "mocha": "mocha --timeout 10000 ./tests/**/*.spec.js ./tests/*.spec.js",
-    "test": "npm run mocha",
+    "test": "npm run test-node && npm run test-karma",
+    "test-node": "cross-env NODE_ENV=test mocha -r esm --preserve-symlinks -t 30000 -A -R ${REPORTER:-spec} tests/**/*.spec.js",
+    "test-karma": "karma start tests/karma.conf.js",
+    "lint": "eslint .",
     "preversion": "npm test"
   },
   "eslintConfig": {
