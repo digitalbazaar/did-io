@@ -28,9 +28,9 @@ export class DidDocument {
    *   cryptoLd,
    *   keyMap: {
    *     capabilityInvocation: someExistingKey,
-   *     authentication: 'ed25519',
-   *     assertionMethod: 'ed25519',
-   *     keyAgreement: 'x25519'
+   *     authentication: 'Ed25519VerificationKey2018',
+   *     assertionMethod: 'Ed25519VerificationKey2018',
+   *     keyAgreement: 'X25519KeyAgreementKey2019'
    *   }
    * });
    * ```
