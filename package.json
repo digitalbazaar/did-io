@@ -48,9 +48,7 @@
   ],
   "scripts": {
     "mocha": "mocha ./tests/**/*.spec.js ./tests/*.spec.js",
-    "test": "npm run mocha",
-    "preversion": "npm test",
-    "postversion": "git push --follow-tags"
+    "test": "npm run mocha"
   },
   "eslintConfig": {
     "env": {
