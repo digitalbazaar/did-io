@@ -1,5 +1,8 @@
 # did-io ChangeLog
 
+### Fixed
+- Engine specification format in package.json.
+
 ## 0.8.2 - 2020-05-12
 
 ### Added
