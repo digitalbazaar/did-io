@@ -1,9 +1,9 @@
 # DID Client _(did-io)_
 
-[![Build Status](https://travis-ci.org/digitalbazaar/did-io.png?branch=master)](https://travis-ci.org/digitalbazaar/did-io)
-[![NPM Version](https://img.shields.io/npm/v/did-io.svg?style=flat-square)](https://npm.im/did-io)
+![Node.js CI](https://github.com/digitalbazaar/did-io/workflows/Node.js%20CI/badge.svg)
+[![NPM Version](https://img.shields.io/npm/v/digitalbazaar/did-io)](https://www.npmjs.com/package/@digitalbazaar/did-io)
 
-> A [DID](https://w3c-ccg.github.io/did-spec/) (Decentralized Identifier) resolution library for Javascript
+> A [DID](https://w3c-ccg.github.io/did-spec/) (Decentralized Identifier) resolution library for Javascript.
 
 ## Table of Contents
 
@@ -16,26 +16,22 @@
 - [Commercial Support](#commercial-support)
 - [License](#license)
 
-## Security
-
-TBD
-
 ## Background
 
 TBD
 
 See also (related specs):
 
-* [Decentralized Identifiers (DIDs) - Data Model and Syntaxes](https://w3c-ccg.github.io/did-spec/)
+* [DID Core v1](https://w3c.github.io/did-core/)
+* [Decentralized Identifier Resolution v2](https://w3c-ccg.github.io/did-resolution/)
 * [Veres One DID Method](https://w3c-ccg.github.io/didm-veres-one/)
-* [Web Ledger Protocol](https://w3c.github.io/web-ledger/)
 * [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/)
 * [Linked Data Proofs](https://w3c-dvcg.github.io/ld-proofs/)
 * [Object Capabilities for Linked Data](https://w3c-ccg.github.io/ocap-ld/)
 
 ## Install
 
-Requires Node.js 10+
+Requires Node.js 12+
 
 To install locally (for development):
 
@@ -48,7 +44,7 @@ npm install
 To install as a dependency in another project, add this to your `package.json`:
 
 ```
-"did-io": "^0.9.0"
+"@digitalbazaar/did-io": "^1.0.0"
 ```
 
 ## Usage
@@ -63,6 +59,11 @@ is loaded via `.use(driver)`.
 That means that you need to create instances of specific driver libraries for
 each method that you want to use. 
 
+NOTE: This driver provides convenience methods that can help when working with
+_multiple_ DID methods at the same time. If you're just using a single method
+(like [`did:key`](https://github.com/digitalbazaar/did-method-key-js)), you're
+better off using its driver directly.
+
 #### Creating a `did-io` Client Instance
 
 ```js
@@ -75,7 +76,7 @@ const didIo = new DidResolver();
 #### Supported Drivers
 
 * [`did:v1`](https://github.com/veres-one/did-veres-one)
-* [did:key](https://github.com/veres-one/did-method-key-js)
+* [did:key](https://github.com/digitalbazaar/did-method-key-js)
 
 #### Veres One DID Method
 
@@ -83,7 +84,7 @@ const didIo = new DidResolver();
 * [`did-veres-one`](https://github.com/veres-one/did-veres-one) driver docs
 
 ```js
-const v1 = require('did-veres-one');
+import * as v1 from 'did-veres-one';
 
 // See did-veres-one repo for instructions on how to set up the httpsAgent etc
 const veresDriver = v1.driver({ mode: 'dev', httpsAgent, documentLoader });
@@ -113,7 +114,7 @@ drivers:
 
 #### `did:key` DID Method
 
-* [`did-key-driver`]() driver docs
+* [`did-key-driver`](https://github.com/digitalbazaar/did-method-key-js) driver docs
 
 ```js
 const keyDriver = require('did-method-key');

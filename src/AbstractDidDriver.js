@@ -5,17 +5,7 @@ export class AbstractDidDriver {
   }
 
   /**
-   * Generates and returns the id of a given key. Used by `did-io` drivers.
-   *
-   * @param {LDKeyPair} key
-   * @param {string} [did] - Optional DID.
-   *
-   * @returns {Promise<string>} Returns the key's id.
-   */
-  async computeKeyId() {}
-
-  /**
-   * @returns {Promise<{didDocument: DidDocument, keys: object}>}
+   * @returns {Promise<{didDocument: DidDocument, keyPairs: object}>}
    */
   async generate() {}
 
