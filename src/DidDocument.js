@@ -1,14 +1,33 @@
 /*!
- * Copyright (c) 2020 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
  */
-import {PROOF_PURPOSES} from './constants';
+import {VERIFICATION_RELATIONSHIPS} from './constants';
 
 export class DidDocument {
-  constructor({id, capabilityInvocation, authentication, assertionMethod,
-    capabilityDelegation, keyAgreement, service} = {}) {
+  /**
+   * @see https://w3c.github.io/did-core/#did-document-properties
+   * @param {string} id - Decentralized Identifier (DID) of this document.
+   * @param {string} [controller]
+   * @param {object[]} [verificationMethod]
+   * @param {object[]|string[]} [assertionMethod]
+   * @param {object[]|string[]} [authentication]
+   * @param {object[]|string[]} [capabilityDelegation]
+   * @param {object[]|string[]} [capabilityInvocation]
+   * @param {object[]|string[]} [keyAgreement]
+   * @param {object[]} [service]
+   */
+  constructor({
+    id, controller, verificationMethod, assertionMethod, authentication,
+    capabilityDelegation, capabilityInvocation, keyAgreement, service
+  } = {}) {
+    if(!id) {
+      throw new Error('Id is required.');
+    }
     this.id = id; // DID
+    this.controller = controller;
+    this.verificationMethod = verificationMethod;
 
-    // Proof methods
+    // Proof methods / verification relationships
     this.capabilityInvocation = capabilityInvocation;
     this.authentication = authentication;
     this.assertionMethod = assertionMethod;
@@ -21,24 +40,25 @@ export class DidDocument {
 
   /**
    * Initializes the DID Document's keys/proof methods.
-   * Usage:
-   * ```
+   * @example
    * didDocument.id = 'did:ex:123';
    * const {didKeys} = await didDocument.initKeys({
    *   cryptoLd,
    *   keyMap: {
    *     capabilityInvocation: someExistingKey,
-   *     authentication: 'Ed25519VerificationKey2018',
-   *     assertionMethod: 'Ed25519VerificationKey2018',
+   *     authentication: 'Ed25519VerificationKey2020',
+   *     assertionMethod: 'Ed25519VerificationKey2020',
    *     keyAgreement: 'X25519KeyAgreementKey2019'
    *   }
    * });
-   * ```
-   * @param [cryptoLd] {CryptoLD} - CryptoLD driver instance, initialized with
-   *   the key types this DID Document intends to support.
-   * @param [keyMap={}] {object}
    *
-   * @returns {Promise<{didKeys: object}>} Public/private Key hashmap by key id.
+   * @param {object} options - Options hashmap.
+   * @param {CryptoLD} [options.cryptoLd] - CryptoLD driver instance,
+   *   initialized with the key types this DID Document intends to support.
+   * @param {object} [keyMap] - Map of keys (or key types) by purpose.
+   *
+   * @returns {Promise<{keyPairs: object}>} A hashmap of public/private key
+   *   pairs, by key id.
    */
   async initKeys({cryptoLd, keyMap = {}} = {}) {
     if(!this.id) {
@@ -46,13 +66,13 @@ export class DidDocument {
         'DID Document "id" property is required to initialize keys.');
     }
 
-    const didKeys = {};
+    const keyPairs = {};
 
     // Set the defaults for the created keys (if needed)
     const options = {controller: this.id};
 
     for(const purpose in keyMap) {
-      if(!PROOF_PURPOSES.includes(purpose)) {
+      if(!VERIFICATION_RELATIONSHIPS.has(purpose)) {
         throw new Error(`Unsupported key purpose: "${purpose}".`);
       }
 
@@ -67,292 +87,196 @@ export class DidDocument {
       }
 
       this[purpose] = [key.export({publicKey: true})];
-      didKeys[key.id] = key;
+      keyPairs[key.id] = key;
     }
 
-    return {didKeys};
+    return {keyPairs};
   }
 
   /**
-   * Returns all verification methods (keys) for a given proof purpose.
+   * Finds a verification method for a given id or purpose.
    *
-   * @param proofPurpose {string} proof purpose identifier
-   * @returns {object|undefined}
-   */
-  getAllVerificationMethods(proofPurpose) {
-    // return this.doc[proofPurpose];
-  }
-
-  /**
-   * Returns the node for the verification method for the specified proof
-   * purpose (from which you can create an LDKeyPair instance).
-   * If no methodId or methodIndex is given, the first available non-revoked
-   * key is returned.
+   * If a method id is given, returns the object for that method (for example,
+   * returns the public key definition for that id).
    *
-   * This is useful for when you know the _purpose_ of a key, but not its id.
-   * (If you know the key id but need to find its purpose, use
-   * `findVerificationMethod()` instead.)
+   * If a purpose (verification relationship) is given, returns the first
+   * available verification method for that purpose.
    *
-   * Usage:
+   * If no method is found (for the given id or purpose), returns undefined.
    *
-   *   ```
-   *   const method = didDoc.getVerificationMethod(
-   *     {proofPurpose: 'assertionMethod'});
-   *
-   *   // Now you can either create a key pair
-   *   const keyPair = new LDKeyPair(method);
-   *
-   *   // Or get the key directly from the doc's key cache
-   *   const keyPair = didDoc.keys[method.id];
-   *   ```
-   *
-   * @param proofPurpose {string} For example, 'capabilityDelegation'
-   *
-   * @param [methodId] {string} method id (DID with hash fragment, like
-   *   `did:example:1234#<key fingerprint>`)
-   * @param [methodIndex] {number} The nth method in the set, zero-indexed.
-   *
-   * @returns {object} Public method data
-   */
-  getVerificationMethod({proofPurpose, methodId, methodIndex = 0}) {
-    const methods = this.getAllVerificationMethods(proofPurpose);
-    if(!methods) {
-      throw new Error(`Method not found for proof purpose "${proofPurpose}".`);
-    }
-
-    let methodData;
-
-    if(methodId) {
-      methodData = methods.find(m => m.id === methodId);
-    } else {
-      methodData = methods[methodIndex];
-    }
-    // TODO: Check for revocation and expiration
-
-    return methodData;
-  }
-
-  /**
-   * Alias for `findVerificationMethod()`.
-   * Example:
-   * ```
-   * findKey({id: 'did:ex:123#abcd'})
+   * @example
+   * didDocument.findVerificationMethod({id: 'did:ex:123#abcd'});
    * // ->
-   * // {proofPurpose: 'authentication', key: { ... }}
-   * ```
-   * @returns {{proofPurpose: string, key: object}}
-   */
-  findKey({id}) {
-    const {proofPurpose, method: key} = this.findVerificationMethod({id});
-    return {proofPurpose, key};
-  }
-
-  /**
-   * Finds a verification method for a given id, and returns it along with the
-   * proof purpose in which it resides. (Note that if a key is included in
-   * multiple proof purpose sections, the first occurrence is returned.)
-   *
-   * Useful for operations like rotate, since you need to know which proof
-   * purpose section to add a new key to (after removing the old one).
-   *
-   * Example:
-   * ```
-   * findVerificationMethod({id: 'did:ex:123#abcd'})
+   * {
+   *   id: 'did:ex:123#abcd',
+   *   controller: 'did:ex:123',
+   *   type: 'Ed25519VerificationKey2020',
+   *   publicKeyMultibase: '...'
+   * }
+   * @example
+   * didDocument.findVerificationMethod({purpose: 'authentication'});
    * // ->
-   * // {proofPurpose: 'authentication', method: { ... }}
-   * ```
-   *
-   * @param {string} id - Verification method id.
-   * @returns {{proofPurpose: string, method: object}}
-   */
-  findVerificationMethod({id}) {
-    if(!id) {
-      throw new Error('Method id is required.');
-    }
-
-    for(const proofPurpose in PROOF_PURPOSES) {
-      let method;
-      try {
-        method = this.getVerificationMethod({proofPurpose, methodId: id});
-        if(method) {
-          return {proofPurpose, method};
-        }
-      } catch(error) {
-        // Method not found for that purpose, continue searching
-      }
-    }
-    return {};
-  }
-
-  /**
-   * Composes and returns a service id for a service name.
-   *
-   * @param {string} serviceName
-   *
-   * @returns {string} Service id
-   */
-  serviceIdFor(fragment) {
-    if(!fragment) {
-      throw new Error('Invalid service fragment.');
-    }
-    return `${this.id}#${fragment}`;
-  }
-
-  /**
-   * Finds a service endpoint in this did doc, given an id or a name.
-   *
-   * @param {string} [fragment]
-   * @param {string} [id]
+   * {
+   *   id: 'did:ex:123#abcd',
+   *   controller: 'did:ex:123',
+   *   type: 'Ed25519VerificationKey2020',
+   *   publicKeyMultibase: '...'
+   * }
+   * @param {object} options - Options hashmap.
+   * One of the following is required:
+   * @param {string} [options.id] - Verification method id.
+   * @param {string} [options.purpose] - Method purpose (verification
+   *   relationship).
    *
    * @returns {object}
    */
-  findService({fragment, id}) {
-    // const serviceId = id || this.serviceIdFor(fragment);
-    //
-    // return jsonld
-    //   .getValues(this.doc, 'service')
-    //   .find(service => service.id === serviceId);
+  findVerificationMethod({id, purpose} = {}) {
+    if(!(id || purpose)) {
+      throw new Error('A method id or purpose is required.');
+    }
+
+    if(id) {
+      return this._methodById({id});
+    }
+
+    // Id not given, find the first method by purpose
+    const [method] = this[purpose] || [];
+    if(method && typeof method === 'string') {
+      // This is a reference, not the full method, attempt to find it
+      return this._methodById({id: method});
+    }
+
+    return method;
   }
 
   /**
-   * Tests whether this did doc has a service endpoint (by fragment or id).
-   * One of `id` or `fragment` is required.
+   * Tests whether this DID Document contains a verification relationship
+   * between the subject and a method id, for a given purpose.
    *
-   * @param {string} [id]
-   * @param {string} [name]
+   * @example
+   * didDocument.approvesMethodFor({
+   *   methodId: 'did:ex:1234#abcd', purpose: 'authentication'
+   * })
+   * // ->
+   * true
+   * @example
+   * didDocument.approvesMethodFor({
+   *   methodId: 'did:ex:1234#abcd', purpose: 'assertionMethod'
+   * })
+   * // ->
+   * false
+   *
+   * @param {object} options - Options hashmap.
+   * @param {string} options.methodId - Verification method id (a uri).
+   * @param {string} options.purpose - e.g. 'authentication', etc.
    *
    * @returns {boolean}
    */
-  hasService({id, fragment}) {
-    return !!this.findService({id, fragment});
+  approvesMethodFor({methodId, purpose}) {
+    if(!(methodId && purpose)) {
+      throw new Error('A method id and purpose is required.');
+    }
+    const method = this._methodById({id: methodId});
+    if(!method) {
+      return false;
+    }
+    const methods = this[purpose] || [];
+    return !!methods.find(method => {
+      return (typeof method === 'string' && method === methodId) ||
+        (typeof method === 'object' && method.id === methodId);
+    });
   }
 
   /**
    * Adds a service endpoint to this did doc.
-   * One of `id` or `fragment` is required.
    *
-   * @param {string} [fragment]
-   * @param {string} [id]
-   * @param {string} type URI (e.g. 'urn:AgentService')
-   * @param {string} endpoint  URI (e.g. 'https://agent.example.com')
+   * @param {object} options - Options hashmap.
+   * @param {string} options.id - Service id (uri).
+   * @param {string} options.type - Service endpoint type
+   *   (e.g. 'urn:AgentService').
+   * @param {string} options.endpoint - Service endpoint uri
+   *   (e.g. 'https://agent.example.com').
    */
-  addService({fragment, endpoint, id, type}) {
-    // if(!!id === !!fragment) {
-    //   throw new Error('Exactly one of `fragment` or `id` is required.');
-    // }
-    // if(id && !id.includes(':')) {
-    //   throw new Error('Service `id` must be a URI.');
-    // }
-    // const serviceId = id || this.serviceIdFor(fragment);
-    //
-    // if(!type || !type.includes(':')) {
-    //   throw new Error('Service `type` is required and must be a URI.');
-    // }
-    // if(!endpoint || !endpoint.includes(':')) {
-    //   throw new Error('Service `endpoint` is required and must be a URI.');
-    // }
-    //
-    // if(this.findService({id, fragment})) {
-    //   throw new Error('Service with that name or id already exists.');
-    // }
-    //
-    // jsonld.addValue(this.doc, 'service', {
-    //   id: serviceId,
-    //   serviceEndpoint: endpoint,
-    //   type,
-    // }, {
-    //   propertyIsArray: true
-    // });
+  addService({id, type, endpoint} = {}) {
+    if(!(id && type && endpoint)) {
+      throw new Error('Service id, type and endpoint is required.');
+    }
+    if(!this.service) {
+      this.service = [];
+    }
+
+    if(this.findService({id})) {
+      throw new Error(`A service with id "${id}" already exists.`);
+    }
+    this.service.push({id, type, endpoint});
+  }
+
+  /**
+   * Finds a service endpoint in this did doc, given an id or a type.
+   *
+   * @param {object} options - Options hashmap.
+   *
+   * One of the following is required:
+   * @param {string} [options.id] - Service id (a uri).
+   * @param {string} [options.type] - Service type.
+   *
+   * @returns {object}
+   */
+  findService({id, type} = {}) {
+    if(!(id || type)) {
+      throw new Error('A service id or type is required.');
+    }
+    const services = this.service || [];
+    if(id) {
+      return services.find(service => service.id === id);
+    }
+    return services.find(service => service.type === type);
   }
 
   /**
    * Removes a service endpoint from this did doc.
-   * One of `id` or `fragment` is required.
+   * If that service endpoint does not exist in this doc, does nothing.
    *
-   * @param {string} [fragment]
-   * @param {string} [id]
+   * @param {object} options - Options hashmap.
+   * @param {string} options.id - Service id (uri).
    */
-  removeService({id, fragment}) {
-    // const serviceId = id || this.serviceIdFor(fragment);
-    //
-    // const services = jsonld
-    //   .getValues(this.doc, 'service')
-    //   .filter(service => service.id !== serviceId);
-    // if(services.length === 0) {
-    //   jsonld.removeProperty(this.doc, 'service');
-    // } else {
-    //   this.doc.service = services;
-    // }
-  }
-
-  addKey({key, proofPurpose, controller = this.id}) {
-    // Add public key node to the DID Doc
-    // const keys = this.getAllVerificationMethods(proofPurpose);
-    // if(!keys) {
-    //   throw new Error(`Keys not found for proofPurpose "${proofPurpose}".`);
-    // }
-
-    // keys.push(key.publicNode({controller})); //addPublicKey
-
-    // Add keypair (public + private) to non-exported key storage
-    // this.keys[key.id] = key;
+  removeService({id}) {
+    if(!this.service) {
+      return;
+    }
+    this.service = this.service.filter(s => s.id !== id);
   }
 
   /**
-   * @param key {LDKeyPair}
+   * Finds a verification method for a given id and returns it.
+   *
+   * @param {object} options - Options hashmap.
+   * @param {string} options.id - Verification method id.
+   *
+   * @returns {object}
+   * @private
    */
-  removeKey(key) {
-    // check all proof purpose keys
-    for(const proofPurposeType of Object.values(PROOF_PURPOSES)) {
-      if(this.doc[proofPurposeType]) {
-        this.doc[proofPurposeType] = this.doc[proofPurposeType]
-          .filter(k => k.id !== key.id);
-      }
+  _methodById({id}) {
+    let result;
+
+    // First, check the 'verificationMethod' bucket, see if it's listed there
+    if(this.verificationMethod) {
+      result = this.verificationMethod.find(method => method.id === id);
     }
 
-    // also remove key from this doc's keys hash
-    delete this.keys[key.id];
-  }
-
-  /**
-   * Rotates a key in this did document (removes the old one, and generates and
-   * adds a new one to the same proof purpose section). Key id is not re-used.
-   *
-   * One of the following is required:
-   * @param {LDKeyPair} [key] - Key object (with an .id)
-   * @param {string} [id] - Key id
-   *
-   * @param {string} [passphrase] - Optional passphrase to encrypt the new key.
-   *
-   * @returns {Promise<LDKeyPair>} Returns new key (after removing the old one)
-   */
-  async rotateKey({key, id, passphrase}) {
-    // if(!key && !id) {
-    //   throw new Error('A key id or key object is required to rotate.');
-    // }
-    // const keyId = id || key.id;
-    // const {proofPurpose, key: oldKey} = this.findKey({id: keyId});
-    // if(!oldKey) {
-    //   throw new Error(`Key ${keyId} is not found in did document.`);
-    // }
-    // const keyType = oldKey.type;
-    // const controller = oldKey.controller;
-    //
-    // // Start the observer if necessary (generates patches for update())
-    // if(!this.observer) {
-    //   this.observe();
-    // }
-    //
-    // // First, remove the old key
-    // this.removeKey({id: keyId});
-    //
-    // // Generate an add a new key to the same proof purpose (key id not re-used)
-    // const newKey = await LDKeyPair.generate({type: keyType, passphrase});
-    // newKey.id = VeresOneDidDoc.generateKeyId({did: this.id, keyPair: newKey});
-    // newKey.controller = controller;
-    //
-    // this.addKey({key: newKey, proofPurpose, controller});
-    //
-    // return newKey;
+    for(const purpose of VERIFICATION_RELATIONSHIPS.keys()) {
+      const methods = this[purpose] || [];
+      // Iterate through each verification method in 'authentication', etc.
+      for(const method of methods) {
+        // Only return it if the method is defined, not referenced
+        if(typeof method === 'object' && method.id === id) {
+          result = method;
+          break;
+        }
+      }
+      if(result) {
+        return result;
+      }
+    }
   }
 }

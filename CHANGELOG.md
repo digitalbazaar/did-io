@@ -1,12 +1,16 @@
 # did-io ChangeLog
 
-## 0.9.0 - TBD
+## 1.0.0 - TBD
 
 ### Added
 - Added a general-purpose `DidDocument` class.
 
 ### Changed
+- **BREAKING**: Renamed NPM package name from `did-io` to `@digitalbazaar/did-io`.
 - **BREAKING**: Changed module export signature.
+- **BREAKING**: Generating a DID Document now returns a tuple, of the form
+  `{didDocument, keyPairs}` (instead of storing the key pairs directly on
+  the DID Document, as in the previous `did-io` version).
 
 ## 0.8.3 - 2020-08-19
 
