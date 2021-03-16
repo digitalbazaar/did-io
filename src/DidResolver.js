@@ -51,6 +51,45 @@ export class DidResolver {
 }
 
 /**
+ * Tests whether this DID Document contains a verification relationship
+ * between the subject and a method id, for a given purpose.
+ *
+ * @example
+ * didDocument.approvesMethodFor({
+ *   methodId: 'did:ex:1234#abcd', purpose: 'authentication'
+ * })
+ * // ->
+ * true
+ * @example
+ * didDocument.approvesMethodFor({
+ *   methodId: 'did:ex:1234#abcd', purpose: 'assertionMethod'
+ * })
+ * // ->
+ * false
+ *
+ * @param {object} options - Options hashmap.
+ * @param {object} options.doc - DID Document.
+ * @param {string} options.methodId - Verification method id (a uri).
+ * @param {string} options.purpose - e.g. 'authentication', etc.
+ *
+ * @returns {boolean} Returns whether a method id is authorized for purpose.
+ */
+export function approvesMethodFor({doc, methodId, purpose}) {
+  if(!(methodId && purpose)) {
+    throw new Error('A method id and purpose is required.');
+  }
+  const method = _methodById({doc, methodId});
+  if(!method) {
+    return false;
+  }
+  const methods = doc[purpose] || [];
+  return !!methods.find(method => {
+    return (typeof method === 'string' && method === methodId) ||
+      (typeof method === 'object' && method.id === methodId);
+  });
+}
+
+/**
  * Finds a verification method for a given methodId or purpose.
  *
  * If a method id is given, returns the object for that method (for example,
