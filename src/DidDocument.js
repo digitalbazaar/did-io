@@ -94,44 +94,6 @@ export class DidDocument {
   }
 
   /**
-   * Tests whether this DID Document contains a verification relationship
-   * between the subject and a method id, for a given purpose.
-   *
-   * @example
-   * didDocument.approvesMethodFor({
-   *   methodId: 'did:ex:1234#abcd', purpose: 'authentication'
-   * })
-   * // ->
-   * true
-   * @example
-   * didDocument.approvesMethodFor({
-   *   methodId: 'did:ex:1234#abcd', purpose: 'assertionMethod'
-   * })
-   * // ->
-   * false
-   *
-   * @param {object} options - Options hashmap.
-   * @param {string} options.methodId - Verification method id (a uri).
-   * @param {string} options.purpose - e.g. 'authentication', etc.
-   *
-   * @returns {boolean}
-   */
-  approvesMethodFor({methodId, purpose}) {
-    if(!(methodId && purpose)) {
-      throw new Error('A method id and purpose is required.');
-    }
-    const method = this._methodById({id: methodId});
-    if(!method) {
-      return false;
-    }
-    const methods = this[purpose] || [];
-    return !!methods.find(method => {
-      return (typeof method === 'string' && method === methodId) ||
-        (typeof method === 'object' && method.id === methodId);
-    });
-  }
-
-  /**
    * Adds a service endpoint to this did doc.
    *
    * @param {object} options - Options hashmap.

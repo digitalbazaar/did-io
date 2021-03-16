@@ -7,7 +7,9 @@ const {expect} = chai;
 
 import {DidResolver} from '../';
 // Exported only for testing
-import {findVerificationMethod, _parseDid} from '../src/DidResolver.js';
+import {
+  findVerificationMethod, approvesMethodFor, _parseDid
+} from '../src/DidResolver.js';
 
 const MOCK_KEY = {
   id: 'did:ex:123#abcd',
@@ -135,6 +137,54 @@ describe('didIo utility functions', () => {
 
       const result = findVerificationMethod({doc, purpose: 'authentication'});
       expect(result).to.eql(MOCK_KEY);
+    });
+  });
+
+  describe('approvesMethodFor', () => {
+    const did = 'did:ex:123';
+    let key;
+
+    beforeEach(async () => {
+      key = {...MOCK_KEY};
+    });
+
+    it('should return false if method not in document', async () => {
+      const doc = {
+        id: did
+      };
+
+      const result = approvesMethodFor({
+        doc, methodId: key.id, purpose: 'authentication'
+      });
+      expect(result).to.be.false;
+    });
+
+    it('should return false if method not approved', async () => {
+      const doc = {
+        id: did,
+        verificationMethod: [key]
+      };
+
+      expect(approvesMethodFor({
+        doc, methodId: key.id, purpose: 'authentication'
+      })).to.be.false;
+
+      doc.assertionMethod = [key.id];
+      expect(approvesMethodFor({
+        doc, methodId: key.id, purpose: 'authentication'
+      })).to.be.false;
+    });
+
+    it('should return true if method is approved (referenced)', async () => {
+      const doc = {
+        id: did,
+        verificationMethod: [key],
+        authentication: [key.id]
+      };
+
+      expect(approvesMethodFor({
+        doc, methodId: key.id, purpose: 'authentication'
+      })).to.be.true;
     });
   });
 });
