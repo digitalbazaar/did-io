@@ -94,62 +94,6 @@ export class DidDocument {
   }
 
   /**
-   * Finds a verification method for a given id or purpose.
-   *
-   * If a method id is given, returns the object for that method (for example,
-   * returns the public key definition for that id).
-   *
-   * If a purpose (verification relationship) is given, returns the first
-   * available verification method for that purpose.
-   *
-   * If no method is found (for the given id or purpose), returns undefined.
-   *
-   * @example
-   * didDocument.findVerificationMethod({id: 'did:ex:123#abcd'});
-   * // ->
-   * {
-   *   id: 'did:ex:123#abcd',
-   *   controller: 'did:ex:123',
-   *   type: 'Ed25519VerificationKey2020',
-   *   publicKeyMultibase: '...'
-   * }
-   * @example
-   * didDocument.findVerificationMethod({purpose: 'authentication'});
-   * // ->
-   * {
-   *   id: 'did:ex:123#abcd',
-   *   controller: 'did:ex:123',
-   *   type: 'Ed25519VerificationKey2020',
-   *   publicKeyMultibase: '...'
-   * }
-   * @param {object} options - Options hashmap.
-   * One of the following is required:
-   * @param {string} [options.id] - Verification method id.
-   * @param {string} [options.purpose] - Method purpose (verification
-   *   relationship).
-   *
-   * @returns {object}
-   */
-  findVerificationMethod({id, purpose} = {}) {
-    if(!(id || purpose)) {
-      throw new Error('A method id or purpose is required.');
-    }
-
-    if(id) {
-      return this._methodById({id});
-    }
-
-    // Id not given, find the first method by purpose
-    const [method] = this[purpose] || [];
-    if(method && typeof method === 'string') {
-      // This is a reference, not the full method, attempt to find it
-      return this._methodById({id: method});
-    }
-
-    return method;
-  }
-
-  /**
    * Tests whether this DID Document contains a verification relationship
    * between the subject and a method id, for a given purpose.
    *
@@ -245,38 +189,5 @@ export class DidDocument {
       return;
     }
     this.service = this.service.filter(s => s.id !== id);
-  }
-
-  /**
-   * Finds a verification method for a given id and returns it.
-   *
-   * @param {object} options - Options hashmap.
-   * @param {string} options.id - Verification method id.
-   *
-   * @returns {object}
-   * @private
-   */
-  _methodById({id}) {
-    let result;
-
-    // First, check the 'verificationMethod' bucket, see if it's listed there
-    if(this.verificationMethod) {
-      result = this.verificationMethod.find(method => method.id === id);
-    }
-
-    for(const purpose of VERIFICATION_RELATIONSHIPS.keys()) {
-      const methods = this[purpose] || [];
-      // Iterate through each verification method in 'authentication', etc.
-      for(const method of methods) {
-        // Only return it if the method is defined, not referenced
-        if(typeof method === 'object' && method.id === id) {
-          result = method;
-          break;
-        }
-      }
-      if(result) {
-        return result;
-      }
-    }
   }
 }
