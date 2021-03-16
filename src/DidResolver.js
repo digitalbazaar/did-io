@@ -90,6 +90,64 @@ export function approvesMethodFor({doc, methodId, purpose}) {
 }
 
 /**
+ * Initializes the DID Document's keys/proof methods.
+ * @example
+ * didDocument.id = 'did:ex:123';
+ * const {didKeys} = await didDocument.initKeys({
+ *   cryptoLd,
+ *   keyMap: {
+ *     capabilityInvocation: someExistingKey,
+ *     authentication: 'Ed25519VerificationKey2020',
+ *     assertionMethod: 'Ed25519VerificationKey2020',
+ *     keyAgreement: 'X25519KeyAgreementKey2019'
+ *   }
+ * });
+ *
+ * @param {object} options - Options hashmap.
+ * @param {object} options.doc - DID Document.
+ * @typedef {Object} CryptoLD
+ * @param {CryptoLD} [options.cryptoLd] - CryptoLD driver instance,
+ *   initialized with the key types this DID Document intends to support.
+ * @param {object} [keyMap] - Map of keys (or key types) by purpose.
+ *
+ * @returns {Promise<{keyPairs: object}>} A hashmap of public/private key
+ *   pairs, by key id.
+ */
+export async function initKeys({doc, cryptoLd, keyMap = {}} = {}) {
+  if(!doc.id) {
+    throw new TypeError(
+      'DID Document "id" property is required to initialize keys.');
+  }
+
+  const keyPairs = {};
+
+  // Set the defaults for the created keys (if needed)
+  const options = {controller: doc.id};
+
+  for(const purpose in keyMap) {
+    if(!VERIFICATION_RELATIONSHIPS.has(purpose)) {
+      throw new Error(`Unsupported key purpose: "${purpose}".`);
+    }
+
+    let key;
+    if(typeof keyMap[purpose] === 'string') {
+      if(!cryptoLd) {
+        throw new Error('Please provide an initialized CryptoLD instance.');
+      }
+      key = await cryptoLd.generate({type: keyMap[purpose], ...options});
+    } else {
+      // An existing key has been provided
+      key = keyMap[purpose];
+    }
+
+    this[purpose] = [key.export({publicKey: true})];
+    keyPairs[key.id] = key;
+  }
+
+  return {keyPairs};
+}
+
+/**
  * Finds a verification method for a given methodId or purpose.
  *
  * If a method id is given, returns the object for that method (for example,
@@ -203,3 +261,63 @@ export function _parseDid(did) {
 
   return {prefix};
 }
+
+/**
+ * Adds a service endpoint to this did doc.
+ *
+ * @param {object} options - Options hashmap.
+ * @param {string} options.id - Service id (uri).
+ * @param {string} options.type - Service endpoint type
+ *   (e.g. 'urn:AgentService').
+ * @param {string} options.endpoint - Service endpoint uri
+ *   (e.g. 'https://agent.example.com').
+ */
+// function addService({id, type, endpoint} = {}) {
+//   if(!(id && type && endpoint)) {
+//     throw new Error('Service id, type and endpoint is required.');
+//   }
+//   if(!this.service) {
+//     this.service = [];
+//   }
+//
+//   if(this.findService({id})) {
+//     throw new Error(`A service with id "${id}" already exists.`);
+//   }
+//   this.service.push({id, type, endpoint});
+// }
+
+/**
+ * Finds a service endpoint in this did doc, given an id or a type.
+ *
+ * @param {object} options - Options hashmap.
+ *
+ * One of the following is required:
+ * @param {string} [options.id] - Service id (a uri).
+ * @param {string} [options.type] - Service type.
+ *
+ * @returns {object}
+ */
+// function findService({id, type} = {}) {
+//   if(!(id || type)) {
+//     throw new Error('A service id or type is required.');
+//   }
+//   const services = this.service || [];
+//   if(id) {
+//     return services.find(service => service.id === id);
+//   }
+//   return services.find(service => service.type === type);
+// }
+
+/**
+ * Removes a service endpoint from this did doc.
+ * If that service endpoint does not exist in this doc, does nothing.
+ *
+ * @param {object} options - Options hashmap.
+ * @param {string} options.id - Service id (uri).
+ */
+// function removeService({id}) {
+//   if(!this.service) {
+//     return;
+//   }
+//   this.service = this.service.filter(s => s.id !== id);
+// }
