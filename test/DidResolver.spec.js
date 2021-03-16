@@ -1,16 +1,18 @@
 /*!
  * Copyright (c) 2021 Digital Bazaar, Inc. All rights reserved.
  */
-const chai = require('chai');
+import chai from 'chai';
 chai.should();
 
 const {expect} = chai;
 
-const {DidResolver} = require('../../');
+import {DidResolver} from '../';
+// Exported only for testing
+import {_parseDid} from '../src/DidResolver.js';
 
-describe('parseDid', () => {
+describe('_parseDid', () => {
   it('should return main did method identifier', async () => {
-    const {prefix} = DidResolver.parseDid('did:v1:test:nym:abcd');
+    const {prefix} = _parseDid('did:v1:test:nym:abcd');
     expect(prefix).to.equal('v1');
   });
 });
