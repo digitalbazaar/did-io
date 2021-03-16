@@ -6,28 +6,6 @@ export class DidResolver {
     this.methods = options.methods || {};
   }
 
-  /**
-   * Parses the DID into various component (currently, only cares about prefix).
-   *
-   * Usage:
-   *
-   *   ```
-   *   DidResolver.parseDid('did:v1:test:nym');
-   *   // -> 'v1'
-   *   ```
-   * @param did
-   * @returns {{prefix: string}}
-   */
-  static parseDid(did) {
-    if(!did) {
-      throw new TypeError('DID cannot be empty.');
-    }
-
-    const prefix = did.split(':').slice(1, 2).join(':');
-
-    return {prefix};
-  }
-
   use(methodName, driver) {
     this.methods[methodName] = driver;
   }
@@ -61,11 +39,33 @@ export class DidResolver {
   }
 
   methodForDid(did) {
-    const {prefix} = DidResolver.parseDid(did);
+    const {prefix} = _parseDid(did);
     const method = this.methods[prefix];
     if(!method) {
       throw new Error(`Driver for DID ${did} not found.`);
     }
     return method;
   }
+}
+
+/**
+ * Parses the DID into various component (currently, only cares about prefix).
+ *
+ * Usage:
+ *
+ *   ```
+ *   _parseDid('did:v1:test:nym');
+ *   // -> 'v1'
+ *   ```
+ * @param {string} did - DID uri.
+ * @returns {{prefix: string}} Returns the method prefix (without `did:`).
+ */
+export function _parseDid(did) {
+  if(!did) {
+    throw new TypeError('DID cannot be empty.');
+  }
+
+  const prefix = did.split(':').slice(1, 2).join(':');
+
+  return {prefix};
 }

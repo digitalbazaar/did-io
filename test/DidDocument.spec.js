@@ -6,7 +6,7 @@ chai.should();
 
 const {expect} = chai;
 
-const {DidDocument} = require('../../');
+const {DidDocument} = require('../src/main');
 
 const MOCK_KEY = {
   id: 'did:ex:123#abcd',

@@ -4,7 +4,7 @@
 module.exports = config => {
   const bundler = process.env.BUNDLER || 'webpack';
   const frameworks = ['mocha'];
-  const files = ['**/*.spec.js'];
+  const files = ['test/**/*.spec.js'];
   const reporters = ['mocha'];
   const browsers = ['ChromeHeadless'];
   const client = {
@@ -21,7 +21,7 @@ module.exports = config => {
     frameworks,
     files,
     reporters,
-    basePath: '',
+    basePath: 'test',
     port: 9876,
     colors: true,
     browsers,
