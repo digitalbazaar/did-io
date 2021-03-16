@@ -18,28 +18,41 @@ export class DidResolver {
   }
 
   /**
-   * @param {object} options
-   * @param {DidDocument} options.didDocument
+   * @param {object} options - Options hashmap.
+   * @param {object} options.didDocument - DID Document to update.
+   * @param {object} [options.updateOptions] - Options to pass to the update
+   *   operations.
    *
-   * @returns {Promise}
+   * @returns {Promise<object>} - Returns results of the update operation.
    */
-  async update(options = {}) {
-    const didDocument = options.didDocument || {};
+  async update({didDocument = {}, ...updateOptions} = {}) {
     const method = this._methodForDid(didDocument.did);
-    return method.update(options);
+    return method.update(updateOptions);
   }
 
   /**
    * Registers a DID Document, method-specific.
    *
    * TODO: Not sure if this is top level / universal?
+   *
+   * @param {object} options - Options hashmap.
+   * @param {object} options.didDocument - DID Document to register.
+   * @param {object} [options.registerOptions] - Options to pass to the register
+   *   operations.
+   *
+   * @returns {Promise<object>} - Returns results of the registration operation.
    */
-  async register(options = {}) {
-    const didDocument = options.didDocument || {};
+  async register({didDocument = {}, ...registerOptions} = {}) {
     const method = this._methodForDid(didDocument.did);
-    return method.register(options);
+    return method.register(registerOptions);
   }
 
+  /**
+   * @param {string} did - DID uri.
+   *
+   * @returns {object} - DID Method driver.
+   * @private
+   */
   _methodForDid(did) {
     const {prefix} = _parseDid(did);
     const method = this.methods[prefix];
@@ -57,20 +70,18 @@ export class DidResolver {
  * @example
  * didDocument.approvesMethodFor({
  *   methodId: 'did:ex:1234#abcd', purpose: 'authentication'
- * })
- * // ->
- * true
+ * });
+ * // -> true
  * @example
  * didDocument.approvesMethodFor({
  *   methodId: 'did:ex:1234#abcd', purpose: 'assertionMethod'
- * })
- * // ->
- * false
+ * });
+ * // -> false
  *
  * @param {object} options - Options hashmap.
  * @param {object} options.doc - DID Document.
  * @param {string} options.methodId - Verification method id (a uri).
- * @param {string} options.purpose - e.g. 'authentication', etc.
+ * @param {string} options.purpose - E.g. 'authentication', etc.
  *
  * @returns {boolean} Returns whether a method id is authorized for purpose.
  */
@@ -91,9 +102,10 @@ export function approvesMethodFor({doc, methodId, purpose}) {
 
 /**
  * Initializes the DID Document's keys/proof methods.
+ *
  * @example
  * didDocument.id = 'did:ex:123';
- * const {didKeys} = await didDocument.initKeys({
+ * const {didKeys} = await initKeys({
  *   cryptoLd,
  *   keyMap: {
  *     capabilityInvocation: someExistingKey,
@@ -101,14 +113,14 @@ export function approvesMethodFor({doc, methodId, purpose}) {
  *     assertionMethod: 'Ed25519VerificationKey2020',
  *     keyAgreement: 'X25519KeyAgreementKey2019'
  *   }
- * });
+ * });.
  *
  * @param {object} options - Options hashmap.
  * @param {object} options.doc - DID Document.
- * @typedef {Object} CryptoLD
+ * @typedef {object} CryptoLD
  * @param {CryptoLD} [options.cryptoLd] - CryptoLD driver instance,
  *   initialized with the key types this DID Document intends to support.
- * @param {object} [keyMap] - Map of keys (or key types) by purpose.
+ * @param {object} [options.keyMap] - Map of keys (or key types) by purpose.
  *
  * @returns {Promise<{keyPairs: object}>} A hashmap of public/private key
  *   pairs, by key id.
@@ -179,7 +191,7 @@ export async function initKeys({doc, cryptoLd, keyMap = {}} = {}) {
  * @param {object} options - Options hashmap.
  * @param {object} options.doc - DID Document.
  *
- * One of the following is required:
+ * One of the following is required.
  * @param {string} [options.methodId] - Verification method id.
  * @param {string} [options.purpose] - Method purpose (verification
  *   relationship).
@@ -212,7 +224,8 @@ export function findVerificationMethod({doc, methodId, purpose} = {}) {
  * Finds a verification method for a given id and returns it.
  *
  * @param {object} options - Options hashmap.
- * @param {string} options.id - Verification method id.
+ * @param {object} options.doc - DID Document.
+ * @param {string} options.methodId - Verification method id.
  *
  * @returns {object} Returns the verification method.
  */
@@ -243,13 +256,12 @@ export function _methodById({doc, methodId}) {
 /**
  * Parses the DID into various component (currently, only cares about prefix).
  *
- * Usage:
+ * @example
+ * _parseDid('did:v1:test:nym');
+ * // -> {prefix: 'v1'}
  *
- *   ```
- *   _parseDid('did:v1:test:nym');
- *   // -> 'v1'
- *   ```
  * @param {string} did - DID uri.
+ *
  * @returns {{prefix: string}} Returns the method prefix (without `did:`).
  */
 export function _parseDid(did) {
@@ -291,7 +303,7 @@ export function _parseDid(did) {
  *
  * @param {object} options - Options hashmap.
  *
- * One of the following is required:
+ * One of the following is required.
  * @param {string} [options.id] - Service id (a uri).
  * @param {string} [options.type] - Service type.
  *

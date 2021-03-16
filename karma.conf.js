@@ -1,10 +1,10 @@
 /*!
- * Copyright (c) 2020 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2020-2021 Digital Bazaar, Inc. All rights reserved.
  */
 module.exports = config => {
   const bundler = process.env.BUNDLER || 'webpack';
   const frameworks = ['mocha'];
-  const files = ['test/**/*.spec.js'];
+  const files = ['test/*.spec.js'];
   const reporters = ['mocha'];
   const browsers = ['ChromeHeadless'];
   const client = {
@@ -21,14 +21,13 @@ module.exports = config => {
     frameworks,
     files,
     reporters,
-    basePath: 'test',
     port: 9876,
     colors: true,
     browsers,
     client,
     singleRun: true,
     preprocessors: {
-      'unit/*.js': preprocessors
+      'test/*.js': preprocessors
     },
     webpack: {
       devtool: 'inline-source-map',

@@ -53,7 +53,7 @@
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
-    "eslint": "^7.6.0",
+    "eslint": "^7.22.0",
     "eslint-config-digitalbazaar": "^2.6.1",
     "eslint-plugin-jsdoc": "^32.2.0",
     "karma": "^5.1.1",
@@ -76,7 +76,7 @@
     "Credential"
   ],
   "scripts": {
-    "test": "npm run test-node && npm run test-karma",
+    "test": "npm run lint && npm run test-node && npm run test-karma",
     "test-node": "cross-env NODE_ENV=test mocha -r esm --preserve-symlinks -t 30000 -A -R ${REPORTER:-spec} test/**/*.spec.js",
     "test-karma": "karma start karma.conf.js",
     "lint": "eslint .",
