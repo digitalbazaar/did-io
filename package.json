@@ -35,11 +35,11 @@
     "email": "support@digitalbazaar.com"
   },
   "license": "BSD-3-Clause",
-  "main": "src/main.js",
+  "main": "lib/index.js",
+  "module": "lib/main.js",
   "files": [
-    "src/*.js"
+    "lib/*.js"
   ],
-  "module": "src/main.js",
   "dependencies": {
     "did-context": "^2.0.0",
     "esm": "^3.2.25"
