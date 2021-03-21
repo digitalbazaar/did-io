@@ -5,8 +5,6 @@ import chai from 'chai';
 chai.should();
 const {expect} = chai;
 
-// import {MultiResolver} from '../';
-// Exported only for testing
 import {
   findVerificationMethod, approvesMethodFor, parseDid
 } from '../';
@@ -24,23 +22,6 @@ describe('parseDid', () => {
     expect(prefix).to.equal('v1');
   });
 });
-
-// describe('didIo resolver instance', () => {
-//   const didIo = new MultiResolver();
-//
-//   describe('get()', () => {
-//     it('should error if no DID is passed', async () => {
-//       let error;
-//       try {
-//         await didIo.get();
-//       } catch(e) {
-//         error = e;
-//       }
-//
-//       expect(error.message).to.equal('DID cannot be empty.');
-//     });
-//   });
-// });
 
 describe('didIo utility functions', () => {
   describe('findVerificationMethod', () => {
