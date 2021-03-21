@@ -1,4 +1,4 @@
-# DID Client _(did-io)_
+# DID Client _(@digitalbazaar/did-io)_
 
 ![Node.js CI](https://github.com/digitalbazaar/did-io/workflows/Node.js%20CI/badge.svg)
 [![NPM Version](https://img.shields.io/npm/v/digitalbazaar/did-io)](https://www.npmjs.com/package/@digitalbazaar/did-io)
@@ -17,8 +17,6 @@
 - [License](#license)
 
 ## Background
-
-TBD
 
 See also (related specs):
 
@@ -44,88 +42,107 @@ npm install
 To install as a dependency in another project, add this to your `package.json`:
 
 ```
-"@digitalbazaar/did-io": "^1.0.0"
+"@digitalbazaar/did-io": "^X.x.x"
 ```
 
 ## Usage
 
-### Configuring method-specific drivers
-
-`did-io` is meant to be a DID resolver harness for use with one or more 
-method-specific drivers (no drivers are included by default). It uses a 
-[Chai](https://www.chaijs.com/)-like plugin architecture, where each driver
-is loaded via `.use(driver)`. 
-
-That means that you need to create instances of specific driver libraries for
-each method that you want to use. 
-
-NOTE: This driver provides convenience methods that can help when working with
-_multiple_ DID methods at the same time. If you're just using a single method
-(like [`did:key`](https://github.com/digitalbazaar/did-method-key-js)), you're
-better off using its driver directly.
-
-#### Creating a `did-io` Client Instance
+### Using the CachedResolver
 
 ```js
-import {DidResolver} from 'did-io';
-const didIo = new DidResolver();
+import {CachedResolver} from '@digitalbazaar/did-io';
 
-// You can now specify which DID methods you want via `.use(driver)`  
+// You can pass cache options to the constructor (see Cache Management below)
+const resolver = new CachedResolver({max: 100}); // defaults to 100
 ```
 
-#### Supported Drivers
+On its own, the resolver does not know how to fetch or resolve any DID methods.
+Support for each one has to be enabled explicitly. It uses a
+[Chai](https://www.chaijs.com/)-like plugin architecture, where each driver
+is loaded via `.use(driver)`.
+
+```js
+import didKey from '@digitalbazaar/did-method-key';
+import didVeresOne from 'did-veres-one';
+
+const didKeyDriver = didKey.driver();
+const didVeresOneDriver = didVeresOne.driver({mode: 'dev'}); // Dev / testnet / live modes
+
+// Enable resolver to use the did:key and did:v1 methods for cached fetching.
+resolver.use(didKeyDriver);
+resolver.use(didVeresOneDriver);
+```
+
+After enabling individual DID methods, you can `get()` individual
+DIDs. CachedResolver will use the appropriate driver, based on the `did:` prefix,
+or throw an 'unsupported did method' error if no driver was installed for that
+method.
+
+```js
+await resolver.get({did}); // -> did document
+await resolver.get({url: keyId}); // -> public key node
+```
+
+### Using CachedResolver as a `documentLoader`
+
+One of the most common uses of DIDs and their public keys is for cryptographic
+operations such as signing and verifying signatures of 
+[Verifiable Credentials](https://github.com/digitalbazaar/vc-js) and 
+[other documents](https://github.com/digitalbazaar/jsonld-signatures), and for 
+[encrypting and decrypting objects](https://github.com/digitalbazaar/minimal-cipher).
+
+For these and other Linked Data Security operations, a `documentLoader` function
+is often required. For example, NPM's `package.json` and `package-lock.json`
+mechanisms allow application developers to securely lock down a library's
+dependencies (by specifying exact content hashes or approximate versions).
+In the same manner, `documentLoader`s allow developers to secure their
+Linked Data Security load operations, such as when loading JSON-LD contexts,
+fetching DID Documents of supported DID methods, retrieving public keys, and
+so on.
+
+An initialized CachedResolver instance provides a convenience method that
+builds a `documentLoader` instance that works for its registered DID methods.
+This loader can be further composed with [other compatible JSON-LD document 
+loaders](https://github.com/decentralized-identity/jsonld-document-loader/).
+
+```js
+const resolver = new CachedResolver();
+resolver.use(didMethodDriver1);
+resolver.use(didMethodDriver2);
+
+const documentLoader = resolver.buildDocumentLoader();
+
+// The resulting documentLoader function now supports getting DID documents
+// for did method 1 and 2, as well as fetching public keys from those DIDs.
+```
+
+### Generating, Registering or Updating DID Documents
+
+
+### Cache Management
+
+CachedResolver uses [`lru-memoize`](https://github.com/digitalbazaar/lru-memoize)
+to [memoize](https://en.wikipedia.org/wiki/Memoization) `get()` promises 
+(as opposed to just the results of the operations),
+which helps in high-concurrency use cases. (And that library in turn uses
+[`lru-cache`](https://www.npmjs.com/package/lru-cache) under the hood.)
+
+The `CachedResolver` constructor passes any options given to it through to
+the `lru-cache` constructor, so  see that repo for the full list of cache 
+management options. Commonly used ones include:
+
+* `max` (default: 100) - maximum size of the cache.
+* `maxAge` - maximum age of an item in ms.
+* `updateAgeOnGet` (default: `false`) - When using time-expiring entries with 
+  `maxAge`, setting this to true will make each entry's effective time update to
+  the current time whenever it is retrieved from cache, thereby extending the 
+  expiration date of the entry.
+
+### Supported Drivers
 
 * [`did:v1`](https://github.com/veres-one/did-veres-one)
-* [did:key](https://github.com/digitalbazaar/did-method-key-js)
-
-#### Veres One DID Method
-
-* [Veres One Method spec](https://w3c-ccg.github.io/didm-veres-one/)
-* [`did-veres-one`](https://github.com/veres-one/did-veres-one) driver docs
-
-```js
-import * as v1 from 'did-veres-one';
-
-// See did-veres-one repo for instructions on how to set up the httpsAgent etc
-const veresDriver = v1.driver({ mode: 'dev', httpsAgent, documentLoader });
-
-// to use the did:v1 / Veres One method
-didIo.use(veresDriver);
-
-// Now you can start using the API (inside an async function)
-const didDoc = await didIo.get({did});
-console.log(didDoc);
-```
-
-```js
-didIo.methods['v1'].generate({...});
-// or
-veresDriver.generate({...})
-```
-
-Some operations are method-specific, and can be only called on individual
-drivers:
-
-##### Veres One Supported Operations
-
-* `register()`
-* **`get()`**
-* **`update()`**
-
-#### `did:key` DID Method
-
-* [`did-key-driver`](https://github.com/digitalbazaar/did-method-key-js) driver docs
-
-```js
-const keyDriver = require('did-method-key');
-
-// to use the did:key method
-didIo.use(keyDriver);
-```
-
-##### `did-key` Supported Operations
-
-* **`get()`**
+* [`did:key`](https://github.com/digitalbazaar/did-method-key-js)
+* [`did:web`](https://github.com/interop-alliance/did-web-resolver)
 
 ## Contribute
 
