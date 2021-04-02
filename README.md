@@ -62,11 +62,12 @@ Support for each one has to be enabled explicitly. It uses a
 is loaded via `.use(driver)`.
 
 ```js
-import didKey from '@digitalbazaar/did-method-key';
-import didVeresOne from 'did-veres-one';
+import * as didKey from '@digitalbazaar/did-method-key';
+import * as didVeresOne from 'did-veres-one';
 
 const didKeyDriver = didKey.driver();
-const didVeresOneDriver = didVeresOne.driver({mode: 'dev'}); // Dev / testnet / live modes
+// Dev / testnet / live modes
+const didVeresOneDriver = didVeresOne.driver({mode: 'dev'});
 
 // Enable resolver to use the did:key and did:v1 methods for cached fetching.
 resolver.use(didKeyDriver);
