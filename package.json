@@ -42,7 +42,6 @@
   ],
   "dependencies": {
     "@digitalbazaar/lru-memoize": "^2.0.0",
-    "did-context": "^2.0.0",
     "esm": "^3.2.25"
   },
   "devDependencies": {
