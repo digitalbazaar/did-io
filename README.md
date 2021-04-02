@@ -100,20 +100,29 @@ Linked Data Security load operations, such as when loading JSON-LD contexts,
 fetching DID Documents of supported DID methods, retrieving public keys, and
 so on.
 
-An initialized CachedResolver instance provides a convenience method that
-builds a `documentLoader` instance that works for its registered DID methods.
-This loader can be further composed with [other compatible JSON-LD document 
-loaders](https://github.com/decentralized-identity/jsonld-document-loader/).
+You can use an initialized `CachedResolver` instance when constructing a
+`documentLoader` for your use case (to handle DID and DID key resolution for 
+installed methods). For example:
 
 ```js
 const resolver = new CachedResolver();
 resolver.use(didMethodDriver1);
 resolver.use(didMethodDriver2);
 
-const documentLoader = resolver.buildDocumentLoader();
-
-// The resulting documentLoader function now supports getting DID documents
-// for did method 1 and 2, as well as fetching public keys from those DIDs.
+const documentLoader = async url => {
+  // Handle other static document and contexts here...
+  
+  // Use CachedResolver to fetch did: links.
+  if(url && url.startsWith('did:')) {
+    // this will handle both DIDs and key IDs for the 2 installed drivers
+    const document = await resolver.get({url});
+    return {
+      url,
+      document,
+      static: true
+    }
+  }
+}
 ```
 
 ### Generating, Registering or Updating DID Documents
