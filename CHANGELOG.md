@@ -1,6 +1,6 @@
 # did-io ChangeLog
 
-## 1.0.0 -
+## 1.0.0 - 2021-04-06
 
 This version is a major breaking release, based on cumulative experience in
 the field with DID method drivers. See Upgrading from `8.x` section for
