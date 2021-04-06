@@ -128,7 +128,6 @@ const documentLoader = async url => {
 
 ### Generating, Registering or Updating DID Documents
 
-
 ### Cache Management
 
 CachedResolver uses [`lru-memoize`](https://github.com/digitalbazaar/lru-memoize)
@@ -142,7 +141,7 @@ the `lru-cache` constructor, so  see that repo for the full list of cache
 management options. Commonly used ones include:
 
 * `max` (default: 100) - maximum size of the cache.
-* `maxAge` - maximum age of an item in ms.
+* `maxAge` (default: 5 sec/5000 ms) - maximum age of an item in ms.
 * `updateAgeOnGet` (default: `false`) - When using time-expiring entries with 
   `maxAge`, setting this to true will make each entry's effective time update to
   the current time whenever it is retrieved from cache, thereby extending the 
