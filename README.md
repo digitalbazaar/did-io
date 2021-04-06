@@ -4,7 +4,7 @@
 [![Coverage status](https://img.shields.io/codecov/c/github/digitalbazaar/did-io)](https://codecov.io/gh/digitalbazaar/did-io)-->
 [![NPM Version](https://img.shields.io/npm/v/@digitalbazaar/did-io.svg)](https://npm.im/@digitalbazaar/did-io)
 
-> A [DID](https://w3c-ccg.github.io/did-spec/) (Decentralized Identifier) resolution library for Javascript.
+> A [DID](https://w3c.github.io/did-core) (Decentralized Identifier) resolution library for Javascript.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@
 
 See also (related specs):
 
-* [DID Core v1](https://w3c.github.io/did-core/)
+* [DID Core v1](https://w3c.github.io/did-core)
 * [Decentralized Identifier Resolution v2](https://w3c-ccg.github.io/did-resolution/)
 * [DID Specification Registries](https://www.w3.org/TR/did-spec-registries/)
 * [Linked Data Cryptographic Suite Registry](https://w3c-ccg.github.io/ld-cryptosuite-registry/)
