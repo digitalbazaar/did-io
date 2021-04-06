@@ -29,7 +29,8 @@ See also (related specs):
 
 ### Version Compatibility
 
-`did-io` v1.0 is a major breaking release, see the [1.0 CHANGELOG entry]() and
+`did-io` v1.0 is a major breaking release, see the
+[1.0 CHANGELOG entry](CHANGELOG.md#100---2021-04-06) and
 [Upgrading from v0.8.x to v1.0.0](docs/upgrading-0.8-to-1.0.md) checklist for
 details.
 
