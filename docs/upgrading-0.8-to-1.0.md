@@ -101,3 +101,10 @@ use `publicMethodFor()`:
 const keyData = await resolver.get({url: keyId});
 const publicKey = await cryptoLd.from(keyData);
 ```
+
+#### 5. Check version compatibility
+
+Check the [Version compatibility](https://github.com/digitalbazaar/did-io#version-compatibility)
+table, since it's very likely that you're not only upgrading `did-io`, but _also_
+upgrading the did drivers, crypto suites, signature suites, and so on.
+
