@@ -1,7 +1,7 @@
 # Selective DID Resolver Client _(@digitalbazaar/did-io)_
 
-[![Build status](https://img.shields.io/github/workflow/status/digitalbazaar/did-io/Node.js%20CI)](https://github.com/digitalbazaar/did-io/actions?query=workflow%3A%22Node.js+CI%22)
-[![Coverage status](https://img.shields.io/codecov/c/github/digitalbazaar/did-io)](https://codecov.io/gh/digitalbazaar/did-io)
+<!--[![Build status](https://img.shields.io/github/workflow/status/digitalbazaar/did-io/Node.js%20CI)](https://github.com/digitalbazaar/did-io/actions?query=workflow%3A%22Node.js+CI%22)
+[![Coverage status](https://img.shields.io/codecov/c/github/digitalbazaar/did-io)](https://codecov.io/gh/digitalbazaar/did-io)-->
 [![NPM Version](https://img.shields.io/npm/v/@digitalbazaar/did-io.svg)](https://npm.im/@digitalbazaar/did-io)
 
 > A [DID](https://w3c-ccg.github.io/did-spec/) (Decentralized Identifier) resolution library for Javascript.
