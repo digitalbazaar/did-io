@@ -1,15 +1,31 @@
 # did-io ChangeLog
 
-## 1.0.0 - TBD
+## 1.0.0 -
+
+This version is a major breaking release, based on cumulative experience in
+the field with DID method drivers. See Upgrading from `8.x` section for
+instructions.
 
 ### Changed
-- **BREAKING**: Renamed NPM package name from `did-io` to `@digitalbazaar/did-io`.
-- **BREAKING**: Changed module export signature.
+- **BREAKING**: Rename NPM package name from `did-io` to `@digitalbazaar/did-io`.
+- **BREAKING**: `.use()` no longer requires a method id first param. New usage:
+  `.use(driver)`.
+- Add a `CachedResolver` class (extracted from `did:key` method driver) to
+  server as the driver harness.
+- **BREAKING**: Change module export signature. (see Upgrading section below
+  on usage.)
+- **BREAKING**: No longer export a `DidDocument` class. DID documents are now
+  expected to be plain JS/parsed JSON objects, instead of `DidDocument`
+  instances.
+
+### Upgrading from `8.x`
+
+See [Upgrading v0.8 to v1.0.0 checklist](docs/upgrading-0.8-to-1.0.md) in `docs/`.
 
 ## 0.8.3 - 2020-08-19
 
 ### Fixed
-- Engine specification format in package.json.
+- Engine specification format in package.json (Node 12+).
 
 ## 0.8.2 - 2020-05-12
 
@@ -19,7 +35,7 @@
 ## 0.8.1 - 2020-05-01
 
 ### Added
-- Added a `forceConstruct` optimization flag.
+- Add a `forceConstruct` optimization flag.
 
 ## 0.8.0 - 2020-04-10
 
