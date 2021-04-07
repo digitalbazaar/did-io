@@ -37,7 +37,7 @@ details.
 `did-io` v1.0 is compatible with the following libraries:
 
 * `crypto-ld` `>= 5.0.0` (and related crypto suites).
-* `jsonld-signatures` `>= 8.0.0`
+* `jsonld-signatures` `>= 9.0.0`
 * `@digitalbazaar/did-method-key` `>= 1.0.0`
 * `did-veres-one` `>= 13.0.0` (currently, [branch `v13.x`](https://github.com/veres-one/did-veres-one/pull/56))
 * `vc-js` `>= 7.0` (currently, [branch `v7.x`](https://github.com/digitalbazaar/vc-js/pull/83))
