@@ -35,14 +35,24 @@
     "email": "support@digitalbazaar.com"
   },
   "license": "BSD-3-Clause",
-  "main": "lib/index.js",
-  "module": "lib/main.js",
   "files": [
-    "lib/*.js"
+    "dist",
+    "lib",
+    "rollup.config.js",
+    "build-dist.sh",
+    "README.md",
+    "LICENSE"
   ],
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/esm/index.js"
+    }
+  },
   "dependencies": {
-    "@digitalbazaar/lru-memoize": "^2.0.0",
-    "esm": "^3.2.25"
+    "@digitalbazaar/lru-memoize": "digitalbazaar/lru-memoize#noesm"
   },
   "devDependencies": {
     "@babel/core": "^7.11.0",
@@ -56,6 +66,7 @@
     "eslint": "^7.22.0",
     "eslint-config-digitalbazaar": "^2.6.1",
     "eslint-plugin-jsdoc": "^32.2.0",
+    "esm": "^3.2.25",
     "karma": "^5.1.1",
     "karma-babel-preprocessor": "^8.0.1",
     "karma-chai": "^0.1.0",
@@ -65,6 +76,8 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^4.0.2",
     "mocha": "^8.1.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.47.0",
     "webpack": "^4.44.1"
   },
   "engines": {
@@ -76,6 +89,11 @@
     "Credential"
   ],
   "scripts": {
+    "rollup": "rollup -c rollup.config.js",
+    "build": "npm run clear && npm run rollup && ./build-dist.sh",
+    "clear": "rimraf dist/ && mkdir dist",
+    "prepare": "npm run build",
+    "rebuild": "npm run clear && npm run build",
     "test": "npm run lint && npm run test-node && npm run test-karma",
     "test-node": "cross-env NODE_ENV=test mocha -r esm --preserve-symlinks -t 30000 -A -R ${REPORTER:-spec} test/**/*.spec.js",
     "test-karma": "karma start karma.conf.js",
