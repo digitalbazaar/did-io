@@ -1,5 +1,10 @@
 # did-io ChangeLog
 
+## 1.1.0 - 2021-11-30
+
+### Added
+- Add `resolver.generate()` pass-through function.
+
 ## 1.0.0 - 2021-04-06
 
 This version is a major breaking release, based on cumulative experience in
