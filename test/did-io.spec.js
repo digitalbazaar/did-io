@@ -7,7 +7,7 @@ const {expect} = chai;
 
 import {
   findVerificationMethod, approvesMethodFor, parseDid
-} from '../';
+} from '../lib/index.js';
 
 const MOCK_KEY = {
   id: 'did:ex:123#abcd',
