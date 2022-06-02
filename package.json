@@ -38,7 +38,7 @@
   "type": "module",
   "exports": "./lib/index.js",
   "files": [
-    "lib/*.js"
+    "lib/**/*.js"
   ],
   "dependencies": {
     "@digitalbazaar/lru-memoize": "^3.0.0"
