@@ -76,8 +76,7 @@
     "coverage": "cross-env NODE_ENV=test c8 npm run test-node",
     "coverage-ci": "cross-env NODE_ENV=test c8 --reporter=lcovonly --reporter=text-summary --reporter=text npm run test-node",
     "coverage-report": "c8 report",
-    "lint": "eslint .",
-    "preversion": "npm test"
+    "lint": "eslint ."
   },
   "c8": {
     "reporter": [
