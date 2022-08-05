@@ -1,5 +1,13 @@
 # did-io ChangeLog
 
+## 3.0.0 -
+
+### Changed
+- **BREAKING**: `parseDid` not longer returns prefix. Returns method instead.
+
+### Added
+- **BREAKING**: `CachedResolver` now validates dids before resolving them.
+
 ## 2.0.0 - 2022-06-02
 
 ### Changed
