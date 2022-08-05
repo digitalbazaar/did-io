@@ -17,9 +17,13 @@ const MOCK_KEY = {
 };
 
 describe('parseDid', () => {
-  it('should return main did method identifier', async () => {
-    const {prefix} = parseDid({did: 'did:v1:test:nym:abcd'});
-    expect(prefix).to.equal('v1');
+  it('should return did method', async () => {
+    const {method} = parseDid({did: 'did:v1:test:nym:abcd'});
+    expect(method).to.equal('v1');
+  });
+  it('should return did scheme', async () => {
+    const {scheme} = parseDid({did: 'did:v1:test:nym:abcd'});
+    expect(scheme).to.equal('did');
   });
 });
 
