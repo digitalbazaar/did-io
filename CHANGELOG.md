@@ -8,6 +8,7 @@
 ### Added
 - **BREAKING**: `CachedResolver` now validates dids before resolving them.
 - `CachedResolver.use` now accepts a second optional method parameter.
+- Tests were added for the new validators.
 
 ## 2.0.0 - 2022-06-02
 
