@@ -9,6 +9,7 @@ import {
   typeErrors,
   invalidDids,
   invalidDidSyntax,
+  invalidDidUrlSyntax,
   invalidDidUrls,
   validDids,
   validDidUrls,
@@ -55,7 +56,22 @@ describe('validateDid', () => {
       });
     }
   });
-
+  describe('should throw `invalidDidUrl`', () => {
+    for(const invalidDidUrl of invalidDidUrlSyntax) {
+      it(`should not validate ${invalidDidUrl}`, async () => {
+        const error = testDid(invalidDidUrl);
+        should.exist(error, `Expected error for did url ${invalidDidUrl}`);
+        error.should.be.instanceof(
+          DidResolverError,
+          `Expected a DidResolverError for ${invalidDidUrl}`
+        );
+        error.code.should.equal(
+          'invalidDidUrl',
+          `Expected ${invalidDidUrl} to be an invalid did url`
+        );
+      });
+    }
+  });
 });
 
 describe('isValidDidUrl', () => {

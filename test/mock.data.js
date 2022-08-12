@@ -34,9 +34,15 @@ export const invalidDidSyntax = [
   'did:example'
 ];
 
+export const invalidDidUrlSyntax = [
+  'did:example:id/validPath/ invalid path /',
+  'did:example:id/validPath/^invalid^path^/'
+];
+
 export const invalidDidUrls = [
   ...typeErrors,
-  ...invalidDidSyntax
+  ...invalidDidSyntax,
+  ...invalidDidUrlSyntax
 ];
 
 export const validDids = [
