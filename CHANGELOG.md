@@ -6,7 +6,7 @@
 - **BREAKING**: `parseDid` no longer returns `prefix`. Returns `method` instead.
 
 ### Added
-- **BREAKING**: `CachedResolver` now validates dids before resolving them.
+- **BREAKING**: `CachedResolver` now validates DIDs before resolving them.
 - `CachedResolver.use` now accepts a second optional method parameter.
 - Tests were added for the new validators.
 
