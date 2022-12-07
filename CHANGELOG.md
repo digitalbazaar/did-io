@@ -3,7 +3,8 @@
 ## 3.0.0 -
 
 ### Changed
-- **BREAKING**: `parseDid` no longer returns `prefix`. Returns `method` instead.
+- **BREAKING**: `parseDid` changed to return `scheme` and `method` instead of
+  only `prefix`.
 
 ### Added
 - **BREAKING**: `CachedResolver` now validates DIDs before resolving them.
