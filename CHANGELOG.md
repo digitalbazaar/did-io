@@ -1,5 +1,16 @@
 # did-io ChangeLog
 
+## 3.0.0 -
+
+### Changed
+- **BREAKING**: `parseDid` changed to return `scheme` and `method` instead of
+  only `prefix`.
+
+### Added
+- **BREAKING**: `CachedResolver` now validates DIDs before resolving them.
+- `CachedResolver.use` now accepts a second optional method parameter.
+- Tests were added for the new validators.
+
 ## 2.0.0 - 2022-06-02
 
 ### Changed

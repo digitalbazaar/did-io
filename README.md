@@ -80,7 +80,8 @@ const resolver = new CachedResolver({max: 100}); // defaults to 100
 On its own, the resolver does not know how to fetch or resolve any DID methods.
 Support for each one has to be enabled explicitly. It uses a
 [Chai](https://www.chaijs.com/)-like plugin architecture, where each driver
-is loaded via `.use(driver)`.
+is loaded via `.use(driver)`. Optionally method can be passed in as the second
+parameter.
 
 ```js
 import * as didKey from '@digitalbazaar/did-method-key';
