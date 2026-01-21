@@ -1,6 +1,6 @@
 # did-io ChangeLog
 
-## 2.1.0 - 2026-mm-dd
+## 2.1.0 - 2026-01-21
 
 ### Added
 - Add option to allow a compatible external cache instance to be passed to
