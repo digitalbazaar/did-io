@@ -1,6 +1,6 @@
 {
   "name": "@digitalbazaar/did-io",
-  "version": "2.1.0",
+  "version": "2.1.1-0",
   "description": "A library for managing DIDs (Decentralized Identifiers) and associated data.",
   "homepage": "https://github.com/digitalbazaar/did-io",
   "author": {
