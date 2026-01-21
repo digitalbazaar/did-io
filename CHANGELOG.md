@@ -1,5 +1,15 @@
 # did-io ChangeLog
 
+## 2.1.0 - 2026-mm-dd
+
+### Added
+- Add option to allow a compatible external cache instance to be passed to
+  passed to `CachedResolver`. The cache instance must minimally support
+  `memoize()` with a signature that matches `@digitalbazaar/lru-memoize@4`.
+  This option allows applications to use different versions of the
+  cache with their own initialization code, provided that it maintains
+  the necessary interface.
+
 ## 2.0.0 - 2022-06-02
 
 ### Changed
