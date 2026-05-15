@@ -1,5 +1,6 @@
 *.sw[op]
 *~
+.zed/
 .cproject
 .project
 .c9
