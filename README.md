@@ -211,13 +211,15 @@ which helps in high-concurrency use cases. (And that library in turn uses
 [`lru-cache`](https://www.npmjs.com/package/lru-cache) under the hood.)
 
 The `CachedResolver` constructor passes any options given to it through to
-the `lru-cache` constructor, so  see that repo for the full list of cache 
+the `lru-cache` constructor, so see that repo for the full list of cache 
 management options. Commonly used ones include:
 
 * `max` (default: 100) - maximum size of the cache.
-* `maxAge` (default: 5 sec/5000 ms) - maximum age of an item in ms.
+* `ttl` (default: 5 sec/5000 ms) - maximum age (time-to-live) of an item in ms.
+* `maxAge` - deprecated alias for `ttl`, retained for backwards compatibility
+  with v3. If both `ttl` and `maxAge` are provided, `ttl` takes precedence.
 * `updateAgeOnGet` (default: `false`) - When using time-expiring entries with 
-  `maxAge`, setting this to true will make each entry's effective time update to
+  `ttl`, setting this to true will make each entry's effective time update to
   the current time whenever it is retrieved from cache, thereby extending the 
   expiration date of the entry.
 

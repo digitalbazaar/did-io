@@ -41,7 +41,7 @@
     "lib/**/*.js"
   ],
   "dependencies": {
-    "@digitalbazaar/lru-memoize": "^3.0.0"
+    "@digitalbazaar/lru-memoize": "^4.0.0"
   },
   "devDependencies": {
     "c8": "^7.11.3",

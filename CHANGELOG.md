@@ -1,5 +1,15 @@
 # did-io ChangeLog
 
+## 2.1.1 - 2026-TBD
+
+### Changed
+- Upgrade `@digitalbazaar/lru-memoize` dependency from `^3.0.0` to `^4.0.0`.
+  The `CachedResolver` constructor now accepts the v4-style `ttl` option
+  (preferred) in place of the v3-style `maxAge` option. For backwards
+  compatibility, `maxAge` is still accepted and automatically translated to
+  `ttl`; if both are supplied, `ttl` takes precedence. The prior default of
+  5000ms is preserved when neither option is given.
+
 ## 2.1.0 - 2026-01-21
 
 ### Added
