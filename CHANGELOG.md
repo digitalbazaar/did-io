@@ -1,6 +1,6 @@
 # did-io ChangeLog
 
-## 2.1.1 - 2026-TBD
+## 2.1.1 - 2026-05-16
 
 ### Changed
 - Upgrade `@digitalbazaar/lru-memoize` dependency from `^3.0.0` to `^4.0.0`.
