@@ -122,6 +122,7 @@ describe('CachedResolver', () => {
           err = e;
         }
         expect(err).to.be.instanceof(Error);
+        expect(err.name).to.equal('MethodNotSupportedError');
         expect(err.message).to.include('unknown');
       });
   });
@@ -144,6 +145,7 @@ describe('CachedResolver', () => {
         err = e;
       }
       expect(err).to.be.instanceof(Error);
+      expect(err.name).to.equal('MethodNotSupportedError');
       expect(err.message).to.include('unknown');
     });
   });
