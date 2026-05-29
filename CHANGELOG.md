@@ -1,6 +1,6 @@
 # did-io ChangeLog
 
-## 2.1.2 - 2026-05-28
+## 2.1.2 - 2026-05-dd
 
 ### Fixed
 - `CachedResolver` now sets the error name to `NotSupportedError` on errors
