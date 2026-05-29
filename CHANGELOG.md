@@ -1,8 +1,8 @@
 # did-io ChangeLog
 
-## 2.1.2 - 2026-05-dd
+## 2.2.0 - 2026-05-29
 
-### Fixed
+### Added
 - `CachedResolver` now sets the error name to `NotSupportedError` on errors
   thrown when no driver is registered for a DID method. Previously a plain
   `Error` was thrown, forcing callers to parse the message string to identify
